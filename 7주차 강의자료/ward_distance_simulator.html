@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ward Clustering — 3D Distance Simulator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #06080f;
+  --s1: #0d1520;
+  --s2: #111d2e;
+  --border: #1a2d47;
+  --c0: #38bdf8;
+  --c1: #fb923c;
+  --c2: #34d399;
+  --c3: #e879f9;
+  --c4: #f87171;
+  --text: #dce8f5;
+  --muted: #4d6a8a;
+  --merge: #fff;
+  --dist-lo: #34d399;
+  --dist-hi: #f87171;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column;}
+
+/* ── HEADER ── */
+header{
+  padding:9px 20px;display:flex;align-items:center;gap:14px;
+  background:var(--s1);border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.logo{font-size:9px;font-family:'DM Mono',monospace;color:var(--c0);letter-spacing:4px;opacity:.8;}
+.htitle{font-size:13px;font-weight:800;flex:1;letter-spacing:-.3px;}
+.htitle em{color:var(--c0);font-style:normal;}
+.fw-tabs{display:flex;gap:3px;background:var(--bg);padding:3px;border-radius:8px;}
+.fwb{padding:5px 14px;border:none;border-radius:5px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);}
+.fwb.on{background:var(--c0);color:var(--bg);}
+
+/* ── MAIN GRID ── */
+.grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 140px;flex:1;overflow:hidden;gap:1px;background:var(--border);}
+.panel{background:var(--bg);position:relative;overflow:hidden;}
+.panel-label{position:absolute;top:10px;left:14px;font-size:9px;font-family:'DM Mono',monospace;color:var(--c0);letter-spacing:3px;z-index:5;opacity:.7;}
+
+/* ── 3D PANEL ── */
+#p3d{grid-column:1;grid-row:1;}
+#threeCanvas{display:block;width:100%;height:100%;}
+
+/* ellipsoid overlay labels */
+.axis-strip{position:absolute;bottom:10px;left:10px;display:flex;gap:10px;z-index:5;}
+.atag{padding:3px 9px;border-radius:3px;font-size:9px;font-family:'DM Mono',monospace;border-left:3px solid;backdrop-filter:blur(6px);background:rgba(6,8,15,.7);}
+.atag.a1{border-color:#f472b6;color:#f472b6;}
+.atag.a2{border-color:#38bdf8;color:#38bdf8;}
+.atag.a3{border-color:#34d399;color:#34d399;}
+
+/* merge flash */
+#mergeFlash{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;z-index:20;opacity:0;transition:opacity .2s;
+  text-align:center;
+}
+#mergeFlash .mf-title{font-size:18px;font-weight:800;text-shadow:0 0 20px currentColor;}
+#mergeFlash .mf-sub{font-size:10px;font-family:'DM Mono',monospace;opacity:.7;margin-top:3px;}
+
+/* ── DENDROGRAM PANEL ── */
+#pdendro{grid-column:2;grid-row:1;}
+#dendroCanvas{display:block;}
+
+/* ── BOTTOM: DISTANCE TIMELINE ── */
+#ptimeline{grid-column:1/3;grid-row:2;display:flex;flex-direction:column;}
+.timeline-inner{flex:1;position:relative;padding:10px 16px 6px;}
+.tl-label{font-size:9px;font-family:'DM Mono',monospace;color:var(--c0);letter-spacing:3px;margin-bottom:6px;}
+#timelineCanvas{display:block;}
+
+/* ── CONTROLS (floating) ── */
+#controls{
+  position:fixed;bottom:152px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:8px;z-index:50;
+  background:rgba(13,21,32,.92);border:1px solid var(--border);
+  border-radius:100px;padding:7px 16px;backdrop-filter:blur(12px);
+}
+.cb{padding:5px 14px;border:1px solid var(--border);border-radius:100px;background:transparent;color:var(--text);font-family:'DM Mono',monospace;font-size:10px;cursor:pointer;transition:all .2s;}
+.cb:hover{border-color:var(--c0);color:var(--c0);}
+.cb.primary{background:var(--c0);color:var(--bg);border-color:var(--c0);font-weight:700;}
+.step-badge{font-family:'DM Mono',monospace;font-size:11px;color:var(--c0);min-width:80px;text-align:center;}
+.speed-wrap{display:flex;align-items:center;gap:6px;}
+.speed-wrap label{font-size:9px;font-family:'DM Mono',monospace;color:var(--muted);}
+input[type=range]{width:60px;appearance:none;height:3px;background:var(--border);border-radius:2px;outline:none;}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:11px;height:11px;border-radius:50%;background:var(--c0);cursor:pointer;}
+
+/* ── INFO SIDEBAR ── */
+#infoPanel{
+  position:absolute;top:36px;right:0;width:220px;
+  background:rgba(13,21,32,.92);border-left:1px solid var(--border);
+  border-bottom:1px solid var(--border);border-radius:0 0 0 8px;
+  padding:12px 14px;z-index:10;backdrop-filter:blur(12px);
+  font-size:11px;line-height:1.6;
+}
+#infoPanel .ip-step{font-size:9px;font-family:'DM Mono',monospace;color:var(--muted);margin-bottom:4px;}
+#infoPanel .ip-merge{font-weight:700;font-size:12px;margin-bottom:6px;}
+#infoPanel .ip-row{display:flex;justify-content:space-between;gap:8px;}
+#infoPanel .ip-key{color:var(--muted);font-size:10px;}
+#infoPanel .ip-val{font-family:'DM Mono',monospace;font-size:10px;}
+.dist-bar-wrap{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:6px;}
+.dist-bar{height:100%;border-radius:2px;transition:width .4s,background .4s;}
+.k-chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;}
+.kchip{padding:2px 7px;border-radius:100px;font-size:9px;font-family:'DM Mono',monospace;border:1px solid;}
+
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--border);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">WARD//3D</div>
+  <div class="htitle">Ward Distance — <em>3D Merge Visualizer</em></div>
+  <div class="fw-tabs">
+    <button class="fwb on" onclick="setFW('h2')">⬡ Hydrogen</button>
+    <button class="fwb" onclick="setFW('ccu')">◈ CCU</button>
+  </div>
+</header>
+
+<div class="grid">
+  <!-- 3D scatter -->
+  <div class="panel" id="p3d">
+    <div class="panel-label">3D CLUSTER SPACE</div>
+    <canvas id="threeCanvas"></canvas>
+    <div class="axis-strip">
+      <div class="atag a1">X · INSTITUTIONAL</div>
+      <div class="atag a2">Y · TECHNOECONOMIC</div>
+      <div class="atag a3">Z · RESOURCE-INFRA</div>
+    </div>
+    <div id="mergeFlash"><div class="mf-title" id="mfTitle"></div><div class="mf-sub" id="mfSub"></div></div>
+  </div>
+
+  <!-- Dendrogram -->
+  <div class="panel" id="pdendro">
+    <div class="panel-label">WARD'S DENDROGRAM</div>
+    <canvas id="dendroCanvas"></canvas>
+    <div id="infoPanel">
+      <div class="ip-step" id="ipStep">STEP 0 / 37</div>
+      <div class="ip-merge" id="ipMerge">38 individual countries</div>
+      <div class="ip-row"><span class="ip-key">Ward distance</span><span class="ip-val" id="ipDist">—</span></div>
+      <div class="ip-row"><span class="ip-key">Merged size</span><span class="ip-val" id="ipSize">—</span></div>
+      <div class="ip-row"><span class="ip-key">Active clusters</span><span class="ip-val" id="ipK">38</span></div>
+      <div class="dist-bar-wrap"><div class="dist-bar" id="distBar" style="width:0%"></div></div>
+      <div class="k-chips" id="kChips"></div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="panel" id="ptimeline">
+    <div class="timeline-inner">
+      <div class="tl-label">WARD DISTANCE TIMELINE — each bar = one merge · height = how dissimilar the groups were</div>
+      <canvas id="timelineCanvas"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Controls -->
+<div id="controls">
+  <button class="cb" onclick="goToStep(0)">⏮</button>
+  <button class="cb" onclick="stepBy(-1)">◀</button>
+  <button class="cb primary" id="btnPlay" onclick="togglePlay()">▶ PLAY</button>
+  <button class="cb" onclick="stepBy(1)">▶</button>
+  <button class="cb" onclick="goToEnd()">⏭</button>
+  <div class="step-badge" id="stepBadge">0 / 37</div>
+  <div class="speed-wrap">
+    <label>SPEED</label>
+    <input type="range" min="1" max="5" value="2" id="speedSlider" oninput="onSpeedChange()">
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════
+const H2_DATA = {"points":[{"name":"Angola","code":"AGO","a1":0.0338,"a2":1.4339,"a3":1.5615},{"name":"Argentina","code":"ARG","a1":0.6581,"a2":0.5514,"a3":3.9396},{"name":"Bahrain","code":"BHR","a1":0.6329,"a2":0.5611,"a3":1.8837},{"name":"Brazil","code":"BRA","a1":1.0235,"a2":0.1707,"a3":4.2726},{"name":"Cambodia","code":"KHM","a1":1.0158,"a2":0.7352,"a3":1.9132},{"name":"Chile","code":"CHL","a1":0.7258,"a2":0.0,"a3":3.632},{"name":"China","code":"CHN","a1":1.6769,"a2":0.1094,"a3":5.2364},{"name":"Colombia","code":"COL","a1":0.9679,"a2":0.5347,"a3":4.0717},{"name":"Cote d'Ivoire","code":"CIV","a1":0.2712,"a2":1.1674,"a3":1.4577},{"name":"Cuba","code":"CUB","a1":0.3385,"a2":1.4181,"a3":2.2923},{"name":"Ecuador","code":"ECU","a1":1.1301,"a2":1.6038,"a3":2.8106},{"name":"Egypt","code":"EGY","a1":1.4798,"a2":0.4207,"a3":3.7624},{"name":"Ghana","code":"GHA","a1":0.1811,"a2":2.0,"a3":2.0769},{"name":"Guatemala","code":"GTM","a1":0.302,"a2":1.2842,"a3":1.8448},{"name":"India","code":"IND","a1":0.7477,"a2":0.2095,"a3":4.5392},{"name":"Indonesia","code":"IDN","a1":1.4062,"a2":0.6694,"a3":3.1043},{"name":"Israel","code":"ISR","a1":2.1745,"a2":0.3586,"a3":2.34},{"name":"Jordan","code":"JOR","a1":0.6121,"a2":0.3599,"a3":2.1953},{"name":"Kenya","code":"KEN","a1":1.1309,"a2":0.4475,"a3":1.3642},{"name":"Malaysia","code":"MYS","a1":1.6918,"a2":0.8109,"a3":3.1071},{"name":"Mexico","code":"MEX","a1":0.6363,"a2":0.6429,"a3":2.8894},{"name":"Morocco","code":"MAR","a1":1.2373,"a2":0.7388,"a3":3.0034},{"name":"Myanmar","code":"MMR","a1":0.7384,"a2":1.5779,"a3":1.6626},{"name":"Namibia","code":"NAM","a1":1.2542,"a2":0.3414,"a3":2.0712},{"name":"Nigeria","code":"NGA","a1":0.3358,"a2":1.7431,"a3":1.7857},{"name":"Oman","code":"OMN","a1":0.3804,"a2":0.267,"a3":2.6208},{"name":"Pakistan","code":"PAK","a1":0.2959,"a2":0.8773,"a3":2.6919},{"name":"Peru","code":"PER","a1":0.2557,"a2":0.7479,"a3":3.5708},{"name":"Philippines","code":"PHL","a1":1.2494,"a2":0.342,"a3":3.1195},{"name":"Qatar","code":"QAT","a1":0.1349,"a2":0.3485,"a3":1.9582},{"name":"Saudi Arabia","code":"SAU","a1":0.4845,"a2":0.3719,"a3":3.6771},{"name":"Senegal","code":"SEN","a1":0.4131,"a2":0.5712,"a3":1.3891},{"name":"Singapore","code":"SGP","a1":1.7878,"a2":0.649,"a3":2.7412},{"name":"South Africa","code":"ZAF","a1":1.3561,"a2":0.2569,"a3":3.7376},{"name":"United Arab Emirates","code":"ARE","a1":1.4058,"a2":0.4967,"a3":3.4347},{"name":"Tanzania","code":"TZA","a1":0.1015,"a2":0.731,"a3":0.833},{"name":"Uruguay","code":"URY","a1":1.0038,"a2":0.2992,"a3":2.0375},{"name":"Viet Nam","code":"VNM","a1":1.8998,"a2":0.4783,"a3":3.1971}],"steps":[{"step":1,"c1_members":[15],"c2_members":[21],"merged_members":[15,21],"dist":0.349,"c1_size":1,"c2_size":1,"cent1":[1.4062,0.6694,3.1043],"cent2":[1.2373,0.7388,3.0034],"cent_merged":[1.3217,0.7041,3.0538],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0844,0.0347,0.0504]},{"step":2,"c1_members":[11],"c2_members":[34],"merged_members":[11,34],"dist":0.3866,"c1_size":1,"c2_size":1,"cent1":[1.4798,0.4207,3.7624],"cent2":[1.4058,0.4967,3.4347],"cent_merged":[1.4428,0.4587,3.5985],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.037,0.038,0.1639]},{"step":3,"c1_members":[23],"c2_members":[36],"merged_members":[23,36],"dist":0.4574,"c1_size":1,"c2_size":1,"cent1":[1.2542,0.3414,2.0712],"cent2":[1.0038,0.2992,2.0375],"cent_merged":[1.129,0.3203,2.0544],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.1252,0.0211,0.0169]},{"step":4,"c1_members":[8],"c2_members":[13],"merged_members":[8,13],"dist":0.4591,"c1_size":1,"c2_size":1,"cent1":[0.2712,1.1674,1.4577],"cent2":[0.302,1.2842,1.8448],"cent_merged":[0.2866,1.2258,1.6513],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0154,0.0584,0.1935]},{"step":5,"c1_members":[2],"c2_members":[17],"merged_members":[2,17],"dist":0.5195,"c1_size":1,"c2_size":1,"cent1":[0.6329,0.5611,1.8837],"cent2":[0.6121,0.3599,2.1953],"cent_merged":[0.6225,0.4605,2.0395],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0104,0.1006,0.1558]},{"step":6,"c1_members":[19],"c2_members":[32],"merged_members":[19,32],"dist":0.5238,"c1_size":1,"c2_size":1,"cent1":[1.6918,0.8109,3.1071],"cent2":[1.7878,0.649,2.7412],"cent_merged":[1.7398,0.7299,2.9242],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.048,0.0809,0.1829]},{"step":7,"c1_members":[33],"c2_members":[11,34],"merged_members":[33,11,34],"dist":0.5364,"c1_size":1,"c2_size":2,"cent1":[1.3561,0.2569,3.7376],"cent2":[1.4428,0.4587,3.5985],"cent_merged":[1.4139,0.3914,3.6449],"std1":[0,0,0],"std2":[0.037,0.038,0.1639],"std_merged":[0.0508,0.1001,0.149]},{"step":8,"c1_members":[1],"c2_members":[30],"merged_members":[1,30],"dist":0.5493,"c1_size":1,"c2_size":1,"cent1":[0.6581,0.5514,3.9396],"cent2":[0.4845,0.3719,3.6771],"cent_merged":[0.5713,0.4617,3.8083],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0868,0.0897,0.1313]},{"step":9,"c1_members":[3],"c2_members":[14],"merged_members":[3,14],"dist":0.5664,"c1_size":1,"c2_size":1,"cent1":[1.0235,0.1707,4.2726],"cent2":[0.7477,0.2095,4.5392],"cent_merged":[0.8856,0.1901,4.4059],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.1379,0.0194,0.1333]},{"step":10,"c1_members":[12],"c2_members":[24],"merged_members":[12,24],"dist":0.6639,"c1_size":1,"c2_size":1,"cent1":[0.1811,2.0,2.0769],"cent2":[0.3358,1.7431,1.7857],"cent_merged":[0.2585,1.8716,1.9313],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0773,0.1284,0.1456]},{"step":11,"c1_members":[0],"c2_members":[8,13],"merged_members":[0,8,13],"dist":0.7264,"c1_size":1,"c2_size":2,"cent1":[0.0338,1.4339,1.5615],"cent2":[0.2866,1.2258,1.6513],"cent_merged":[0.2023,1.2952,1.6213],"std1":[0,0,0],"std2":[0.0154,0.0584,0.1935],"std_merged":[0.1198,0.1091,0.1636]},{"step":12,"c1_members":[28],"c2_members":[33,11,34],"merged_members":[28,33,11,34],"dist":0.7481,"c1_size":1,"c2_size":3,"cent1":[1.2494,0.342,3.1195],"cent2":[1.4139,0.3914,3.6449],"cent_merged":[1.3728,0.3791,3.5135],"std1":[0,0,0],"std2":[0.0508,0.1001,0.149],"std_merged":[0.0837,0.0893,0.2615]},{"step":13,"c1_members":[37],"c2_members":[19,32],"merged_members":[37,19,32],"dist":0.7524,"c1_size":1,"c2_size":2,"cent1":[1.8998,0.4783,3.1971],"cent2":[1.7398,0.7299,2.9242],"cent_merged":[1.7931,0.6461,3.0151],"std1":[0,0,0],"std2":[0.048,0.0809,0.1829],"std_merged":[0.085,0.1358,0.1972]},{"step":14,"c1_members":[20],"c2_members":[26],"merged_members":[20,26],"dist":0.8014,"c1_size":1,"c2_size":1,"cent1":[0.6363,0.6429,2.8894],"cent2":[0.2959,0.8773,2.6919],"cent_merged":[0.4661,0.7601,2.7907],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.1702,0.1172,0.0988]},{"step":15,"c1_members":[25],"c2_members":[29],"merged_members":[25,29],"dist":0.8125,"c1_size":1,"c2_size":1,"cent1":[0.3804,0.267,2.6208],"cent2":[0.1349,0.3485,1.9582],"cent_merged":[0.2576,0.3077,2.2895],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.1228,0.0407,0.3313]},{"step":16,"c1_members":[4],"c2_members":[18],"merged_members":[4,18],"dist":0.8333,"c1_size":1,"c2_size":1,"cent1":[1.0158,0.7352,1.9132],"cent2":[1.1309,0.4475,1.3642],"cent_merged":[1.0734,0.5914,1.6387],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0575,0.1438,0.2745]},{"step":17,"c1_members":[31],"c2_members":[35],"merged_members":[31,35],"dist":0.8533,"c1_size":1,"c2_size":1,"cent1":[0.4131,0.5712,1.3891],"cent2":[0.1015,0.731,0.833],"cent_merged":[0.2573,0.6511,1.1111],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.1558,0.0799,0.2781]},{"step":18,"c1_members":[7],"c2_members":[1,30],"merged_members":[7,1,30],"dist":0.8907,"c1_size":1,"c2_size":2,"cent1":[0.9679,0.5347,4.0717],"cent2":[0.5713,0.4617,3.8083],"cent_merged":[0.7035,0.486,3.8961],"std1":[0,0,0],"std2":[0.0868,0.0897,0.1313],"std_merged":[0.1999,0.081,0.164]},{"step":19,"c1_members":[9],"c2_members":[0,8,13],"merged_members":[9,0,8,13],"dist":0.9277,"c1_size":1,"c2_size":3,"cent1":[0.3385,1.4181,2.2923],"cent2":[0.2023,1.2952,1.6213],"cent_merged":[0.2364,1.3259,1.7891],"std1":[0,0,0],"std2":[0.1198,0.1091,0.1636],"std_merged":[0.1194,0.1084,0.3232]},{"step":20,"c1_members":[23,36],"c2_members":[4,18],"merged_members":[23,36,4,18],"dist":0.9938,"c1_size":2,"c2_size":2,"cent1":[1.129,0.3203,2.0544],"cent2":[1.0734,0.5914,1.6387],"cent_merged":[1.1012,0.4558,1.8465],"std1":[0.1252,0.0211,0.0169],"std2":[0.0575,0.1438,0.2745],"std_merged":[0.1013,0.1701,0.2846]},{"step":21,"c1_members":[27],"c2_members":[20,26],"merged_members":[27,20,26],"dist":1.0008,"c1_size":1,"c2_size":2,"cent1":[0.2557,0.7479,3.5708],"cent2":[0.4661,0.7601,2.7907],"cent_merged":[0.396,0.756,3.0507],"std1":[0,0,0],"std2":[0.1702,0.1172,0.0988],"std_merged":[0.1707,0.0959,0.3765]},{"step":22,"c1_members":[5],"c2_members":[3,14],"merged_members":[5,3,14],"dist":1.0545,"c1_size":1,"c2_size":2,"cent1":[0.7258,0.0,3.632],"cent2":[0.8856,0.1901,4.4059],"cent_merged":[0.8323,0.1267,4.1479],"std1":[0,0,0],"std2":[0.1379,0.0194,0.1333],"std_merged":[0.1355,0.091,0.3807]},{"step":23,"c1_members":[2,17],"c2_members":[25,29],"merged_members":[2,17,25,29],"dist":1.0836,"c1_size":2,"c2_size":2,"cent1":[0.6225,0.4605,2.0395],"cent2":[0.2576,0.3077,2.2895],"cent_merged":[0.4401,0.3841,2.1645],"std1":[0.0104,0.1006,0.1558],"std2":[0.1228,0.0407,0.3313],"std_merged":[0.2022,0.1083,0.2875]},{"step":24,"c1_members":[22],"c2_members":[12,24],"merged_members":[22,12,24],"dist":1.2512,"c1_size":1,"c2_size":2,"cent1":[0.7384,1.5779,1.6626],"cent2":[0.2585,1.8716,1.9313],"cent_merged":[0.4184,1.7737,1.8417],"std1":[0,0,0],"std2":[0.0773,0.1284,0.1456],"std_merged":[0.2349,0.1737,0.1737]},{"step":25,"c1_members":[15,21],"c2_members":[37,19,32],"merged_members":[15,21,37,19,32],"dist":1.3204,"c1_size":2,"c2_size":3,"cent1":[1.3217,0.7041,3.0538],"cent2":[1.7931,0.6461,3.0151],"cent_merged":[1.6046,0.6693,3.0306],"std1":[0.0844,0.0347,0.0504],"std2":[0.085,0.1358,0.1972],"std_merged":[0.246,0.1112,0.1572]},{"step":26,"c1_members":[7,1,30],"c2_members":[5,3,14],"merged_members":[7,1,30,5,3,14],"dist":1.4103,"c1_size":3,"c2_size":3,"cent1":[0.7035,0.486,3.8961],"cent2":[0.8323,0.1267,4.1479],"cent_merged":[0.7679,0.3064,4.022],"std1":[0.1999,0.081,0.164],"std2":[0.1355,0.091,0.3807],"std_merged":[0.1825,0.1992,0.319]},{"step":27,"c1_members":[16],"c2_members":[15,21,37,19,32],"merged_members":[16,15,21,37,19,32],"dist":1.7911,"c1_size":1,"c2_size":5,"cent1":[2.1745,0.3586,2.34],"cent2":[1.6046,0.6693,3.0306],"cent_merged":[1.6996,0.6175,2.9155],"std1":[0,0,0],"std2":[0.246,0.1112,0.1572],"std_merged":[0.3091,0.154,0.2947]},{"step":28,"c1_members":[9,0,8,13],"c2_members":[22,12,24],"merged_members":[9,0,8,13,22,12,24],"dist":1.8119,"c1_size":4,"c2_size":3,"cent1":[0.2364,1.3259,1.7891],"cent2":[0.4184,1.7737,1.8417],"cent_merged":[0.3144,1.5178,1.8116],"std1":[0.1194,0.1084,0.3232],"std2":[0.2349,0.1737,0.1737],"std_merged":[0.1998,0.2622,0.2708]},{"step":29,"c1_members":[31,35],"c2_members":[2,17,25,29],"merged_members":[31,35,2,17,25,29],"dist":2.0127,"c1_size":2,"c2_size":4,"cent1":[0.2573,0.6511,1.1111],"cent2":[0.4401,0.3841,2.1645],"cent_merged":[0.3791,0.4731,1.8134],"std1":[0.1558,0.0799,0.2781],"std2":[0.2022,0.1083,0.2875],"std_merged":[0.2068,0.1606,0.5723]},{"step":30,"c1_members":[28,33,11,34],"c2_members":[16,15,21,37,19,32],"merged_members":[28,33,11,34,16,15,21,37,19,32],"dist":2.1243,"c1_size":4,"c2_size":6,"cent1":[1.3728,0.3791,3.5135],"cent2":[1.6996,0.6175,2.9155],"cent_merged":[1.5689,0.5221,3.1547],"std1":[0.0837,0.0893,0.2615],"std2":[0.3091,0.154,0.2947],"std_merged":[0.2928,0.1762,0.4066]},{"step":31,"c1_members":[10],"c2_members":[9,0,8,13,22,12,24],"merged_members":[10,9,0,8,13,22,12,24],"dist":2.3508,"c1_size":1,"c2_size":7,"cent1":[1.1301,1.6038,2.8106],"cent2":[0.3144,1.5178,1.8116],"cent_merged":[0.4164,1.5286,1.9365],"std1":[0,0,0],"std2":[0.1998,0.2622,0.2708],"std_merged":[0.3282,0.2469,0.4163]},{"step":32,"c1_members":[6],"c2_members":[7,1,30,5,3,14],"merged_members":[6,7,1,30,5,3,14],"dist":2.7095,"c1_size":1,"c2_size":6,"cent1":[1.6769,0.1094,5.2364],"cent2":[0.7679,0.3064,4.022],"cent_merged":[0.8978,0.2782,4.1955],"std1":[0,0,0],"std2":[0.1825,0.1992,0.319],"std_merged":[0.3602,0.1969,0.5175]},{"step":33,"c1_members":[27,20,26],"c2_members":[31,35,2,17,25,29],"merged_members":[27,20,26,31,35,2,17,25,29],"dist":2.7363,"c1_size":3,"c2_size":6,"cent1":[0.396,0.756,3.0507],"cent2":[0.3791,0.4731,1.8134],"cent_merged":[0.3848,0.5674,2.2258],"std1":[0.1707,0.0959,0.3765],"std2":[0.2068,0.1606,0.5723],"std_merged":[0.1957,0.195,0.7783]},{"step":34,"c1_members":[23,36,4,18],"c2_members":[27,20,26,31,35,2,17,25,29],"merged_members":[23,36,4,18,27,20,26,31,35,2,17,25,29],"dist":3.1908,"c1_size":4,"c2_size":9,"cent1":[1.1012,0.4558,1.8465],"cent2":[0.3848,0.5674,2.2258],"cent_merged":[0.6052,0.5331,2.1091],"std1":[0.1013,0.1701,0.2846],"std2":[0.1957,0.195,0.7783],"std_merged":[0.3728,0.1947,0.6892]},{"step":35,"c1_members":[28,33,11,34,16,15,21,37,19,32],"c2_members":[6,7,1,30,5,3,14],"merged_members":[28,33,11,34,16,15,21,37,19,32,6,7,1,30,5,3,14],"dist":4.7815,"c1_size":10,"c2_size":7,"cent1":[1.5689,0.5221,3.1547],"cent2":[0.8978,0.2782,4.1955],"cent_merged":[1.2925,0.4217,3.5833],"std1":[0.2928,0.1762,0.4066],"std2":[0.3602,0.1969,0.5175],"std_merged":[0.4615,0.2205,0.6855]},{"step":36,"c1_members":[10,9,0,8,13,22,12,24],"c2_members":[23,36,4,18,27,20,26,31,35,2,17,25,29],"merged_members":[10,9,0,8,13,22,12,24,23,36,4,18,27,20,26,31,35,2,17,25,29],"dist":6.5557,"c1_size":8,"c2_size":13,"cent1":[0.4164,1.5286,1.9365],"cent2":[0.6052,0.5331,2.1091],"cent_merged":[0.5333,0.9123,2.0434],"std1":[0.3282,0.2469,0.4163],"std2":[0.3728,0.1947,0.6892],"std_merged":[0.3681,0.5295,0.6059]},{"step":37,"c1_members":[28,33,11,34,16,15,21,37,19,32,6,7,1,30,5,3,14],"c2_members":[10,9,0,8,13,22,12,24,23,36,4,18,27,20,26,31,35,2,17,25,29],"merged_members":[28,33,11,34,16,15,21,37,19,32,6,7,1,30,5,3,14,10,9,0,8,13,22,12,24,23,36,4,18,27,20,26,31,35,2,17,25,29],"dist":9.9185,"c1_size":17,"c2_size":21,"cent1":[1.2925,0.4217,3.5833],"cent2":[0.5333,0.9123,2.0434],"cent_merged":[0.8729,0.6928,2.7323],"std1":[0.4615,0.2205,0.6855],"std2":[0.3681,0.5295,0.6059],"std_merged":[0.5592,0.486,0.9997]}],"names":["Angola","Argentina","Bahrain","Brazil","Cambodia","Chile","China","Colombia","Cote d'Ivoire","Cuba","Ecuador","Egypt","Ghana","Guatemala","India","Indonesia","Israel","Jordan","Kenya","Malaysia","Mexico","Morocco","Myanmar","Namibia","Nigeria","Oman","Pakistan","Peru","Philippines","Qatar","Saudi Arabia","Senegal","Singapore","South Africa","United Arab Emirates","Tanzania","Uruguay","Viet Nam"]};
+
+const CCU_DATA = {"points":[{"name":"Algeria","code":"DZA","a1":0.1583,"a2":0.1433,"a3":1.7119},{"name":"Angola","code":"AGO","a1":0.0323,"a2":0.9928,"a3":0.4098},{"name":"Argentina","code":"ARG","a1":1.0282,"a2":1.2593,"a3":1.6864},{"name":"Bahrain","code":"BHR","a1":1.7315,"a2":1.2991,"a3":1.6377},{"name":"Brazil","code":"BRA","a1":0.5652,"a2":1.2461,"a3":1.4839},{"name":"Cambodia","code":"KHM","a1":1.0144,"a2":1.0421,"a3":1.3689},{"name":"Chile","code":"CHL","a1":0.8387,"a2":1.1421,"a3":2.645},{"name":"China","code":"CHN","a1":2.7046,"a2":1.7713,"a3":4.9197},{"name":"Colombia","code":"COL","a1":1.8809,"a2":1.191,"a3":1.5249},{"name":"Cote d'Ivoire","code":"CIV","a1":0.3698,"a2":1.1822,"a3":0.6882},{"name":"Cuba","code":"CUB","a1":0.3371,"a2":0.9963,"a3":1.6395},{"name":"Ecuador","code":"ECU","a1":0.3288,"a2":0.9856,"a3":1.7298},{"name":"Egypt","code":"EGY","a1":0.4786,"a2":0.4578,"a3":1.7359},{"name":"Ghana","code":"GHA","a1":0.1797,"a2":1.5504,"a3":1.2527},{"name":"India","code":"IND","a1":0.4893,"a2":2.1582,"a3":3.4026},{"name":"Indonesia","code":"IDN","a1":2.3191,"a2":1.2497,"a3":2.9445},{"name":"Iran","code":"IRN","a1":0.7005,"a2":0.3788,"a3":1.8345},{"name":"Israel","code":"ISR","a1":1.6031,"a2":1.0884,"a3":1.8136},{"name":"Jordan","code":"JOR","a1":0.6108,"a2":1.2132,"a3":1.8034},{"name":"Kenya","code":"KEN","a1":0.2297,"a2":1.0044,"a3":0.5525},{"name":"Malaysia","code":"MYS","a1":2.1763,"a2":0.9967,"a3":1.816},{"name":"Mexico","code":"MEX","a1":1.635,"a2":1.2184,"a3":1.7522},{"name":"Morocco","code":"MAR","a1":1.536,"a2":1.1375,"a3":2.0148},{"name":"Namibia","code":"NAM","a1":0.2529,"a2":1.3658,"a3":0.5837},{"name":"Nigeria","code":"NGA","a1":1.3344,"a2":1.5823,"a3":0.6132},{"name":"Oman","code":"OMN","a1":1.179,"a2":1.1616,"a3":1.896},{"name":"Pakistan","code":"PAK","a1":1.3945,"a2":1.3129,"a3":1.4611},{"name":"Philippines","code":"PHL","a1":0.5481,"a2":0.1831,"a3":1.6782},{"name":"Qatar","code":"QAT","a1":1.1337,"a2":1.0544,"a3":1.6255},{"name":"Saudi Arabia","code":"SAU","a1":1.4832,"a2":0.9969,"a3":1.803},{"name":"Senegal","code":"SEN","a1":0.4118,"a2":1.3642,"a3":1.1039},{"name":"Singapore","code":"SGP","a1":2.2154,"a2":0.068,"a3":1.2979},{"name":"Thailand","code":"THA","a1":2.3015,"a2":1.3681,"a3":1.6024},{"name":"United Arab Emirates","code":"ARE","a1":1.4047,"a2":1.036,"a3":1.6566},{"name":"Tanzania","code":"TZA","a1":0.1002,"a2":1.0049,"a3":0.0353},{"name":"Uruguay","code":"URY","a1":0.631,"a2":1.0066,"a3":2.2957},{"name":"Venezuela","code":"VEN","a1":0.3311,"a2":1.0293,"a3":1.3902},{"name":"Viet Nam","code":"VNM","a1":2.0414,"a2":1.0325,"a3":2.0023}],"steps":[{"step":1,"c1_members":[10],"c2_members":[11],"merged_members":[10,11],"dist":0.1116,"c1_size":1,"c2_size":1,"cent1":[0.3371,0.9963,1.6395],"cent2":[0.3288,0.9856,1.7298],"cent_merged":[0.3329,0.9909,1.6846],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0042,0.0053,0.0452]},{"step":2,"c1_members":[29],"c2_members":[33],"merged_members":[29,33],"dist":0.2259,"c1_size":1,"c2_size":1,"cent1":[1.4832,0.9969,1.803],"cent2":[1.4047,1.036,1.6566],"cent_merged":[1.444,1.0165,1.7298],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0393,0.0196,0.0732]},{"step":3,"c1_members":[3],"c2_members":[21],"merged_members":[3,21],"dist":0.274,"c1_size":1,"c2_size":1,"cent1":[1.7315,1.2991,1.6377],"cent2":[1.635,1.2184,1.7522],"cent_merged":[1.6833,1.2588,1.6949],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0483,0.0403,0.0573]},{"step":4,"c1_members":[17],"c2_members":[22],"merged_members":[17,22],"dist":0.2839,"c1_size":1,"c2_size":1,"cent1":[1.6031,1.0884,1.8136],"cent2":[1.536,1.1375,2.0148],"cent_merged":[1.5696,1.113,1.9142],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0335,0.0245,0.1006]},{"step":5,"c1_members":[20],"c2_members":[37],"merged_members":[20,37],"dist":0.3005,"c1_size":1,"c2_size":1,"cent1":[2.1763,0.9967,1.816],"cent2":[2.0414,1.0325,2.0023],"cent_merged":[2.1088,1.0146,1.9091],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0675,0.0179,0.0931]},{"step":6,"c1_members":[1],"c2_members":[19],"merged_members":[1,19],"dist":0.317,"c1_size":1,"c2_size":1,"cent1":[0.0323,0.9928,0.4098],"cent2":[0.2297,1.0044,0.5525],"cent_merged":[0.131,0.9986,0.4811],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0987,0.0058,0.0713]},{"step":7,"c1_members":[5],"c2_members":[28],"merged_members":[5,28],"dist":0.3475,"c1_size":1,"c2_size":1,"cent1":[1.0144,1.0421,1.3689],"cent2":[1.1337,1.0544,1.6255],"cent_merged":[1.074,1.0482,1.4972],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0596,0.0061,0.1283]},{"step":8,"c1_members":[12],"c2_members":[16],"merged_members":[12,16],"dist":0.3754,"c1_size":1,"c2_size":1,"cent1":[0.4786,0.4578,1.7359],"cent2":[0.7005,0.3788,1.8345],"cent_merged":[0.5896,0.4183,1.7852],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.1109,0.0395,0.0493]},{"step":9,"c1_members":[4],"c2_members":[18],"merged_members":[4,18],"dist":0.3951,"c1_size":1,"c2_size":1,"cent1":[0.5652,1.2461,1.4839],"cent2":[0.6108,1.2132,1.8034],"cent_merged":[0.588,1.2296,1.6437],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0228,0.0164,0.1597]},{"step":10,"c1_members":[2],"c2_members":[25],"merged_members":[2,25],"dist":0.4022,"c1_size":1,"c2_size":1,"cent1":[1.0282,1.2593,1.6864],"cent2":[1.179,1.1616,1.896],"cent_merged":[1.1036,1.2105,1.7912],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0754,0.0489,0.1048]},{"step":11,"c1_members":[36],"c2_members":[10,11],"merged_members":[36,10,11],"dist":0.4207,"c1_size":1,"c2_size":2,"cent1":[0.3311,1.0293,1.3902],"cent2":[0.3329,0.9909,1.6846],"cent_merged":[0.3323,1.0037,1.5865],"std1":[0,0,0],"std2":[0.0042,0.0053,0.0452],"std_merged":[0.0035,0.0186,0.1436]},{"step":12,"c1_members":[8],"c2_members":[3,21],"merged_members":[8,3,21],"dist":0.4319,"c1_size":1,"c2_size":2,"cent1":[1.8809,1.191,1.5249],"cent2":[1.6833,1.2588,1.6949],"cent_merged":[1.7491,1.2362,1.6383],"std1":[0,0,0],"std2":[0.0483,0.0403,0.0573],"std_merged":[0.1012,0.0459,0.0928]},{"step":13,"c1_members":[9],"c2_members":[23],"merged_members":[9,23],"dist":0.4946,"c1_size":1,"c2_size":1,"cent1":[0.3698,1.1822,0.6882],"cent2":[0.2529,1.3658,0.5837],"cent_merged":[0.3114,1.274,0.636],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.0585,0.0918,0.0523]},{"step":14,"c1_members":[29,33],"c2_members":[17,22],"merged_members":[29,33,17,22],"dist":0.5169,"c1_size":2,"c2_size":2,"cent1":[1.444,1.0165,1.7298],"cent2":[1.5696,1.113,1.9142],"cent_merged":[1.5067,1.0647,1.822],"std1":[0.0393,0.0196,0.0732],"std2":[0.0335,0.0245,0.1006],"std_merged":[0.0726,0.0531,0.1274]},{"step":15,"c1_members":[0],"c2_members":[27],"merged_members":[0,27],"dist":0.5352,"c1_size":1,"c2_size":1,"cent1":[0.1583,0.1433,1.7119],"cent2":[0.5481,0.1831,1.6782],"cent_merged":[0.3532,0.1632,1.695],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.1949,0.0199,0.0169]},{"step":16,"c1_members":[13],"c2_members":[30],"merged_members":[13,30],"dist":0.5825,"c1_size":1,"c2_size":1,"cent1":[0.1797,1.5504,1.2527],"cent2":[0.4118,1.3642,1.1039],"cent_merged":[0.2958,1.4573,1.1783],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.1161,0.0931,0.0744]},{"step":17,"c1_members":[6],"c2_members":[35],"merged_members":[6,35],"dist":0.603,"c1_size":1,"c2_size":1,"cent1":[0.8387,1.1421,2.645],"cent2":[0.631,1.0066,2.2957],"cent_merged":[0.7349,1.0743,2.4703],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[0.1038,0.0677,0.1746]},{"step":18,"c1_members":[34],"c2_members":[1,19],"merged_members":[34,1,19],"dist":0.6173,"c1_size":1,"c2_size":2,"cent1":[0.1002,1.0049,0.0353],"cent2":[0.131,0.9986,0.4811],"cent_merged":[0.1207,1.0007,0.3325],"std1":[0,0,0],"std2":[0.0987,0.0058,0.0713],"std_merged":[0.0819,0.0056,0.2181]},{"step":19,"c1_members":[26],"c2_members":[8,3,21],"merged_members":[26,8,3,21],"dist":0.6801,"c1_size":1,"c2_size":3,"cent1":[1.3945,1.3129,1.4611],"cent2":[1.7491,1.2362,1.6383],"cent_merged":[1.6605,1.2553,1.594],"std1":[0,0,0],"std2":[0.1012,0.0459,0.0928],"std_merged":[0.1768,0.0518,0.1111]},{"step":20,"c1_members":[5,28],"c2_members":[2,25],"merged_members":[5,28,2,25],"dist":0.7543,"c1_size":2,"c2_size":2,"cent1":[1.074,1.0482,1.4972],"cent2":[1.1036,1.2105,1.7912],"cent_merged":[1.0888,1.1294,1.6442],"std1":[0.0596,0.0061,0.1283],"std2":[0.0754,0.0489,0.1048],"std_merged":[0.0696,0.0883,0.188]},{"step":21,"c1_members":[12,16],"c2_members":[0,27],"merged_members":[12,16,0,27],"dist":1.0072,"c1_size":2,"c2_size":2,"cent1":[0.5896,0.4183,1.7852],"cent2":[0.3532,0.1632,1.695],"cent_merged":[0.4714,0.2908,1.7401],"std1":[0.1109,0.0395,0.0493],"std2":[0.1949,0.0199,0.0169],"std_merged":[0.1978,0.1313,0.0582]},{"step":22,"c1_members":[4,18],"c2_members":[36,10,11],"merged_members":[4,18,36,10,11],"dist":1.0187,"c1_size":2,"c2_size":3,"cent1":[0.588,1.2296,1.6437],"cent2":[0.3323,1.0037,1.5865],"cent_merged":[0.4346,1.0941,1.6094],"std1":[0.0228,0.0164,0.1597],"std2":[0.0035,0.0186,0.1436],"std_merged":[0.1261,0.1121,0.1529]},{"step":23,"c1_members":[9,23],"c2_members":[13,30],"merged_members":[9,23,13,30],"dist":1.1172,"c1_size":2,"c2_size":2,"cent1":[0.3114,1.274,0.636],"cent2":[0.2958,1.4573,1.1783],"cent_merged":[0.3035,1.3657,0.9071],"std1":[0.0585,0.0918,0.0523],"std2":[0.1161,0.0931,0.0744],"std_merged":[0.0922,0.1302,0.2787]},{"step":24,"c1_members":[32],"c2_members":[20,37],"merged_members":[32,20,37],"dist":1.1307,"c1_size":1,"c2_size":2,"cent1":[2.3015,1.3681,1.6024],"cent2":[2.1088,1.0146,1.9091],"cent_merged":[2.1731,1.1324,1.8069],"std1":[0,0,0],"std2":[0.0675,0.0179,0.0931],"std_merged":[0.1062,0.1673,0.1634]},{"step":25,"c1_members":[29,33,17,22],"c2_members":[26,8,3,21],"merged_members":[29,33,17,22,26,8,3,21],"dist":1.1616,"c1_size":4,"c2_size":4,"cent1":[1.5067,1.0647,1.822],"cent2":[1.6605,1.2553,1.594],"cent_merged":[1.5836,1.16,1.708],"std1":[0.0726,0.0531,0.1274],"std2":[0.1768,0.0518,0.1111],"std_merged":[0.1555,0.1088,0.1652]},{"step":26,"c1_members":[5,28,2,25],"c2_members":[29,33,17,22,26,8,3,21],"merged_members":[5,28,2,25,29,33,17,22,26,8,3,21],"dist":1.5577,"c1_size":4,"c2_size":8,"cent1":[1.0888,1.1294,1.6442],"cent2":[1.5836,1.16,1.708],"cent_merged":[1.4187,1.1498,1.6867],"std1":[0.0696,0.0883,0.188],"std2":[0.1555,0.1088,0.1652],"std_merged":[0.2686,0.1034,0.1757]},{"step":27,"c1_members":[15],"c2_members":[32,20,37],"merged_members":[15,32,20,37],"dist":1.719,"c1_size":1,"c2_size":3,"cent1":[2.3191,1.2497,2.9445],"cent2":[2.1731,1.1324,1.8069],"cent_merged":[2.2096,1.1618,2.0913],"std1":[0,0,0],"std2":[0.1062,0.1673,0.1634],"std_merged":[0.1116,0.1535,0.5125]},{"step":28,"c1_members":[6,35],"c2_members":[4,18,36,10,11],"merged_members":[6,35,4,18,36,10,11],"dist":1.8703,"c1_size":2,"c2_size":5,"cent1":[0.7349,1.0743,2.4703],"cent2":[0.4346,1.0941,1.6094],"cent_merged":[0.5204,1.0885,1.8554],"std1":[0.1038,0.0677,0.1746],"std2":[0.1261,0.1121,0.1529],"std_merged":[0.1812,0.1018,0.4203]},{"step":29,"c1_members":[24],"c2_members":[9,23,13,30],"merged_members":[24,9,23,13,30],"dist":1.932,"c1_size":1,"c2_size":4,"cent1":[1.3344,1.5823,0.6132],"cent2":[0.3035,1.3657,0.9071],"cent_merged":[0.5097,1.409,0.8483],"std1":[0,0,0],"std2":[0.0922,0.1302,0.2787],"std_merged":[0.4205,0.1451,0.2756]},{"step":30,"c1_members":[34,1,19],"c2_members":[24,9,23,13,30],"merged_members":[34,1,19,24,9,23,13,30],"dist":2.4982,"c1_size":3,"c2_size":5,"cent1":[0.1207,1.0007,0.3325],"cent2":[0.5097,1.409,0.8483],"cent_merged":[0.3639,1.2559,0.6549],"std1":[0.0819,0.0056,0.2181],"std2":[0.4205,0.1451,0.2756],"std_merged":[0.3853,0.2286,0.3573]},{"step":31,"c1_members":[5,28,2,25,29,33,17,22,26,8,3,21],"c2_members":[15,32,20,37],"merged_members":[5,28,2,25,29,33,17,22,26,8,3,21,15,32,20,37],"dist":2.8646,"c1_size":12,"c2_size":4,"cent1":[1.4187,1.1498,1.6867],"cent2":[2.2096,1.1618,2.0913],"cent_merged":[1.6164,1.1528,1.7879],"std1":[0.2686,0.1034,0.1757],"std2":[0.1116,0.1535,0.5125],"std_merged":[0.4177,0.1181,0.3457]},{"step":32,"c1_members":[31],"c2_members":[12,16,0,27],"merged_members":[31,12,16,0,27],"dist":3.1215,"c1_size":1,"c2_size":4,"cent1":[2.2154,0.068,1.2979],"cent2":[0.4714,0.2908,1.7401],"cent_merged":[0.8202,0.2462,1.6517],"std1":[0,0,0],"std2":[0.1978,0.1313,0.0582],"std_merged":[0.7197,0.1474,0.1844]},{"step":33,"c1_members":[7],"c2_members":[14],"merged_members":[7,14],"dist":3.6171,"c1_size":1,"c2_size":1,"cent1":[2.7046,1.7713,4.9197],"cent2":[0.4893,2.1582,3.4026],"cent_merged":[1.597,1.9647,4.1612],"std1":[0,0,0],"std2":[0,0,0],"std_merged":[1.1077,0.1934,0.7585]},{"step":34,"c1_members":[6,35,4,18,36,10,11],"c2_members":[34,1,19,24,9,23,13,30],"merged_members":[6,35,4,18,36,10,11,34,1,19,24,9,23,13,30],"dist":4.1189,"c1_size":7,"c2_size":8,"cent1":[0.5204,1.0885,1.8554],"cent2":[0.3639,1.2559,0.6549],"cent_merged":[0.4369,1.1777,1.2151],"std1":[0.1812,0.1018,0.4203],"std2":[0.3853,0.2286,0.3573],"std_merged":[0.3172,0.1992,0.7136]},{"step":35,"c1_members":[5,28,2,25,29,33,17,22,26,8,3,21,15,32,20,37],"c2_members":[7,14],"merged_members":[5,28,2,25,29,33,17,22,26,8,3,21,15,32,20,37,7,14],"dist":6.5427,"c1_size":16,"c2_size":2,"cent1":[1.6164,1.1528,1.7879],"cent2":[1.597,1.9647,4.1612],"cent_merged":[1.6142,1.243,2.0516],"std1":[0.4177,0.1181,0.3457],"std2":[1.1077,0.1934,0.7585],"std_merged":[0.5399,0.2858,0.8523]},{"step":36,"c1_members":[31,12,16,0,27],"c2_members":[6,35,4,18,36,10,11,34,1,19,24,9,23,13,30],"merged_members":[31,12,16,0,27,6,35,4,18,36,10,11,34,1,19,24,9,23,13,30],"dist":6.594,"c1_size":5,"c2_size":15,"cent1":[0.8202,0.2462,1.6517],"cent2":[0.4369,1.1777,1.2151],"cent_merged":[0.5327,0.9449,1.3243],"std1":[0.7197,0.1474,0.1844],"std2":[0.3172,0.1992,0.7136],"std_merged":[0.4822,0.4449,0.6528]},{"step":37,"c1_members":[5,28,2,25,29,33,17,22,26,8,3,21,15,32,20,37,7,14],"c2_members":[31,12,16,0,27,6,35,4,18,36,10,11,34,1,19,24,9,23,13,30],"merged_members":[5,28,2,25,29,33,17,22,26,8,3,21,15,32,20,37,7,14,31,12,16,0,27,6,35,4,18,36,10,11,34,1,19,24,9,23,13,30],"dist":8.0415,"c1_size":18,"c2_size":20,"cent1":[1.6142,1.243,2.0516],"cent2":[0.5327,0.9449,1.3243],"cent_merged":[1.045,1.0861,1.6688],"std1":[0.5399,0.2858,0.8523],"std2":[0.4822,0.4449,0.6528],"std_merged":[0.743,0.4062,0.8368]}],"names":["Algeria","Angola","Argentina","Bahrain","Brazil","Cambodia","Chile","China","Colombia","Cote d'Ivoire","Cuba","Ecuador","Egypt","Ghana","India","Indonesia","Iran","Israel","Jordan","Kenya","Malaysia","Mexico","Morocco","Namibia","Nigeria","Oman","Pakistan","Philippines","Qatar","Saudi Arabia","Senegal","Singapore","Thailand","United Arab Emirates","Tanzania","Uruguay","Venezuela","Viet Nam"]};
+
+const COLORS = ['#38bdf8','#fb923c','#34d399','#e879f9','#f87171'];
+const CUT_COLORS = {2:'#e879f9',3:'#fb923c',4:'#38bdf8',5:'#34d399'};
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let fw = 'h2';
+let step = 0;
+let playing = false;
+let playTimer = null;
+let animFrame = 0; // for ellipsoid pulse animation
+
+function getData() { return fw==='h2' ? H2_DATA : CCU_DATA; }
+
+// ═══════════════════════════════════════════════════════════
+// THREE.JS — 3D SCATTER
+// ═══════════════════════════════════════════════════════════
+let scene, camera, renderer, raycaster, mouse3;
+let dotMeshes = [], ellipsoids = [], centroidLines = [];
+let spherical = {theta:0.5, phi:1.0, radius:9};
+let isDragging=false, prevMouse={x:0,y:0};
+let spinning = false;
+
+function initThree() {
+  const panel = document.getElementById('p3d');
+  const W=panel.clientWidth, H=panel.clientHeight;
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(50, W/H, 0.1, 200);
+  updateCam();
+  renderer = new THREE.WebGLRenderer({canvas:document.getElementById('threeCanvas'), antialias:true, alpha:true});
+  renderer.setSize(W,H);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setClearColor(0x06080f,1);
+  raycaster = new THREE.Raycaster();
+  raycaster.params.Points.threshold=0.2;
+  mouse3 = new THREE.Vector2();
+  addSceneBase();
+  const cv = renderer.domElement;
+  cv.addEventListener('mousedown',e=>{isDragging=true;prevMouse={x:e.clientX,y:e.clientY};});
+  cv.addEventListener('mouseup',()=>isDragging=false);
+  cv.addEventListener('mousemove',e=>{
+    if(isDragging){
+      spherical.theta-=(e.clientX-prevMouse.x)*0.007;
+      spherical.phi=Math.max(.2,Math.min(2.7,spherical.phi+(e.clientY-prevMouse.y)*0.007));
+      updateCam(); prevMouse={x:e.clientX,y:e.clientY};
+    }
+  });
+  cv.addEventListener('wheel',e=>{spherical.radius=Math.max(4,Math.min(18,spherical.radius+e.deltaY*.01));updateCam();});
+  window.addEventListener('resize',onResize);
+  animateThree();
+}
+
+function addSceneBase() {
+  // Subtle grid on ground
+  const grid = new THREE.GridHelper(8,8,0x1a2d47,0x1a2d47);
+  grid.position.set(3,0,3); scene.add(grid);
+  // Axes
+  const lm=(c)=>new THREE.LineBasicMaterial({color:c});
+  const lg=(a,b)=>{const g=new THREE.BufferGeometry();g.setFromPoints([new THREE.Vector3(...a),new THREE.Vector3(...b)]);return g;};
+  scene.add(new THREE.Line(lg([0,0,0],[7,0,0]),lm(0xf472b6)));
+  scene.add(new THREE.Line(lg([0,0,0],[0,7,0]),lm(0x38bdf8)));
+  scene.add(new THREE.Line(lg([0,0,0],[0,0,7]),lm(0x34d399)));
+}
+
+function updateCam() {
+  const {theta,phi,radius}=spherical;
+  camera.position.set(radius*Math.sin(phi)*Math.cos(theta)+3, radius*Math.cos(phi)+1.5, radius*Math.sin(phi)*Math.sin(theta)+3);
+  camera.lookAt(3,1.5,3);
+}
+
+function onResize() {
+  const panel=document.getElementById('p3d');
+  const W=panel.clientWidth,H=panel.clientHeight;
+  camera.aspect=W/H; camera.updateProjectionMatrix();
+  renderer.setSize(W,H);
+}
+
+// Build cluster membership at step S
+function getMembership(s) {
+  const d=getData(), n=d.names.length;
+  const members={};
+  for(let i=0;i<n;i++) members[i]=[i];
+  for(let i=0;i<s;i++){
+    const st=d.steps[i];
+    const newId=n+i;
+    const m1=st.c1_members, m2=st.c2_members;
+    members[newId]=[...m1,...m2];
+    // remove old
+    const allKeys=Object.keys(members).map(Number);
+    for(const k of allKeys){
+      if(k!==newId && (m1.includes(members[k]?.[0]) && members[k]?.every(x=>m1.includes(x)))) { delete members[k]; break; }
+    }
+    // cleaner: track by sets
+  }
+  // Rebuild properly
+  const memB={};
+  for(let i=0;i<n;i++) memB[i]=new Set([i]);
+  for(let i=0;i<s;i++){
+    const st=d.steps[i];
+    const newId=n+i;
+    // find which current keys contain c1_members[0] and c2_members[0]
+    const allKeys=Object.keys(memB).map(Number);
+    let k1=-1,k2=-1;
+    for(const k of allKeys){
+      if(memB[k].has(st.c1_members[0])) k1=k;
+      if(memB[k].has(st.c2_members[0])) k2=k;
+    }
+    if(k1>=0&&k2>=0&&k1!==k2){
+      const merged=new Set([...memB[k1],...memB[k2]]);
+      delete memB[k1]; delete memB[k2];
+      memB[newId]=merged;
+    }
+  }
+  // Convert to arrays
+  const result=[];
+  for(const [k,v] of Object.entries(memB)) result.push([...v]);
+  result.sort((a,b)=>a[0]-b[0]);
+  return result;
+}
+
+let pulseT=0;
+function buildScene3D(highlightC1=null, highlightC2=null) {
+  // Remove old dots & ellipsoids
+  [...dotMeshes,...ellipsoids,...centroidLines].forEach(o=>scene.remove(o));
+  dotMeshes=[]; ellipsoids=[]; centroidLines=[];
+
+  const d=getData();
+  const pts=d.points;
+  const clusters=getMembership(step);
+  const maxA1=Math.max(...pts.map(p=>p.a1));
+  const maxA2=Math.max(...pts.map(p=>p.a2));
+  const maxA3=Math.max(...pts.map(p=>p.a3));
+  const scale=5.5;
+
+  function toV3(p){return new THREE.Vector3(p.a1/maxA1*scale,p.a2/maxA2*scale,p.a3/maxA3*scale);}
+
+  // Draw ellipsoids for each cluster
+  clusters.forEach((members,ci) => {
+    const color=new THREE.Color(COLORS[ci%COLORS.length]);
+    const isActive = highlightC1!==null && (
+      members.some(m=>highlightC1.includes(m)) || members.some(m=>highlightC2.includes(m))
+    );
+    const isMerging = highlightC1!==null && members.some(m=>highlightC1.includes(m)&&highlightC2.includes(m));
+
+    // Centroid
+    const centX=members.reduce((s,i)=>s+pts[i].a1/maxA1*scale,0)/members.length;
+    const centY=members.reduce((s,i)=>s+pts[i].a2/maxA2*scale,0)/members.length;
+    const centZ=members.reduce((s,i)=>s+pts[i].a3/maxA3*scale,0)/members.length;
+
+    // Std dev for ellipsoid radii
+    const stdX=Math.max(0.18,Math.sqrt(members.reduce((s,i)=>s+Math.pow(pts[i].a1/maxA1*scale-centX,2),0)/members.length));
+    const stdY=Math.max(0.18,Math.sqrt(members.reduce((s,i)=>s+Math.pow(pts[i].a2/maxA2*scale-centY,2),0)/members.length));
+    const stdZ=Math.max(0.18,Math.sqrt(members.reduce((s,i)=>s+Math.pow(pts[i].a3/maxA3*scale-centZ,2),0)/members.length));
+
+    const pulse = isMerging ? 1+0.15*Math.sin(pulseT*0.12) : 1;
+    const geo=new THREE.SphereGeometry(1,16,12);
+    const mat=new THREE.MeshBasicMaterial({color,transparent:true,opacity:isActive?0.18:0.08,side:THREE.DoubleSide});
+    const mesh=new THREE.Mesh(geo,mat);
+    mesh.scale.set(stdX*2.5*pulse,stdY*2.5*pulse,stdZ*2.5*pulse);
+    mesh.position.set(centX,centY,centZ);
+    scene.add(mesh); ellipsoids.push(mesh);
+
+    // Wireframe ring
+    const wgeo=new THREE.SphereGeometry(1,12,8);
+    const wmat=new THREE.MeshBasicMaterial({color,transparent:true,opacity:isActive?0.4:0.15,wireframe:true});
+    const wmesh=new THREE.Mesh(wgeo,wmat);
+    wmesh.scale.copy(mesh.scale);
+    wmesh.position.copy(mesh.position);
+    scene.add(wmesh); ellipsoids.push(wmesh);
+
+    // Dots
+    members.forEach(i=>{
+      const p=pts[i];
+      const v=toV3(p);
+      const isMergingDot=highlightC1&&(highlightC1.includes(i)||highlightC2?.includes(i));
+      const gd=new THREE.SphereGeometry(isMergingDot?0.18:0.1,8,6);
+      const md=new THREE.MeshBasicMaterial({color,transparent:true,opacity:isMergingDot?1:0.8});
+      const dm=new THREE.Mesh(gd,md);
+      dm.position.copy(v);
+      if(isMergingDot){
+        md.color.set(0xffffff);
+        const glowG=new THREE.SphereGeometry(0.3,8,6);
+        const glowM=new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.3});
+        const glowMesh=new THREE.Mesh(glowG,glowM);
+        glowMesh.position.copy(v);
+        scene.add(glowMesh); dotMeshes.push(glowMesh);
+      }
+      scene.add(dm); dotMeshes.push(dm);
+    });
+  });
+
+  // Draw centroid-to-centroid line for current merge
+  if(highlightC1&&highlightC2&&step>0){
+    const st=d.steps[step-1];
+    const c1pos=new THREE.Vector3(st.cent1[0]/maxA1*scale,st.cent1[1]/maxA2*scale,st.cent1[2]/maxA3*scale);
+    const c2pos=new THREE.Vector3(st.cent2[0]/maxA1*scale,st.cent2[1]/maxA2*scale,st.cent2[2]/maxA3*scale);
+    const geo=new THREE.BufferGeometry().setFromPoints([c1pos,c2pos]);
+    // dashed effect via segments
+    const mat=new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:0.9});
+    const line=new THREE.Line(geo,mat);
+    scene.add(line); centroidLines.push(line);
+
+    // Centroid dots
+    [c1pos,c2pos].forEach(pos=>{
+      const cg=new THREE.SphereGeometry(0.22,8,6);
+      const cm=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.9});
+      const cm2=new THREE.Mesh(cg,cm);
+      cm2.position.copy(pos);
+      scene.add(cm2); centroidLines.push(cm2);
+    });
+  }
+}
+
+let lastStep=-1;
+function animateThree() {
+  requestAnimationFrame(animateThree);
+  pulseT++;
+  if(step>0 && pulseT%3===0){
+    const st=getData().steps[step-1];
+    buildScene3D(st.c1_members,st.merged_members.filter(m=>!st.c1_members.includes(m)));
+  }
+  if(spinning) { spherical.theta+=0.004; updateCam(); }
+  renderer.render(scene,camera);
+}
+
+// ═══════════════════════════════════════════════════════════
+// DENDROGRAM
+// ═══════════════════════════════════════════════════════════
+let dcv, dctx, DW, DH;
+let nodePos={}, leafOrder=[], maxDist=0;
+const DPAD={top:28,bottom:88,left:26,right:72};
+
+function initDendro() {
+  const panel=document.getElementById('pdendro');
+  DW=panel.clientWidth; DH=panel.clientHeight;
+  dcv=document.getElementById('dendroCanvas');
+  dcv.width=DW; dcv.height=DH;
+  dctx=dcv.getContext('2d');
+  computeDendroLayout();
+}
+
+function computeDendroLayout() {
+  const d=getData(), n=d.names.length, Z=d.steps;
+  maxDist=Math.max(...Z.map(r=>r.dist));
+  nodePos={}; leafOrder=[];
+  function getOrder(nodeId){
+    if(nodeId<n){leafOrder.push(nodeId);return;}
+    const si=nodeId-n;
+    if(si>=Z.length)return;
+    getOrder(Z[si].c1_members[0]<n?Z[si].c1_members[0]:findRootOf(Z[si].c1_members[0],n,Z));
+    getOrder(Z[si].c2_members[0]<n?Z[si].c2_members[0]:findRootOf(Z[si].c2_members[0],n,Z));
+  }
+  function findRootOf(nodeId,n,Z){
+    // find the step index where this member first appears as a merged cluster
+    for(let i=0;i<Z.length;i++){
+      if([...Z[i].c1_members,...Z[i].c2_members].includes(nodeId) && Z[i].c1_members.includes(nodeId)&&Z[i].c1_members.length>1) return n+i;
+    }
+    return nodeId;
+  }
+  // Simpler: use the last step's full tree
+  function recurse(nodeId){
+    if(nodeId<n){leafOrder.push(nodeId);return;}
+    const si=nodeId-n;
+    const st=Z[si];
+    // find sub-roots
+    const r1=findSubRoot(st.c1_members,n,Z,si);
+    const r2=findSubRoot(st.c2_members,n,Z,si);
+    recurse(r1); recurse(r2);
+  }
+  function findSubRoot(members,n,Z,maxSi){
+    if(members.length===1) return members[0];
+    for(let i=maxSi-1;i>=0;i--){
+      if(Z[i].merged_members.length===members.length && members.every(m=>Z[i].merged_members.includes(m))) return n+i;
+    }
+    return members[0];
+  }
+  recurse(n+Z.length-1);
+  const leafX={};
+  leafOrder.forEach((li,pos)=>{leafX[li]=pos;});
+  function assignPos(nodeId){
+    if(nodeId<n){nodePos[nodeId]={x:leafX[nodeId],y:0,members:[nodeId]};return nodePos[nodeId];}
+    const si=nodeId-n;
+    if(si>=Z.length)return{x:0,y:0,members:[]};
+    const st=Z[si];
+    const r1=findSubRoot(st.c1_members,n,Z,si);
+    const r2=findSubRoot(st.c2_members,n,Z,si);
+    const p1=assignPos(r1)||{x:0,y:0,members:[]};
+    const p2=assignPos(r2)||{x:0,y:0,members:[]};
+    nodePos[nodeId]={x:(p1.x+p2.x)/2,y:st.dist,members:st.merged_members};
+    return nodePos[nodeId];
+  }
+  assignPos(n+Z.length-1);
+}
+
+function dX(dataX){return DPAD.left+(dataX/(leafOrder.length-1))*(DW-DPAD.left-DPAD.right);}
+function dY(dataY){return DPAD.top+(1-dataY/maxDist)*(DH-DPAD.top-DPAD.bottom);}
+
+function drawDendro() {
+  if(!dctx)return;
+  const panel=document.getElementById('pdendro');
+  DW=panel.clientWidth; DH=panel.clientHeight;
+  dcv.width=DW; dcv.height=DH;
+
+  dctx.clearRect(0,0,DW,DH);
+  const d=getData(), n=d.names.length, Z=d.steps;
+
+  // Grid lines
+  dctx.strokeStyle='rgba(26,45,71,0.5)'; dctx.lineWidth=0.5;
+  for(let i=0;i<=5;i++){
+    const y=DPAD.top+(i/5)*(DH-DPAD.top-DPAD.bottom);
+    dctx.beginPath();dctx.moveTo(DPAD.left,y);dctx.lineTo(DW-DPAD.right,y);dctx.stroke();
+    const val=maxDist*(1-i/5);
+    dctx.fillStyle='rgba(77,106,138,0.6)';dctx.font='8px DM Mono';dctx.fillText(val.toFixed(1),4,y+3);
+  }
+
+  // k cut lines
+  [2,3,4,5].forEach(k=>{
+    const cutIdx=n-k;
+    if(cutIdx>=0&&cutIdx<Z.length){
+      const dist=Z[cutIdx].dist;
+      const prevDist=cutIdx>0?Z[cutIdx-1].dist:0;
+      const cutDist=(dist+prevDist)/2;
+      const cy=dY(cutDist);
+      dctx.save();
+      dctx.setLineDash([4,3]);
+      dctx.strokeStyle=CUT_COLORS[k]+'66';
+      dctx.lineWidth=1;
+      dctx.beginPath();dctx.moveTo(DPAD.left,cy);dctx.lineTo(DW-DPAD.right,cy);dctx.stroke();
+      dctx.fillStyle=CUT_COLORS[k]+'aa';
+      dctx.font='bold 8px DM Mono';
+      dctx.fillText(`k=${k}`,DW-DPAD.right+3,cy+3);
+      dctx.restore();
+    }
+  });
+
+  // Build cluster color map
+  const clusters=getMembership(step);
+  function getLeafColor(li){
+    const ci=clusters.findIndex(cl=>cl.includes(li));
+    return ci>=0?COLORS[ci%COLORS.length]:'#1a2d47';
+  }
+
+  function findSubRoot(members,maxSi){
+    if(members.length===1)return members[0];
+    for(let i=maxSi-1;i>=0;i--){
+      if(Z[i].merged_members.length===members.length&&members.every(m=>Z[i].merged_members.includes(m)))return n+i;
+    }
+    return members[0];
+  }
+
+  function drawNode(nodeId,maxSi){
+    if(nodeId<n)return;
+    const si=nodeId-n;
+    if(si>=step)return; // not yet drawn
+    const st=Z[si];
+    const r1=findSubRoot(st.c1_members,si);
+    const r2=findSubRoot(st.c2_members,si);
+    drawNode(r1,si); drawNode(r2,si);
+    const p=nodePos[nodeId];
+    const p1=nodePos[r1]||{x:0,y:0};
+    const p2=nodePos[r2]||{x:0,y:0};
+    const isNew=si===step-1;
+    const ci=clusters.findIndex(cl=>st.merged_members.every(m=>cl.includes(m)));
+    const color=ci>=0?COLORS[ci%COLORS.length]:'#38bdf8';
+    const cx1=dX(p1.x),cy1=dY(p1.y),cx2=dX(p2.x),cy2=dY(p2.y),cyTop=dY(p.y);
+
+    dctx.save();
+    dctx.strokeStyle=isNew?'#ffffff':color;
+    dctx.lineWidth=isNew?2.5:1.5;
+    dctx.globalAlpha=isNew?1:0.7;
+    if(isNew){dctx.shadowBlur=10;dctx.shadowColor=color;}
+
+    // Gap fill — for big jumps make it visually thick
+    const prevDist=si>0?Z[si-1].dist:0;
+    const gap=st.dist-prevDist;
+    const gapNorm=gap/maxDist;
+    if(gapNorm>0.05){
+      dctx.save();
+      dctx.fillStyle=color+'22';
+      dctx.fillRect(DPAD.left,dY(st.dist)-2,DW-DPAD.left-DPAD.right,Math.max(2,gapNorm*(DH-DPAD.top-DPAD.bottom)*0.5));
+      dctx.restore();
+    }
+
+    dctx.beginPath();
+    dctx.moveTo(cx1,cy1);dctx.lineTo(cx1,cyTop);dctx.lineTo(cx2,cyTop);dctx.lineTo(cx2,cy2);
+    dctx.stroke();
+    if(isNew){
+      dctx.beginPath();dctx.arc((cx1+cx2)/2,cyTop,5,0,Math.PI*2);
+      dctx.fillStyle=color;dctx.fill();
+    }
+    dctx.restore();
+  }
+  drawNode(n+Z.length-1,Z.length);
+
+  // Leaf labels
+  leafOrder.forEach((li,pos)=>{
+    const cx=dX(pos),cy=dY(0);
+    const color=getLeafColor(li);
+    dctx.beginPath();dctx.arc(cx,cy,3,0,Math.PI*2);dctx.fillStyle=color;dctx.fill();
+    dctx.save();
+    dctx.translate(cx,cy+7);dctx.rotate(Math.PI/2);
+    dctx.fillStyle=color;
+    dctx.font=`${Math.max(7,Math.min(9,(DW-DPAD.left-DPAD.right)/d.names.length*0.85))}px DM Mono`;
+    dctx.textBaseline='middle';
+    dctx.fillText(d.names[li],0,0);
+    dctx.restore();
+  });
+
+  // Y axis label
+  dctx.save();dctx.translate(12,DH/2);dctx.rotate(-Math.PI/2);
+  dctx.fillStyle='rgba(77,106,138,0.6)';dctx.font='9px DM Mono';dctx.textAlign='center';
+  dctx.fillText('WARD DISTANCE',0,0);dctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// TIMELINE
+// ═══════════════════════════════════════════════════════════
+let tcv, tctx;
+
+function initTimeline() {
+  tcv=document.getElementById('timelineCanvas');
+  tctx=tcv.getContext('2d');
+}
+
+function drawTimeline() {
+  const panel=document.getElementById('ptimeline');
+  const inner=panel.querySelector('.timeline-inner');
+  const W=inner.clientWidth-32, H=inner.clientHeight-30;
+  tcv.width=W; tcv.height=H;
+  if(!tctx)return;
+  tctx.clearRect(0,0,W,H);
+
+  const d=getData();
+  const dists=d.steps.map(s=>s.dist);
+  const maxD=Math.max(...dists);
+  const n=dists.length;
+  const barW=Math.max(2,(W-n)/n);
+  const gap=W/n;
+
+  dists.forEach((dist,i)=>{
+    const x=i*gap;
+    const h=Math.max(2,(dist/maxD)*(H-4));
+    const y=H-h;
+    const isCurrent=i===step-1;
+    const isPast=i<step;
+    const isNext=i===step;
+
+    // Color based on distance magnitude
+    const t=dist/maxD;
+    const r=Math.round(56+t*(248-56));
+    const g=Math.round(189+t*(113-189));
+    const b=Math.round(248+t*(99-248));
+    const baseColor=`rgb(${r},${g},${b})`;
+
+    tctx.save();
+    if(isCurrent){
+      tctx.shadowBlur=12; tctx.shadowColor=baseColor;
+      tctx.fillStyle='#ffffff';
+    } else if(isPast){
+      tctx.fillStyle=baseColor;
+      tctx.globalAlpha=0.8;
+    } else if(isNext){
+      tctx.fillStyle=baseColor;
+      tctx.globalAlpha=0.35;
+    } else {
+      tctx.fillStyle=baseColor;
+      tctx.globalAlpha=0.15;
+    }
+    tctx.fillRect(x+1,y,Math.max(barW,gap-2),h);
+
+    // Big jump annotation
+    if(i>0){
+      const prevDist=dists[i-1];
+      const jump=dist-prevDist;
+      const jumpNorm=jump/maxD;
+      if(jumpNorm>0.08 && isPast){
+        tctx.globalAlpha=0.9;
+        tctx.strokeStyle=baseColor;
+        tctx.lineWidth=1;
+        tctx.setLineDash([2,2]);
+        tctx.beginPath();tctx.moveTo(x+gap/2,y-2);tctx.lineTo(x+gap/2,4);tctx.stroke();
+        tctx.fillStyle=baseColor;
+        tctx.font='8px DM Mono';
+        tctx.textAlign='center';
+        tctx.fillText('▲',x+gap/2,12);
+      }
+    }
+    tctx.restore();
+  });
+
+  // Current marker line
+  if(step>0){
+    const cx=(step-1)*gap+gap/2;
+    tctx.strokeStyle='rgba(255,255,255,0.6)';tctx.lineWidth=1;tctx.setLineDash([]);
+    tctx.beginPath();tctx.moveTo(cx,0);tctx.lineTo(cx,H);tctx.stroke();
+  }
+
+  // k labels on timeline
+  const n2=d.names.length;
+  [2,3,4,5].forEach(k=>{
+    const idx=n2-k;
+    if(idx>=0&&idx<dists.length){
+      const cx=idx*gap+gap/2;
+      tctx.fillStyle=CUT_COLORS[k]+'cc';
+      tctx.font='7px DM Mono';
+      tctx.textAlign='center';
+      tctx.fillText(`k=${k}`,cx,H-1);
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// INFO PANEL
+// ═══════════════════════════════════════════════════════════
+function updateInfo() {
+  const d=getData();
+  const total=d.steps.length;
+  const k=d.names.length-step;
+
+  document.getElementById('stepBadge').textContent=`${step} / ${total}`;
+  document.getElementById('ipStep').textContent=`STEP ${step} / ${total}`;
+  document.getElementById('ipK').textContent=k;
+
+  if(step===0){
+    document.getElementById('ipMerge').textContent=`${d.names.length} individual countries`;
+    document.getElementById('ipDist').textContent='—';
+    document.getElementById('ipSize').textContent='—';
+    document.getElementById('distBar').style.width='0%';
+    document.getElementById('distBar').style.background='var(--dist-lo)';
+  } else {
+    const st=d.steps[step-1];
+    const maxD=Math.max(...d.steps.map(s=>s.dist));
+    const c1n=st.c1_size===1?d.names[st.c1_members[0]]:`Group(${st.c1_size})`;
+    const c2n=st.c2_size===1?d.names[st.c2_members[0]]:`Group(${st.c2_size})`;
+    document.getElementById('ipMerge').textContent=`${c1n} + ${c2n}`;
+    document.getElementById('ipDist').textContent=st.dist.toFixed(4);
+    document.getElementById('ipSize').textContent=`${st.merged_members.length} countries`;
+    const pct=(st.dist/maxD*100).toFixed(0);
+    const t=st.dist/maxD;
+    const r=Math.round(52+t*(248-52));
+    const g=Math.round(211+t*(113-211));
+    const b=Math.round(153+t*(99-153));
+    document.getElementById('distBar').style.width=pct+'%';
+    document.getElementById('distBar').style.background=`rgb(${r},${g},${b})`;
+
+    // Flash
+    const flash=document.getElementById('mergeFlash');
+    const color=COLORS[(getMembership(step).findIndex(cl=>st.merged_members.every(m=>cl.includes(m))))%COLORS.length];
+    document.getElementById('mfTitle').textContent=`${c1n} ∪ ${c2n}`;
+    document.getElementById('mfTitle').style.color=color||'#fff';
+    document.getElementById('mfSub').textContent=`Ward Δ = ${st.dist.toFixed(4)}`;
+    flash.style.opacity='1';
+    setTimeout(()=>flash.style.opacity='0',1200);
+  }
+
+  // K chips
+  const clusters=getMembership(step);
+  document.getElementById('kChips').innerHTML=clusters.map((cl,ci)=>{
+    const c=COLORS[ci%COLORS.length];
+    return `<span class="kchip" style="color:${c};border-color:${c}33">${cl.length}</span>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// CONTROLS
+// ═══════════════════════════════════════════════════════════
+function goToStep(s){
+  step=Math.max(0,Math.min(getData().steps.length,s));
+  const d=getData();
+  if(step>0){
+    const st=d.steps[step-1];
+    buildScene3D(st.c1_members,st.c2_members);
+  } else {
+    buildScene3D(null,null);
+  }
+  drawDendro();
+  drawTimeline();
+  updateInfo();
+}
+
+function stepBy(d){goToStep(step+d);}
+function goToEnd(){goToStep(getData().steps.length);}
+
+function togglePlay(){
+  if(playing){
+    playing=false;clearInterval(playTimer);
+    document.getElementById('btnPlay').textContent='▶ PLAY';
+    document.getElementById('btnPlay').classList.add('primary');
+  } else {
+    if(step>=getData().steps.length)goToStep(0);
+    playing=true;
+    document.getElementById('btnPlay').textContent='⏸ PAUSE';
+    document.getElementById('btnPlay').classList.remove('primary');
+    const spd=parseInt(document.getElementById('speedSlider').value);
+    const delay=[900,550,300,140,55][spd-1];
+    playTimer=setInterval(()=>{
+      if(step>=getData().steps.length){togglePlay();return;}
+      stepBy(1);
+    },delay);
+  }
+}
+
+function onSpeedChange(){
+  if(playing){togglePlay();togglePlay();}
+}
+
+function setFW(f){
+  fw=f;
+  if(playing)togglePlay();
+  document.querySelectorAll('.fwb').forEach((b,i)=>b.classList.toggle('on',(i===0&&f==='h2')||(i===1&&f==='ccu')));
+  step=0;
+  computeDendroLayout();
+  buildScene3D(null,null);
+  drawDendro();
+  drawTimeline();
+  updateInfo();
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+window.addEventListener('load',()=>{
+  initThree();
+  initDendro();
+  initTimeline();
+  buildScene3D(null,null);
+  drawDendro();
+  drawTimeline();
+  updateInfo();
+});
+
+window.addEventListener('resize',()=>{
+  computeDendroLayout();
+  drawDendro();
+  drawTimeline();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+{
+  "round": 2,
+  "evaluated_at": "2026-04-25T09:30:00Z",
+  "evaluator": "team-lead",
+  "context": "Round 2 closure synthesis. Inputs: 102 manifest entries, 87 documents.jsonl, 149 uae_belem_indicators, 39 ndc_adaptation_sections, 17 chair_metadata, 298 extraction_targets, two-prof critique (Policy 3.8, IR 3.9).",
+  "gates": {
+    "G1_data_coverage": {
+      "status": "partial_pass",
+      "value": 0.62,
+      "target": 0.80,
+      "delta_from_round1": "+0.44",
+      "computation": "manifest 102/expected 165 (Round 1 expected 40 → Round 3 target 165 with historical presidency letters + realist baseline + non-state actors). Source diversity: cop30_curated 20 + ipcc 4 + ndc 53 + korean_gov 3 + brazilian_gov 4 + iisd_enb 4 + nature 1 + cop30_official 2 = 91 successful. Refinement 87/91 schema-pass = 95.2%. Round 2 raw acceptance only. Numerator 102 manifest / denominator 165 target = 0.618.",
+      "previous_value": 0.18,
+      "previous_status": "fail",
+      "note": "Round 1 fatal gap (UNFCCC 0건) resolved. Curated UNFCCC 20 + NDC 53 + Korean MOFA 3 + Brazilian Planalto 4 + ENB 4 = +84 docs. Round 3 target +63 (historical presidency letters 50 + realist baseline 4 datasets + JT-ADAPT non-state actors 5-10) → expected 0.91+ at Round 3 close.",
+      "diagnostics": {
+        "by_source_count": {"cop30_curated": 20, "ndc": 53, "ipcc": 4, "iisd_enb": 4, "korean_gov": 3, "brazilian_gov": 4, "cop30_official": 2, "nature": 1, "other_unfccc": 11},
+        "by_country_unique": 56,
+        "by_group_detected": 11,
+        "schema_pass_rate": 0.952
+      }
+    },
+    "G2_evidence_grounding": {
+      "status": "partial_pass",
+      "value": 0.84,
+      "target": 0.90,
+      "delta_from_round1": "+0.24",
+      "computation": "Evidence chain: 87 docs with paragraph-level extraction (avg 48 paragraphs/doc), 149 indicators with source_seq_id and source_doc_id, 39 NDC adaptation sections with country_iso3 + group memberships, 17 chair_metadata with procedural_phrases linked to source. Coverage: country-level stance traceable for 56 countries (target 20 CINA core ≥ 100% met for 18/20 — only TUV·KIR missing). Per-claim evidence_quote available in indicators (149) and procedural records (17). Outstanding gap: Stage 1 LLM evidence_quote not yet generated (rule-based scoring only).",
+      "previous_value": 0.60,
+      "previous_status": "partial",
+      "note": "Refinement chain intact for 87 docs. Country-level stance traceable for 56/20 CINA-core (90%+). 149 indicators source-traceable. Outstanding: 31% indicator noise (CR3.3 fix Round 3) + LLM evidence_quote pending (Round 4 P0). Round 3 fixes raise to 0.92+."
+    },
+    "G3_theory_grounding": {
+      "status": "partial_pass",
+      "value": 0.78,
+      "target": 0.80,
+      "delta_from_round1": "+0.13",
+      "computation": "Schema v1.3 hard-wires Hood NATO 4축 (instrument_signals: nodality/authority/treasure/organization), frame_type 5분류 (scientific/justice/sovereignty/security/development/mixed), salience_score, procedural_signals. Stage 2 features v2 adds chair_status + pen_holder + drafts_text edge. References absorbed: Hood 2007, Howlett 2019, Salamon 2002 (policy science) + Tallberg 2010, Finnemore-Sikkink 1998, Hochstetler 2012, Allan 2019, Bayer-Urpelainen 2013, Beach-Pedersen 2019 (IR). Outstanding gap: MLG (Hooghe-Marks 2003) not absorbed (CR3.5), Sabatier ACF unmapped, Krippendorff unit definition violation in indicators 31% noise.",
+      "previous_value": 0.65,
+      "previous_status": "partial",
+      "note": "Policy 4.0/5 + IR 4.0/5 = mean 4.0/5 = 0.80 baseline. Additional -0.02 for MLG gap + ACF unmapped. Round 3 task T03/T04 absorb gaps → target 0.85+ at Round 3 close."
+    },
+    "G4_dual_review": {
+      "status": "pass",
+      "value": 0.77,
+      "target": 0.60,
+      "delta_from_round1": "+0.16",
+      "computation": "Policy 3.8/5 + IR 3.9/5 = combined 3.85/5 normalized → 0.77. Two-prof rubric all 5 dimensions ≥ 3.0/5 for both: Policy {Theo 4, Method 3.5, Empirical 4, Strategic 3, Repro 4.5}, IR {Theo 4, Method 3.5, Empirical 3.5, Strategic 4, Repro 4.5}. No dimension below 3.0. R&R minor revision phase entered.",
+      "previous_value": 0.61,
+      "previous_status": "partial",
+      "note": "Combined 3.05 → 3.85 (+0.80). Both professors elevated by ≥ +0.6. Empirical validity dimension drove increase (Policy 2→4 +2.0, IR 2.5→3.5 +1.0). Threshold 0.60 cleared by wide margin."
+    },
+    "G5_heedo_alignment": {
+      "status": "pass",
+      "value": 1.0,
+      "target": 1.0,
+      "delta_from_round1": "0",
+      "computation": "All 4 Heedo directives upheld in Round 2: (1) publishable-grade target — G4 3.85 = R&R minor revision; (2) COP30 retrospective validation — Belém Package L.24/L.25/L.25E + UAE-Belém 9a-e + chair_metadata directly secured; (3) dual-track — Korean MOFA 3 + KEI Working Paper queued for Track A, Brazilian Planalto + Plano Clima for Track B; (4) LLM-GNN-LLM novelty — schema v1.3 + features v2 + R-GAT drafts_text edge maintain pipeline integrity, Stage 1 LLM activation prepared for Round 4.",
+      "previous_value": 1.0,
+      "previous_status": "pass",
+      "note": "Constitution check 4/4 PASS. Cross-review §4 verified. No Round 3 task violates any directive."
+    }
+  },
+  "overall_assessment": {
+    "round_2_closure_recommendation": "approved_with_round_3_remediation",
+    "rationale": "G4 cleared by wide margin (0.77 vs 0.60). G1 G2 G3 partial-pass with clear remediation paths in Round 3 task assignments (CR3.1~CR3.8). Round 1 P0 recommendations all produced empirical evidence. Convergence counter 0/3 (8 new gaps identified in Round 2 — non-convergence expected at Round 5-6).",
+    "passing_gates": ["G4_dual_review", "G5_heedo_alignment"],
+    "partial_passing_gates": ["G1_data_coverage", "G2_evidence_grounding", "G3_theory_grounding"],
+    "failing_gates": [],
+    "round_3_targets": {
+      "G1": 0.91,
+      "G2": 0.92,
+      "G3": 0.85,
+      "G4": 0.82,
+      "G5": 1.0
+    }
+  },
+  "round_3_task_priorities": [
+    "CR3.1 historical presidency letters +50 (T01 P0)",
+    "CR3.2 frame_type justice/development rhetorical signature (T02 P0)",
+    "CR3.3 indicator kind 분화 + toc 자동 라벨링 (T02 P0)",
+    "CR3.4 NATO 4축 discriminating keyword + TF-IDF (T02 P0)",
+    "CR3.5 JT-ADAPT non-state actors 5-10 (T01 P1)",
+    "CR3.6 realist baseline B0 (GDP/CO2/Mil/Alliance) (T01 P0)",
+    "CR3.7 Korean MOE NAP retry + KEI Working Paper (T01 P0)",
+    "CR3.8 Stage 1 LLM activation prep (T02 prep, Round 4 P0)"
+  ],
+  "heedo_decisions_pending_for_round_3": [
+    {"id": "HEEDO-4", "topic": "Stage 1 LLM activation (Round 4 P0)", "cost": "~$10/trial", "blocking": false},
+    {"id": "HEEDO-5", "topic": "Task E (IRR) protocol officialization", "blocking": false},
+    {"id": "HEEDO-7", "topic": "Castro 2025 supplementary academic email contact", "blocking": false}
+  ]
+}

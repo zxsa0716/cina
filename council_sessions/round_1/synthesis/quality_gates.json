@@ -1,0 +1,62 @@
+{
+  "round": 1,
+  "evaluated_at": "2026-04-25T05:00:00Z",
+  "evaluator": "team-lead",
+  "rubric_version": "council_protocol_v1",
+  "gates": {
+    "G1_data_coverage": {
+      "status": "fail",
+      "value": 0.18,
+      "target": 0.80,
+      "rationale": "7/40 expected docs collected. Static sources (IPCC AR6 4 chapters, COP30 official 2 pages, Castro article 1) succeeded; dynamic JS sources (UNFCCC submissions, NDC Registry, IISD ENB) returned 0 documents. UNFCCC submission, NDC adaptation sections, ENB daily summaries — all P0 sources for Stage 1 stance extraction — are absent.",
+      "blocker": "Dynamic-site rendering bypassed by BeautifulSoup; Playwright/Selenium required.",
+      "remediation": "Round 2 T01: Playwright headless browser integration; expand to 70-100 docs via collector matrix CR5."
+    },
+    "G2_evidence_grounding": {
+      "status": "partial",
+      "value": 0.60,
+      "target": 0.90,
+      "rationale": "Refinement output (754 paragraphs from 7 docs) all carry source IDs and paragraph anchors; both professor packs cite evidence quotes with document IDs. However, the corpus itself is too narrow: zero country-level negotiation positions means no stance triples can be evidenced yet. Evidence_quote chain is intact for what exists, but the empirical base is missing.",
+      "blocker": "Same as G1 — without UNFCCC submissions, no country×issue stance evidence.",
+      "remediation": "Round 2 refinement v1.3 schema applied to expanded corpus."
+    },
+    "G3_theory_grounding": {
+      "status": "partial",
+      "value": 0.65,
+      "target": 0.80,
+      "rationale": "Two professors evaluated theory grounding. IR-Political: 3.5/5 (IR canon citations adequate; paradigm balance lacking — realism/constructivism explicitly excluded). Policy-Sci: 3.0/5 (IR theory present but policy-science core — instrument theory, MLG, implementation gap, policy transfer — absent). Mean 3.25/5 = 0.65. Specific gaps documented: NATO 4-axis instrument typology, frame_type variable, salience asymmetry, chairmanship procedural power, realist null model — none currently in CINA framework.",
+      "blocker": null,
+      "remediation": "Round 2 schema v1.3 absorbs CR1 (instrument + frame + salience). Round 3 absorbs CR2 (chair power) into Stage 2 graph. Realist B0 baseline added to evaluation Round 3."
+    },
+    "G4_dual_review": {
+      "status": "partial",
+      "value": 0.61,
+      "target": 0.60,
+      "rationale": "Dual review completed by both professors. Mean rubric: Policy-Sci 2.8/5, IR-Political 3.3/5. Policy-Sci is below the council-protocol threshold of 3/5 (= 0.60), but only by 0.04. IR clears. Aggregated mean (3.05/5 = 0.61) clears the threshold marginally. Productive disagreement on 5 issues documented in cross_review.md §3 with assigned resolutions. No reviewer recommended reject; both recommended major revision tied to Round 2-3 deliverables.",
+      "blocker": "Policy-Sci rubric below threshold driven by Empirical 2/5 + Policy-relevance 2/5 — both will rise once data corpus expands and Korean-ministry cross-walk added.",
+      "remediation": "Round 2: schema v1.3 + collector matrix; Round 3: re-evaluate with both professors after refinement."
+    },
+    "G5_heedo_alignment": {
+      "status": "pass",
+      "value": 1.00,
+      "target": 1.00,
+      "rationale": "All Round 1 work adheres to four constitutional directives: (1) publishable-grade methodology (infrastructure-level standards: sha256, license tracking, identifier registry, prompt versioning); (2) COP30 Belém Adaptation Indicators retrospective validation as primary case (all professor critiques anchor to this); (3) dual-track preserved (deliverables/ vs docs/ untouched); (4) LLM-GNN-LLM novelty intact (Stage 1 schema enrichment, Stage 2 graph variables, Stage 3 briefing all advanced, none replaced). Productive disagreements between professors do not threaten the constitution; cross_review.md §5 verifies all proposed enrichments are constitution-aligned.",
+      "blocker": null,
+      "remediation": null
+    }
+  },
+  "round_1_close_decision": "approve_with_round_2_remediation",
+  "round_1_close_rationale": "G5 pass + G3/G4 partial pass + G1/G2 fail with clear remediation path. Two-professor consensus that Round 1 is foundational, not validation. Closing Round 1 now allows Round 2 to focus on (i) Playwright collection + matrix CR5 (70-100 docs), (ii) schema v1.3 (instrument + frame + salience), (iii) chair_status + pen_holder + drafts_text variables. No constitutional violation detected; Heedo escalation needed only on D1 (scope expansion to implementation cycle) and infrastructure approvals (Playwright binary, ENB academic contact).",
+  "next_round_focus": [
+    "G1 → 0.80 via Playwright + collection matrix",
+    "G2 → 0.90 via schema v1.3 evidence chain on expanded corpus",
+    "G3 → 0.80 via instrument/frame/salience absorption",
+    "G4 → 0.70+ via re-evaluation after empirical base materializes",
+    "G5 → 1.00 maintained (verified in cross_review §5)"
+  ],
+  "heedo_decisions_required": [
+    "HEEDO-1: CINA scope expansion to policy-cycle implementation (Task E, outcome edges) — recommended: accept",
+    "HEEDO-2: Playwright headless browser approval (~200MB Chromium) — recommended: accept",
+    "HEEDO-3: IISD ENB academic-use prior notification (CC BY-NC-SA) — recommended: accept"
+  ]
+}
