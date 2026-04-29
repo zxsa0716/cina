@@ -1,0 +1,81 @@
+MIT License (Code) + CC BY 4.0 (Documentation & Data)
+
+CINA: Climate Issue-Network Analysis Framework
+Copyright (c) 2026 Heedo, Kookmin University Department of Climate Technology Convergence
+
+================================================================================
+PART A — MIT LICENSE (applies to all code in src/, .claude/, *.py)
+================================================================================
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+================================================================================
+PART B — CC BY 4.0 (applies to docs/, deliverables/, council_sessions/)
+================================================================================
+
+This work (documentation, briefs, deliverables, council sessions) is licensed
+under the Creative Commons Attribution 4.0 International License.
+
+  https://creativecommons.org/licenses/by/4.0/
+
+You are free to:
+  - Share — copy and redistribute the material in any medium or format
+  - Adapt — remix, transform, and build upon the material for any purpose,
+            even commercially.
+
+Under the following terms:
+  - Attribution — You must give appropriate credit, provide a link to the
+                  license, and indicate if changes were made.
+
+Citation:
+  Heedo (2026). CINA: Climate Issue-Network Analysis Framework.
+  Kookmin University Department of Climate Technology Convergence.
+  https://github.com/[USERNAME]/cina
+
+================================================================================
+PART C — Third-Party Data (data/raw/ — NOT in this repository)
+================================================================================
+
+Raw collected documents in data/raw/ are subject to their own licenses:
+  - UNFCCC documents: UN Open License
+  - NDC Registry: Sovereign / UN Open
+  - IISD ENB: CC BY-NC-SA 4.0
+  - Castro et al. 2025 ENB Dataset: CC BY-NC-SA 4.0 (via SWISSUbase)
+  - IPCC AR6: IPCC Open Use
+  - OWID CO2: CC BY 4.0
+  - ND-GAIN / IMF: CC BY 4.0
+  - PRIMAP-hist: CC BY-NC-SA 4.0
+  - WRI Climate Watch: CC BY 4.0
+  - Brazilian Plano Clima: Public statement (Brazilian Federal Government)
+  - Korean MOFA / MOE: 공공누리 1유형
+  - Carbon Brief: CC BY-NC-ND 4.0
+
+See data/manifest/manifest.jsonl for per-file license tracking (license,
+license_attribution, sha256). Refer to original sources for full terms.
+
+================================================================================
+NO WARRANTY for outputs (briefings, IRR estimates, predictions)
+================================================================================
+
+CINA outputs (e.g., ministerial briefings, IRR estimates, coalition predictions)
+are research artifacts. They DO NOT constitute official government positions,
+policy advice, or operational diplomatic guidance. Users assume all risk in
+applying outputs.
+
+================================================================================

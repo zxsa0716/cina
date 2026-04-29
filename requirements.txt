@@ -1,0 +1,41 @@
+# CINA: Climate Issue-Network Analysis Framework v2.0
+# Python ≥ 3.11
+
+# ── LLM & API ──────────────────────────────────────────────────────────
+anthropic>=0.34.0
+pydantic>=2.6.0
+
+# ── Scientific computing ───────────────────────────────────────────────
+numpy>=1.26.0
+scipy>=1.11.0
+pandas>=2.1.0
+scikit-learn>=1.4.0
+
+# ── Graph / GNN ────────────────────────────────────────────────────────
+networkx>=3.2
+python-igraph>=0.11.3
+leidenalg>=0.10.1
+torch>=2.2.0
+torch_geometric>=2.5.0
+
+# ── Text processing ────────────────────────────────────────────────────
+rapidfuzz>=3.6.0           # fuzzy matching for evidence verification
+pymupdf>=1.24.0            # PDF text extraction
+langdetect>=1.0.9
+beautifulsoup4>=4.12.3
+requests>=2.31.0
+ratelimit>=2.2.1
+tenacity>=8.2.3            # retry with exponential backoff
+filelock>=3.13.0           # atomic council state writes
+
+# ── Visualization ──────────────────────────────────────────────────────
+matplotlib>=3.8.0
+seaborn>=0.13.0
+plotly>=5.18.0
+
+# ── Dev ────────────────────────────────────────────────────────────────
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+black>=24.1.0
+ruff>=0.2.0
+jupyter>=1.0.0

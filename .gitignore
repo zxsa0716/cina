@@ -1,0 +1,104 @@
+# API keys and secrets
+.env
+.env.*
+*.pem
+*.key
+secrets/
+*.token
+*credentials*
+
+# LLM provider keys (extra defense)
+**/anthropic_*.txt
+**/openai_*.txt
+**/gemini_*.txt
+**/groq_*.txt
+
+# Data artifacts (raw and processed; public release via Zenodo separately)
+data/raw/
+data/processed/
+data/llm_logs/
+data/calibration/*.pkl
+data/runs/
+!data/.gitkeep
+!data/README.md
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb.bak
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Model artifacts (≥ 100MB should use Git LFS, else exclude)
+*.pkl
+*.npy
+*.pt
+*.pth
+runs/                         # TensorBoard logs
+
+# CINA specific
+.cina_collect_state.json
+.claude/logs/
+deliverables/*.pdf            # final compiled deliverables rebuilt from source
+
+# Allow deliverables source markdown
+!deliverables/*.md
+
+# Allow placeholder files
+!.gitkeep
+
+# Council session memory (MCP-managed, may contain prompts)
+council_sessions/.memory_graph.json
+council_sessions/.council_memory.json
+
+# PDF/CSV/ZIP data already excluded via data/raw/ rule
+# but extra safety:
+*.pdf
+*.csv
+*.zip
+!docs/**/*.pdf
+!deliverables/*.csv
+
+# Large baseline data
+data/raw/round*/
+data/raw/tier*/
+data/raw/historical_chair/
+
+# Claude Code internal files
+.claude/logs/
+.claude/cache/
+
+# Python wheel cache
+*.whl
+
+# Build artifacts
+build/
+dist/
+*.egg
+
+# Anthropic-specific (deprecated, keep just in case)
+.anthropic/
+anthropic.json
