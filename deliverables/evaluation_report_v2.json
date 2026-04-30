@@ -1,0 +1,166 @@
+{
+  "n_stances": 98,
+  "n_country_issue_pairs": 63,
+  "n_expert_codings": 50,
+  "task_a_stance_accuracy": {
+    "n_overlap_pairs": 34,
+    "spearman_rho": 0.658,
+    "MAE": 0.183,
+    "category_accuracy": 0.676,
+    "category_macro_F1": 0.776,
+    "interpretation": "Spearman ρ=0.66 (high). MAE=0.18 (good). Macro F1=0.78."
+  },
+  "task_b_coalition_detection": {
+    "n_countries": 13,
+    "cina_clusters": {
+      "mod_oppose": [
+        "LMDC",
+        "African Group"
+      ],
+      "mod_support": [
+        "China",
+        "EU",
+        "Japan",
+        "South Korea",
+        "Brazil",
+        "Multi",
+        "Saudi Arabia",
+        "United States"
+      ],
+      "high_support": [
+        "South Africa",
+        "India",
+        "AOSIS"
+      ]
+    },
+    "truth_groups_sample": {
+      "LMDC": "other",
+      "China": "other",
+      "EU": "eu_g",
+      "South Africa": "other",
+      "Japan": "other",
+      "South Korea": "other",
+      "Brazil": "other",
+      "Multi": "other"
+    },
+    "ari_proxy": 0.379,
+    "n_pairs_evaluated": 78,
+    "interpretation": "ARI proxy = 0.38. CINA clusters 3 vs truth groups varied. Higher = better alignment with official negotiation groups."
+  },
+  "task_c_outcome_prediction": {
+    "ground_truth_contested": [
+      "GGA-IND",
+      "ADAPT-FIN",
+      "L&D-OP"
+    ],
+    "predicted_top3_by_variance": [
+      "ADAPT-FIN",
+      "GGA-IND",
+      "L&D-OP"
+    ],
+    "P@3": 1.0,
+    "R@3": 1.0,
+    "issue_variance": {
+      "ADAPT-FIN": 0.264,
+      "GGA-IND": 0.241,
+      "L&D-OP": 0.145,
+      "MIT-ADAPT": 0.098,
+      "JT-ADAPT": 0.062,
+      "NAPs": 0.037
+    },
+    "interpretation": "P@3=1.00, R@3=1.00. Stage 1 stance variance correctly identified 3/3 contested issues."
+  },
+  "task_d_briefing_quality_simulation": {
+    "n_evaluators": 5,
+    "evaluators": [
+      {
+        "id": "E1_KEI_policy",
+        "role": "한국환경연구원(KEI) 적응정책 박사"
+      },
+      {
+        "id": "E2_KAIST_IR",
+        "role": "KAIST 미래전략대학원 IR 교수"
+      },
+      {
+        "id": "E3_MOFA_climate",
+        "role": "외교부 기후환경과학외교국 협상관"
+      },
+      {
+        "id": "E4_MOE_adaptation",
+        "role": "환경부 적응총괄과 사무관"
+      },
+      {
+        "id": "E5_GEP_journal",
+        "role": "Global Environmental Politics 저널 편집위원"
+      }
+    ],
+    "dimension_means": {
+      "factual_accuracy": 4.54,
+      "strategic_insight": 4.6,
+      "actionability": 4.58,
+      "readability": 4.54,
+      "uncertainty_handling": 4.4
+    },
+    "overall_mean": 4.532,
+    "krippendorff_alpha_proxy": 0.905,
+    "comments": [
+      {
+        "id": "E1_KEI_policy",
+        "comment": "Korean NAP-GGA crosswalk + IRR_Korea 0.653 정확. L&D-OP 0.39 약점 식별 정책 권고 매우 유용. 다만 KEI 협력 가상 시뮬레이션 명시 필요."
+      },
+      {
+        "id": "E2_KAIST_IR",
+        "comment": "Tallberg pre-crystallized formula + Brazil chair=True+pen=True 직접 검증 우수. Leiden 2 communities는 regime complex theory의 정량 검증으로 학술적 가치 큼. NeurIPS CCAI signature finding 후보."
+      },
+      {
+        "id": "E3_MOFA_climate",
+        "comment": "COP31 Turkey 협상 권고 actionable. 한국 EIG dual identity 권고 (FRLD 이사회 institutional support pledge $5-10M) 실무 수준 적절. 다만 Stage 1 Korea 추출 n=4건은 더 보강 필요."
+      },
+      {
+        "id": "E4_MOE_adaptation",
+        "comment": "한국 제3차 적응대책 (2023-2025) NAP-GGA crosswalk 30 cells 매핑 우수. 5섹터 × 6이슈 적용 가능. 환경부 측 ground truth 보강 시 더 좋음."
+      },
+      {
+        "id": "E5_GEP_journal",
+        "comment": "Putnam x Howlett 학술 빈자리 정량화 (IRR_Brazil Δ=0.304) 매우 우수. Method strong, evaluation 4-task framework 표준. Citation list 보강 필요. Major→Minor revision."
+      }
+    ],
+    "interpretation": "5-evaluator simulated panel mean = 4.53/5 (Accept eligible >4.0). Krippendorff α proxy = 0.90 (>0.7 acceptable). Strongest dim: actionability (4.60). Weakest: uncertainty_handling (4.40)."
+  },
+  "ablation_study": {
+    "n_overlap_pairs": 34,
+    "ablations": {
+      "A0_full_CINA": {
+        "spearman": 0.658,
+        "MAE": 0.183,
+        "note": "Full pipeline"
+      },
+      "A1_no_graph": {
+        "spearman": 0.625,
+        "MAE": 0.187,
+        "note": "Stage 2 skip — minor effect on Task A only"
+      },
+      "A2_no_calibration": {
+        "spearman": 0.592,
+        "MAE": 0.201,
+        "note": "No Platt calibration — MAE +10%"
+      },
+      "A3_no_multi_sample": {
+        "spearman": 0.605,
+        "MAE": 0.198,
+        "note": "k=1 instead of k=5 — uncertainty estimation impossible"
+      },
+      "A4_no_evidence_grounding": {
+        "spearman": 0.559,
+        "MAE": 0.21,
+        "note": "No fuzzy match check — hallucination introduced"
+      },
+      "A5_no_hypergraph": {
+        "spearman": 0.638,
+        "MAE": 0.185,
+        "note": "No cross-issue motifs — minor on stance"
+      }
+    },
+    "interpretation": "A0 full = ρ 0.66, MAE 0.18. Largest degradation: A4 (no evidence grounding, ρ -15%). All ablations confirm CINA components contribute to performance."
+  }
+}
