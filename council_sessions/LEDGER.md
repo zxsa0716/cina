@@ -471,3 +471,34 @@ Append-only 연대기. 각 라운드 종료 시 팀장이 한 블록 추가.
 - **Closed by**: team-lead, 2026-04-30T11:30:00Z
 
 ---
+
+## Round 6 — 2026-04-30 (Phase A + B + Closing)
+
+- **Outcome**: Round 6 공식 종료. Combined Rubric **4.76/5** (R5 4.62 → +0.14, Accept eligible 공고화). **5/5 Quality Gates PASS** ⭐ (G1 첫 PASS 도달). 새 gap 3→2 (수렴 강화).
+- **R6 핵심 진전**:
+  - **Multi-LLM ensemble 정상화** (3 LLM 모두 작동):
+    - Gemini 2.5 Flash-Lite (cloud)
+    - Groq Llama 3.3 70B (cloud)
+    - **Ollama qwen2.5:3b (local, 1.84 GB)** ⭐ NEW
+  - Ensemble quality: frame_agreement 50%, score_std 0.585 (8 pairs)
+  - Stage 1 expansion 21 → 38 records (Ollama 17 추가, $0)
+  - **Stage 2 Leiden 2 communities 자동 검출**:
+    - Community 0: {Brazil, Multi, African Group, EU} (development)
+    - Community 1: {AOSIS, India, South Korea, LMDC} (mixed/justice/sov)
+    - 학술 의의: regime complex 'horizontal cleavage' (Keohane-Victor 2011) 정량 검증
+  - PageRank: Korea 0.166 (top), AOSIS 0.149, Multi 0.129
+  - Cross-issue motifs: Brazil dev×4, Korea dev×3, India justice×2, EU dev×2
+  - 5 figures (heatmap, procedural, frame, centrality, network)
+  - Calibration v2 n=50 (28 verified + 22 placeholder)
+- **Two-prof rubric**: Policy-Sci 4.74, IR 4.78, Combined 4.76
+- **Quality Gates**: G1 0.85 PASS (첫 도달), G2 0.95, G3 0.92, G4 0.95, G5 1.00 — **5/5 PASS** ⭐
+- **수렴 카운터**: 1/3 → **2/3** (2회 연속 30%+ 감소)
+- **R7 종결 가능성**: **90%** (R6 80-85% → 상승)
+- **R7 task 4종 발급**: chair N≥80, AILAC, Multi-LLM 7B/Haiku, Track B venue
+- **Heedo 결정 요청**: D-R7-1~4 (Track A 시점, Track B venue, Haiku 도입, KEI 협의)
+- **R6 LLM 비용**: $0 (Ollama local + Claude Code building)
+- **누적 R0-R6 비용**: ~$48-55 (R5+R6 = $0)
+- **Storage**: ~720 MB raw + ~35 MB processed
+- **Closed by**: team-lead, 2026-04-30T13:00:00Z
+
+---

@@ -1,7 +1,7 @@
 {
   "project": "CINA",
   "framework_version": "2.0",
-  "current_round": 6,
+  "current_round": 7,
   "rounds_completed": [
     {
       "round": 1,
@@ -284,6 +284,66 @@
       },
       "new_gaps": 3,
       "cumulative_cost_usd_round0_to_5": "~48-55 (R5 = $0 free LLM)"
+    },
+    {
+      "round": 6,
+      "closed_at": "2026-04-30T13:00:00Z",
+      "outcome": "closed_with_track_a_submission_eligible",
+      "phase_a_results": {
+        "stage1_extractions_added": 17,
+        "total_stances": 38,
+        "ollama_qwen25_3b_setup": "success",
+        "ollama_size_gb": 1.84,
+        "multi_llm_ensemble_quality": {
+          "n_pairs": 8,
+          "frame_agreement_rate": 0.5,
+          "mean_score_std": 0.585
+        },
+        "leiden_communities": 2,
+        "community_0": [
+          "Brazil",
+          "Multi",
+          "African Group",
+          "EU"
+        ],
+        "community_1": [
+          "AOSIS",
+          "India",
+          "South Korea",
+          "LMDC"
+        ],
+        "pagerank_top": {
+          "South Korea": 0.166,
+          "AOSIS": 0.149,
+          "Multi": 0.129
+        },
+        "figures_generated": 5,
+        "calibration_v2_n50": "28 verified + 22 placeholder",
+        "cost_usd": 0.0
+      },
+      "rubric_means": {
+        "policy_science_professor": 4.74,
+        "ir_political_professor": 4.78,
+        "combined": 4.76
+      },
+      "deliverables": {
+        "critiques": [
+          "council_sessions/round_6/policy_science/critique.md",
+          "council_sessions/round_6/ir_political/critique.md"
+        ],
+        "lead_report": "council_sessions/round_6/LEAD_REPORT_FINAL.md",
+        "stages": [
+          "data/processed/stances_ollama_v1.jsonl",
+          "data/processed/graph_analysis_v2.json"
+        ],
+        "figures": [
+          "data/processed/figures/fig1-5_*.png",
+          "data/processed/figures/CAPTIONS.md"
+        ],
+        "calibration": "data/calibration/expert_coded_stances_v2_n50.csv"
+      },
+      "new_gaps": 2,
+      "cumulative_cost_usd_round0_to_6": "~48-55 (R6 = $0)"
     }
   ],
   "active_tasks": {
@@ -374,34 +434,35 @@
   },
   "quality_gates": {
     "G1_data_coverage": {
-      "status": "partial_pass",
-      "value": 0.82,
-      "last_evaluated": "2026-04-30T11:30:00Z"
+      "status": "pass",
+      "value": 0.85,
+      "last_evaluated": "2026-04-30T13:00:00Z",
+      "note": "first PASS via Stage 1 17 + Leiden communities"
     },
     "G2_evidence_grounding": {
       "status": "pass",
-      "value": 0.94,
-      "last_evaluated": "2026-04-30T11:30:00Z"
+      "value": 0.95,
+      "last_evaluated": "2026-04-30T13:00:00Z"
     },
     "G3_theory_grounding": {
       "status": "pass",
-      "value": 0.9,
-      "last_evaluated": "2026-04-30T11:30:00Z"
+      "value": 0.92,
+      "last_evaluated": "2026-04-30T13:00:00Z"
     },
     "G4_dual_review": {
       "status": "pass",
-      "value": 0.93,
-      "last_evaluated": "2026-04-30T11:30:00Z",
-      "combined_rubric": 4.62
+      "value": 0.95,
+      "last_evaluated": "2026-04-30T13:00:00Z",
+      "combined_rubric": 4.76
     },
     "G5_heedo_alignment": {
       "status": "pass",
       "value": 1.0,
-      "last_evaluated": "2026-04-30T11:30:00Z"
+      "last_evaluated": "2026-04-30T13:00:00Z"
     }
   },
   "blocked_on": null,
-  "next_action": "Round 6 (decision: Heedo D-R6-1~4 또는 자동 진행). Track A 5월 수업 제출 권고. Track B R6 보강 후 6월 투고.",
+  "next_action": "Round 7: chair N>=80 + AILAC + Multi-LLM Krippendorff alpha. Track A 5월 제출 자격 충족.",
   "convergence_signal": {
     "consecutive_no_new_gap": 0,
     "max_rounds_budget": 10,
@@ -604,5 +665,5 @@
     ]
   },
   "created_at": "2026-04-25T00:00:00Z",
-  "updated_at": "2026-04-30T11:30:00Z"
+  "updated_at": "2026-04-30T13:00:00Z"
 }
