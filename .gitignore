@@ -102,3 +102,81 @@ dist/
 # Anthropic-specific (deprecated, keep just in case)
 .anthropic/
 anthropic.json
+
+# === PRIVATE / Internal documents (NOT for public GitHub) ===
+# These are personal research notes, build audit logs, council session details,
+# and setup guides. Move to local _private/ folder if needed.
+deliverables/BUILD_AUDIT_v*.md
+deliverables/ANTHROPIC_API_KEY_SETUP.md
+deliverables/FREE_LLM_SETUP.md
+deliverables/GITHUB_PUSH_GUIDE.md
+deliverables/castro_2025_data_request_email.md
+deliverables/stage1_extraction_run_plan.md
+
+# Council session internal critiques (research log, contains personal info)
+council_sessions/round_*/policy_science/
+council_sessions/round_*/ir_political/
+council_sessions/round_*/synthesis/
+council_sessions/round_*/data_collection/
+council_sessions/round_*/refinement/
+council_sessions/round_*/tasks/
+council_sessions/round_*/LEAD_REPORT*.md
+council_sessions/LEDGER.md
+council_sessions/state.json
+
+# Calibration coding (research notes)
+data/calibration/
+
+# Internal refinement stats
+data/processed/refinement_round*.json
+data/processed/extraction_targets.jsonl
+
+# CINA evaluation raw data (keep markdown reports public)
+data/processed/evaluation_*.json
+
+# Old briefing/paper drafts (keep only v3 final public)
+deliverables/ministerial_briefing_ko_v1.md
+deliverables/ministerial_briefing_v2_ko.md
+deliverables/paper_draft_v1_ko.md
+deliverables/paper_draft_v1_en.md
+deliverables/paper_draft_v2_ko.md
+deliverables/paper_draft_v2_en.md
+
+# Old crosswalk versions (keep only v3 public)
+deliverables/korean_nap_gga_crosswalk.csv
+deliverables/korean_nap_gga_crosswalk_v2.csv
+
+# Old IRR Korea (keep only v2 public)
+deliverables/IRR_Korea_2025_estimate.md
+
+# Old IRR Brazil (keep only v2_negAuth public)
+deliverables/IRR_Brazil_2025.md
+
+# Old eval (keep only v2 public)
+deliverables/realist_b0_f1_validation.md
+
+# Internal Claude Code working docs (not for public)
+CLAUDE.md
+.claude/SETTINGS_GUIDE.md
+.claude/settings.local.json
+.claude/agents/
+.claude/skills/
+.claude/commands/
+.claude/logs/
+
+# Evaluation v1 (계획만, replaced by v2)
+deliverables/evaluation_report_v1.md
+
+# Hedging 2D data file (PNG는 공개, json은 raw)
+deliverables/hedging_density_2d_data.json
+
+# MCP config (server keys could leak)
+.mcp.json
+
+# 7주차 강의자료 (수업 강의 자료 — 개인)
+7주차 강의자료/
+
+# Lecture PDFs (수업 자료)
+*.pdf
+!data/raw/**/*.pdf
+!docs/**/*.pdf
