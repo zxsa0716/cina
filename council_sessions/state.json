@@ -1,14 +1,19 @@
 {
   "project": "CINA",
   "framework_version": "2.0",
-  "current_round": 5,
+  "current_round": 6,
   "rounds_completed": [
     {
       "round": 1,
       "closed_at": "2026-04-25T05:00:00Z",
       "outcome": "approved_with_round_2_remediation",
       "manifest_entries": 7,
-      "agents_spawned": ["policy-data-collector", "data-refinement-analyst", "policy-science-professor", "ir-political-professor"],
+      "agents_spawned": [
+        "policy-data-collector",
+        "data-refinement-analyst",
+        "policy-science-professor",
+        "ir-political-professor"
+      ],
       "deliverables": {
         "data_collection_report": "council_sessions/round_1/data_collection/REPORT.md",
         "refinement_collector_feedback": "council_sessions/round_1/refinement/collector_feedback.md",
@@ -44,7 +49,11 @@
       "outcome": "approved_with_round_3_remediation",
       "manifest_entries_at_close": 102,
       "phase_a_round3_preassembled": true,
-      "agents_spawned": ["data-refinement-analyst", "policy-science-professor", "ir-political-professor"],
+      "agents_spawned": [
+        "data-refinement-analyst",
+        "policy-science-professor",
+        "ir-political-professor"
+      ],
       "deliverables": {
         "refinement_report": "council_sessions/round_2/refinement/REPORT.md",
         "refinement_collector_feedback": "council_sessions/round_2/refinement/collector_feedback_round2.md",
@@ -64,8 +73,20 @@
         "combined": 3.85
       },
       "rubric_breakdown": {
-        "policy_science": {"theoretical": 4.0, "methodological": 3.5, "empirical": 4.0, "policy_strategic": 3.0, "reproducibility": 4.5},
-        "ir_political": {"theoretical": 4.0, "methodological": 3.5, "empirical": 3.5, "policy_strategic": 4.0, "reproducibility": 4.5}
+        "policy_science": {
+          "theoretical": 4.0,
+          "methodological": 3.5,
+          "empirical": 4.0,
+          "policy_strategic": 3.0,
+          "reproducibility": 4.5
+        },
+        "ir_political": {
+          "theoretical": 4.0,
+          "methodological": 3.5,
+          "empirical": 3.5,
+          "policy_strategic": 4.0,
+          "reproducibility": 4.5
+        }
       },
       "new_gaps_identified": 8,
       "llm_calls_estimate": 3,
@@ -78,7 +99,11 @@
       "closed_at": "2026-04-26T03:30:00Z",
       "outcome": "approved_with_round_4_remediation",
       "manifest_entries_at_close": 132,
-      "agents_spawned": ["data-refinement-analyst", "policy-science-professor", "ir-political-professor"],
+      "agents_spawned": [
+        "data-refinement-analyst",
+        "policy-science-professor",
+        "ir-political-professor"
+      ],
       "deliverables": {
         "refinement_collector_feedback": "council_sessions/round_3/refinement/collector_feedback_round3.md",
         "policy_sci_critique": "council_sessions/round_3/policy_science/critique.md",
@@ -93,8 +118,20 @@
         "combined": 4.105
       },
       "rubric_breakdown": {
-        "policy_science": {"theoretical": 4.2, "methodological": 3.8, "empirical": 4.3, "policy_strategic": 3.5, "reproducibility": 4.6},
-        "ir_political": {"theoretical": 4.3, "methodological": 3.7, "empirical": 3.8, "policy_strategic": 4.3, "reproducibility": 4.5}
+        "policy_science": {
+          "theoretical": 4.2,
+          "methodological": 3.8,
+          "empirical": 4.3,
+          "policy_strategic": 3.5,
+          "reproducibility": 4.6
+        },
+        "ir_political": {
+          "theoretical": 4.3,
+          "methodological": 3.7,
+          "empirical": 3.8,
+          "policy_strategic": 4.3,
+          "reproducibility": 4.5
+        }
       },
       "new_gaps_identified": 6,
       "llm_calls_estimate": 3,
@@ -109,8 +146,13 @@
       "manifest_entries_at_close": 156,
       "manifest_delta": 24,
       "manifest_delta_pct": 0.182,
-      "t01_target_achievement_pct": 2.00,
-      "agents_spawned": ["policy-data-collector", "data-refinement-analyst", "policy-science-professor", "ir-political-professor"],
+      "t01_target_achievement_pct": 2.0,
+      "agents_spawned": [
+        "policy-data-collector",
+        "data-refinement-analyst",
+        "policy-science-professor",
+        "ir-political-professor"
+      ],
       "deliverables": {
         "data_collection_manifest": "council_sessions/round_4/data_collection/manifest.jsonl (156 entries)",
         "refinement_collector_feedback": "council_sessions/round_4/refinement/collector_feedback_round4.md",
@@ -137,11 +179,23 @@
         "combined": 4.37
       },
       "rubric_breakdown": {
-        "policy_science": {"theoretical": 4.5, "methodological": 4.0, "empirical": 4.4, "policy_strategic": 4.3, "reproducibility": 4.7},
-        "ir_political": {"theoretical": 4.6, "methodological": 4.0, "empirical": 4.4, "policy_strategic": 4.3, "reproducibility": 4.5}
+        "policy_science": {
+          "theoretical": 4.5,
+          "methodological": 4.0,
+          "empirical": 4.4,
+          "policy_strategic": 4.3,
+          "reproducibility": 4.7
+        },
+        "ir_political": {
+          "theoretical": 4.6,
+          "methodological": 4.0,
+          "empirical": 4.4,
+          "policy_strategic": 4.3,
+          "reproducibility": 4.5
+        }
       },
       "rubric_delta_R3_to_R4": {
-        "policy": 0.30,
+        "policy": 0.3,
         "ir": 0.23,
         "combined": 0.265
       },
@@ -173,12 +227,63 @@
       "storage_mb_raw": 600,
       "storage_mb_processed": 28,
       "heedo_decisions_pending_at_close": [
-        {"id": "D-R5-1", "topic": "Brazilian Δ negative Authority 분리 후 framing", "team_lead_recommendation": "A: 분리 + dual-framing 보고"},
-        {"id": "D-R5-2", "topic": "KEI 명수정 박사 외부 협의 시점", "team_lead_recommendation": "B: Round 6 (R5는 internal validity 우선)"},
-        {"id": "D-R5-3", "topic": "Plano Clima 분기 챕터 (D-R4-1 잔여)", "team_lead_recommendation": "A: 분기"},
-        {"id": "D-R5-4", "topic": "Korean L&D-OP 0.390 권고 우선순위", "team_lead_recommendation": "A: 수업 brief 직접 활용"},
-        {"id": "D-R5-5", "topic": "NeurIPS CCAI signature finding 선정", "team_lead_recommendation": "L.25 pre-crystallized formula 단일 채택"}
+        {
+          "id": "D-R5-1",
+          "topic": "Brazilian Δ negative Authority 분리 후 framing",
+          "team_lead_recommendation": "A: 분리 + dual-framing 보고"
+        },
+        {
+          "id": "D-R5-2",
+          "topic": "KEI 명수정 박사 외부 협의 시점",
+          "team_lead_recommendation": "B: Round 6 (R5는 internal validity 우선)"
+        },
+        {
+          "id": "D-R5-3",
+          "topic": "Plano Clima 분기 챕터 (D-R4-1 잔여)",
+          "team_lead_recommendation": "A: 분기"
+        },
+        {
+          "id": "D-R5-4",
+          "topic": "Korean L&D-OP 0.390 권고 우선순위",
+          "team_lead_recommendation": "A: 수업 brief 직접 활용"
+        },
+        {
+          "id": "D-R5-5",
+          "topic": "NeurIPS CCAI signature finding 선정",
+          "team_lead_recommendation": "L.25 pre-crystallized formula 단일 채택"
+        }
       ]
+    },
+    {
+      "round": 5,
+      "closed_at": "2026-04-30T11:30:00Z",
+      "outcome": "closed_with_round_6_remediation",
+      "phase_a_results": {
+        "stage1_llm_extractions": 21,
+        "irr_brazil_delta_revised": 0.304,
+        "irr_brazil_hypothesis": "CONFIRMED",
+        "realist_b0_f1": 0.56,
+        "realist_b0_p_value": "<0.0001",
+        "chair_metadata_records": 56,
+        "cost_usd": 0.0
+      },
+      "phase_b_results": {
+        "policy_sci_rubric": 4.58,
+        "ir_rubric": 4.66,
+        "combined_rubric": 4.62,
+        "fallback_provider": "Gemini 2.5 Flash-Lite (Opus rate limit)"
+      },
+      "deliverables": {
+        "paper_ko_v2": "30,270 chars",
+        "paper_en_v2": "64,789 chars",
+        "briefing_v2_partial": "12,773 chars",
+        "evaluation_report_v1": "Task A/B/C/D synthesis",
+        "graph_analysis_v1": "NetworkX-based, 5 countries, procedural authority detected",
+        "korean_crosswalk_v3": "30/30 cells",
+        "lead_report_final": "council_sessions/round_5/LEAD_REPORT_FINAL.md"
+      },
+      "new_gaps": 3,
+      "cumulative_cost_usd_round0_to_5": "~48-55 (R5 = $0 free LLM)"
     }
   ],
   "active_tasks": {
@@ -204,8 +309,14 @@
       "round6_curated_R5_T01": 19
     },
     "round4_chair_letters_breakdown": {
-      "COP21": 2, "COP22": 2, "COP23": 1, "COP24": 2,
-      "COP25": 2, "COP26": 5, "COP27": 2, "COP30_Troika": 8
+      "COP21": 2,
+      "COP22": 2,
+      "COP23": 1,
+      "COP24": 2,
+      "COP25": 2,
+      "COP26": 5,
+      "COP27": 2,
+      "COP30_Troika": 8
     },
     "round5_phase_a_results": {
       "manifest_growth": "156 -> 175 (+19)",
@@ -213,7 +324,7 @@
       "irr_korea_v2": 0.653,
       "irr_brazil_translation_gap_v2": 0.304,
       "irr_brazil_gap_hypothesis": "CONFIRMED (>=0.30)",
-      "realist_b0_f1": 0.560,
+      "realist_b0_f1": 0.56,
       "realist_b0_mcnemar_p": "<0.0001",
       "realist_b0_kappa": 0.216,
       "hedging_2d_clusters": 3,
@@ -222,81 +333,75 @@
     },
     "license_coverage_pct": 100.0,
     "sha256_coverage_pct": 100.0,
-    "by_country_distinct_pct": 0.40,
+    "by_country_distinct_pct": 0.4,
     "by_issue_distinct_pct": 0.833,
-    "by_session_distinct_pct": 0.50,
+    "by_session_distinct_pct": 0.5,
     "processed_documents_jsonl": 119,
     "stage1_llm_trial_passed": 5,
-    "stage1_llm_trial_pass_rate": 1.00,
+    "stage1_llm_trial_pass_rate": 1.0,
     "uae_belem_indicators_records": 110,
     "uae_belem_indicators_noise_pct": 9.1,
     "chair_metadata_records": 32,
     "chair_metadata_round_5_target": 60,
     "non_state_actor_records": 20,
     "non_state_actor_entities": 4,
-    "frame_distribution": {"scientific": 58, "mixed": 37, "sovereignty": 5, "justice": 9, "development": 5},
+    "frame_distribution": {
+      "scientific": 58,
+      "mixed": 37,
+      "sovereignty": 5,
+      "justice": 9,
+      "development": 5
+    },
     "all_5_frames_active": true,
     "round_5_target_minimum": 172,
-    "irr_korea_2025": {"value": 0.653, "ci_95": [0.543, 0.644], "weakest_dim": "L&D-OP 0.390"},
-    "irr_brazilian_translation_gap": {"delta": 0.269, "hypothesis": "PARTIAL (0.30 미달)"},
-    "realist_b0_f1": {"value": 0.560, "hypothesis": "CONFIRMED (F1<0.70)"},
+    "irr_korea_2025": {
+      "value": 0.653,
+      "ci_95": [
+        0.543,
+        0.644
+      ],
+      "weakest_dim": "L&D-OP 0.390"
+    },
+    "irr_brazilian_translation_gap": {
+      "delta": 0.269,
+      "hypothesis": "PARTIAL (0.30 미달)"
+    },
+    "realist_b0_f1": {
+      "value": 0.56,
+      "hypothesis": "CONFIRMED (F1<0.70)"
+    },
     "l25_hot_spots": 0
   },
   "quality_gates": {
     "G1_data_coverage": {
       "status": "partial_pass",
-      "value": 0.78,
-      "target": 0.80,
-      "round_4_target": 0.85,
-      "round_5_target": 0.86,
-      "delta_round_3_to_4": 0.07,
-      "last_evaluated": "2026-04-26T07:30:00Z",
-      "note": "manifest 132→156 (+24, T01 200% 달성). countries 35→40% / sessions 31.2→50% (+60%). Round 5 24 PDF processed + Castro matrix + SBI/SBSTA notes 시 0.86 PASS 임박."
+      "value": 0.82,
+      "last_evaluated": "2026-04-30T11:30:00Z"
     },
     "G2_evidence_grounding": {
       "status": "pass",
-      "value": 0.91,
-      "target": 0.90,
-      "round_4_target": 0.93,
-      "round_5_target": 0.93,
-      "delta_round_3_to_4": 0.03,
-      "first_pass_at_round": 4,
-      "last_evaluated": "2026-04-26T07:30:00Z",
-      "note": "G2 0.88→0.91 첫 PASS. Stage 1 LLM 5/5 trial schema-valid (헌법 §4 회복). IRR_Korea 0.653 + Brazilian Δ=0.269 + B0 F1=0.560 + L.25 hot_spots=0 4 P0 모두 산출."
+      "value": 0.94,
+      "last_evaluated": "2026-04-30T11:30:00Z"
     },
     "G3_theory_grounding": {
       "status": "pass",
-      "value": 0.87,
-      "target": 0.80,
-      "round_4_target": 0.86,
-      "round_5_target": 0.88,
-      "delta_round_3_to_4": 0.05,
-      "last_evaluated": "2026-04-26T07:30:00Z",
-      "note": "G3 0.82→0.87 (target 0.86 초과). theoretical dim mean 4.55/5. L.25 pre-crystallized formula multi-theoretical framing (Tallberg ii+iv ⊕ Steinberg ⊕ Goh) NeurIPS CCAI signature finding 후보."
+      "value": 0.9,
+      "last_evaluated": "2026-04-30T11:30:00Z"
     },
     "G4_dual_review": {
       "status": "pass",
-      "value": 0.874,
-      "target": 0.60,
-      "round_4_target": 0.86,
-      "round_5_target": 0.90,
-      "delta_round_3_to_4": 0.054,
-      "last_evaluated": "2026-04-26T07:30:00Z",
-      "note": "Combined 4.37/5 = 0.874 (target 0.60 wide margin). Policy 4.38 + IR 4.36, no dimension < 4.0. Minor revision phase consolidate. R1→R4 누적 +1.32 +26.4%p. NeurIPS CCAI threshold >4.0 두 번째 연속 상회."
+      "value": 0.93,
+      "last_evaluated": "2026-04-30T11:30:00Z",
+      "combined_rubric": 4.62
     },
     "G5_heedo_alignment": {
       "status": "pass",
       "value": 1.0,
-      "target": 1.0,
-      "round_4_target": 1.0,
-      "round_5_target": 1.0,
-      "delta_round_3_to_4": 0,
-      "last_evaluated": "2026-04-26T07:30:00Z",
-      "note": "4 directives 모두 PASS. directive #4 partial→full PASS 회복 (Stage 1 LLM 가동). directive #1 signature finding 후보 발견으로 강화."
+      "last_evaluated": "2026-04-30T11:30:00Z"
     }
   },
   "blocked_on": null,
-  "next_action": "Round 5 launch — T01-T04 dispatched. T01 P0 Castro 2025 matrix + SBI/SBSTA informal notes ≥4건 + KEI WP 5건. T02 P0 24 PDF processed 통합 (chair N≥60) + Brazilian neg Auth 분리 + B0 통계 (McNemar/κ/95%CI) + 2D plot. T03 Brazilian Δ 재평가 + IRR Korea 가중치 외부 정합성. T04 F1 통계 후 realist B0 재검증 + pre-crystallized formula 4-mechanism framing 정련. Heedo D-R5-1 (Brazilian Δ framing) 응답 대기 중 — non-blocking으로 Round 5 진행 가능 (default A).",
+  "next_action": "Round 6 (decision: Heedo D-R6-1~4 또는 자동 진행). Track A 5월 수업 제출 권고. Track B R6 보강 후 6월 투고.",
   "convergence_signal": {
     "consecutive_no_new_gap": 0,
     "max_rounds_budget": 10,
@@ -383,23 +488,93 @@
     }
   ],
   "heedo_decisions_accepted": [
-    {"id": "HEEDO-1", "topic": "CINA scope expansion to policy-cycle implementation", "decision": "accept", "decided_at": "2026-04-25T05:30:00Z"},
-    {"id": "HEEDO-2", "topic": "Playwright headless browser approval", "decision": "accept", "decided_at": "2026-04-25T05:30:00Z"},
-    {"id": "HEEDO-3", "topic": "IISD ENB academic-use prior notification", "decision": "accept", "decided_at": "2026-04-25T05:30:00Z"},
-    {"id": "H-R3-1", "topic": "Task E (IRR) 메트릭 헌법 합의", "decision": "accept", "decided_at": "2026-04-26T01:15:00Z"},
-    {"id": "H-R3-2", "topic": "비국가 행위자 노드 JT-ADAPT 한정 채택", "decision": "accept", "decided_at": "2026-04-26T01:15:00Z"},
-    {"id": "H-R3-3", "topic": "Stage 1 LLM 활성화 사전 승인", "decision": "accept", "decided_at": "2026-04-26T01:15:00Z", "implementation": "Round 4 trial 5/5 schema-valid 완료 — 헌법 §4 full PASS 회복"}
+    {
+      "id": "HEEDO-1",
+      "topic": "CINA scope expansion to policy-cycle implementation",
+      "decision": "accept",
+      "decided_at": "2026-04-25T05:30:00Z"
+    },
+    {
+      "id": "HEEDO-2",
+      "topic": "Playwright headless browser approval",
+      "decision": "accept",
+      "decided_at": "2026-04-25T05:30:00Z"
+    },
+    {
+      "id": "HEEDO-3",
+      "topic": "IISD ENB academic-use prior notification",
+      "decision": "accept",
+      "decided_at": "2026-04-25T05:30:00Z"
+    },
+    {
+      "id": "H-R3-1",
+      "topic": "Task E (IRR) 메트릭 헌법 합의",
+      "decision": "accept",
+      "decided_at": "2026-04-26T01:15:00Z"
+    },
+    {
+      "id": "H-R3-2",
+      "topic": "비국가 행위자 노드 JT-ADAPT 한정 채택",
+      "decision": "accept",
+      "decided_at": "2026-04-26T01:15:00Z"
+    },
+    {
+      "id": "H-R3-3",
+      "topic": "Stage 1 LLM 활성화 사전 승인",
+      "decision": "accept",
+      "decided_at": "2026-04-26T01:15:00Z",
+      "implementation": "Round 4 trial 5/5 schema-valid 완료 — 헌법 §4 full PASS 회복"
+    }
   ],
   "infrastructure_status": {
-    "collectors_implemented": ["cop30_official", "castro_2025", "ipcc_ar6", "unfccc_submissions", "ndc_registry", "iisd_enb", "curated_cop30", "korean_gov", "brazilian_gov", "enb_curated", "curated_round3", "curated_round4", "curated_round5", "round4_t01_historical_chair"],
-    "collectors_static_only": ["cop30_official", "castro_2025", "ipcc_ar6"],
-    "collectors_dynamic_validated": ["ndc_registry", "iisd_enb"],
-    "collectors_curated_validated": ["curated_cop30", "korean_gov", "brazilian_gov", "enb_curated", "curated_round3", "curated_round4", "curated_round5", "round4_t01_historical_chair"],
+    "collectors_implemented": [
+      "cop30_official",
+      "castro_2025",
+      "ipcc_ar6",
+      "unfccc_submissions",
+      "ndc_registry",
+      "iisd_enb",
+      "curated_cop30",
+      "korean_gov",
+      "brazilian_gov",
+      "enb_curated",
+      "curated_round3",
+      "curated_round4",
+      "curated_round5",
+      "round4_t01_historical_chair"
+    ],
+    "collectors_static_only": [
+      "cop30_official",
+      "castro_2025",
+      "ipcc_ar6"
+    ],
+    "collectors_dynamic_validated": [
+      "ndc_registry",
+      "iisd_enb"
+    ],
+    "collectors_curated_validated": [
+      "curated_cop30",
+      "korean_gov",
+      "brazilian_gov",
+      "enb_curated",
+      "curated_round3",
+      "curated_round4",
+      "curated_round5",
+      "round4_t01_historical_chair"
+    ],
     "manifest_system": "operational",
     "council_protocol": "operational",
     "stage1_llm_pipeline": "operational (5/5 trial pass)",
     "tasks_issued": 24,
-    "round_5_pending": ["castro_2025_matrix_collector", "sbi_sbsta_informal_notes", "kei_wp_series", "24_pdf_processed_pipeline", "brazilian_neg_authority_separation", "b0_statistics_mcnemar_kappa_ci", "hedging_2d_plot"]
+    "round_5_pending": [
+      "castro_2025_matrix_collector",
+      "sbi_sbsta_informal_notes",
+      "kei_wp_series",
+      "24_pdf_processed_pipeline",
+      "brazilian_neg_authority_separation",
+      "b0_statistics_mcnemar_kappa_ci",
+      "hedging_2d_plot"
+    ]
   },
   "schema_version": {
     "stage1_prompt": "v1.4 (Round 4: LLM evidence-quote based scoring, 5/5 trial pass)",
@@ -411,8 +586,15 @@
     "transition_at": "2026-04-26T07:30:00Z",
     "transition_by": "team-lead",
     "round_4_outcome": "approved_with_round_5_remediation",
-    "passing_gates": ["G2_evidence_grounding (FIRST PASS)", "G3_theory_grounding", "G4_dual_review", "G5_heedo_alignment"],
-    "partial_passing_gates": ["G1_data_coverage"],
+    "passing_gates": [
+      "G2_evidence_grounding (FIRST PASS)",
+      "G3_theory_grounding",
+      "G4_dual_review",
+      "G5_heedo_alignment"
+    ],
+    "partial_passing_gates": [
+      "G1_data_coverage"
+    ],
     "failing_gates": [],
     "transition_signal": "minor_revision_phase_consolidated_neurips_ccai_threshold_clear",
     "round_5_focus_3": [
@@ -422,5 +604,5 @@
     ]
   },
   "created_at": "2026-04-25T00:00:00Z",
-  "updated_at": "2026-04-26T07:30:00Z"
+  "updated_at": "2026-04-30T11:30:00Z"
 }

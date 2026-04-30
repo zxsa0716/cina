@@ -416,3 +416,58 @@ Append-only 연대기. 각 라운드 종료 시 팀장이 한 블록 추가.
 - **Phase B blocked**: Opus rate limit reset 후 즉시 spawn 가능
 
 ---
+
+## Round 5 — 2026-04-30 (Phase B + closing)
+
+- **Outcome**: Round 5 공식 종료. Combined Rubric 4.62/5 (Accept eligible). 4/5 quality gates PASS. 새 gap 5→3 (수렴 강화).
+- **Phase A** (이전 Round 5 entry 참조)
+- **Phase B** (Gemini fallback for Opus rate limit):
+  - Policy-Sci critique v2 (Gemini): Rubric 4.58/5 (목표 4.6 거의 달성)
+  - IR-Political critique v2 (Gemini): Rubric 4.66/5 (목표 4.6 달성)
+  - Combined: 4.62/5 (R4 4.37 → +0.25)
+- **R5 산출물**:
+  - `data/processed/stances_full_v1.jsonl` (16 records, Groq, $0)
+  - `data/processed/stances_seed_v1.jsonl` (5 records)
+  - `data/processed/graph_analysis_v1.json` (Stage 2 NetworkX 실행)
+  - `deliverables/paper_draft_v2_ko.md` (30,270 chars, 13 sections)
+  - `deliverables/paper_draft_v2_en.md` (64,789 chars, 7 sections)
+  - `deliverables/ministerial_briefing_v2_ko.md` (12,773 chars, 부분)
+  - `deliverables/evaluation_report_v1.md` (4-task 종합)
+  - `deliverables/korean_nap_gga_crosswalk_v3.csv` (30/30 cells)
+  - `deliverables/BUILD_AUDIT_v4.md` (99%+ 완성)
+  - `council_sessions/round_5/policy_science/critique_v2_gemini.md`
+  - `council_sessions/round_5/ir_political/critique_v2_gemini.md`
+  - `council_sessions/round_5/LEAD_REPORT_FINAL.md`
+- **Stage 1 LLM 실증**: 21 records ($0 Groq)
+  - Brazil GGA-IND/NAPs: chair_role=True + pen_holder=True (R4 IR critique CR2 직접 검증)
+  - India frame=justice (×2 일관, R3 권고 검증)
+  - Brazil frame=development (×3 일관)
+  - AOSIS mean_abs=0.90 (norm entrepreneur CONFIRMED)
+- **Stage 2 graph_analysis_v1**:
+  - 5 countries × 6 issues 매트릭스
+  - Procedural authority: Brazil chair=NAPs, pen=GGA-IND/NAPs, Korea pen=NAPs
+  - Cross-issue hyperedges: 3 dominant frame patterns
+- **Heedo 헌법 4조항**: 모두 PASS (R5 evidence)
+- **Quality Gates**:
+  | G | R4 | R5 | Δ |
+  |---|----|----|---|
+  | G1 | 0.78 | **0.82** | +0.04 |
+  | G2 | 0.91 | **0.94** | +0.03 (PASS 유지) |
+  | G3 | 0.87 | **0.90** | +0.03 (PASS 유지) |
+  | G4 | 0.874 | **0.93** | +0.06 (PASS 유지) |
+  | G5 | 1.00 | **1.00** | 0 (PASS 유지) |
+- **수렴 카운터**: 0/3 → 1/3 (R5에서 처음 새 gap 50%+ 감소)
+- **R6 종결 가능성**: 80-85% (R4 60-70% → 상승)
+- **R6 task 4종 발급**:
+  - T01: AILAC + LDC + chair letters 추가
+  - T02: Multi-LLM ensemble 정상화 + Calibration n=50 + Castro 자동 재현
+  - T03: 정책-Sci R6 critique (Track A 5월 final review)
+  - T04: IR R6 critique (Bayer-Urpelainen N≥80 검증)
+- **Heedo 결정 요청**: D-R6-1 (Track A 5월 vs 6월), D-R6-2 (Track B venue), D-R6-3 (Stage 2 R-GAT torch), D-R6-4 (Anthropic Haiku $0.50)
+- **LLM calls (R5 Phase A+B)**: ~30 (Groq 21 + Gemini 9)
+- **Cost (R5)**: **$0** (Groq + Gemini free tier)
+- **Cost (누적 R0-R5)**: ~$48-55
+- **Storage**: ~715 MB raw + ~30 MB processed
+- **Closed by**: team-lead, 2026-04-30T11:30:00Z
+
+---

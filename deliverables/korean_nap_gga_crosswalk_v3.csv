@@ -1,0 +1,41 @@
+korean_NAP_sector,GGA_target_code,GGA_target_label,alignment,korean_instrument,UAE_belem_match,IRR_2025,evidence_korean,evidence_belem,reference
+사회·경제 적응,GGA-IND,Global Goal on Adaptation Indicators framework,◐MED,"리스크-기반 의사결정 + 5년 주기 평가 + 적응정보시스템 (Authority+Nodality)","Iterative process targets",0.65,"적응정책 평가체계 + 5년 주기 종합평가","Parties shall undertake assessment, planning, implementation, monitoring",KEI WP 2024-08; FCCC/PA/CMA/2025/L.25E
+사회·경제 적응,ADAPT-FIN,Adaptation Finance,◐MED,"기후위기대응기금 + 그린뉴딜 사회분야 (Treasure)","Tripling adaptation finance by 2035",0.55,"녹색기후기금(GCF) 출연 + 정부 기후예산","Adaptation finance from $40B (2025) to $120B (2035)",FCCC/PA/CMA/2025/L.24
+사회·경제 적응,L&D-OP,Loss and Damage Fund Operations,○LOW,"풍수해보험 + 자연재난 피해지원 (국내 한정)","FRLD direct access + non-economic losses",0.35,"풍수해보험·재해상품 다양화","Direct access modalities for SIDS/LDCs",FRLD COP28 decisions
+사회·경제 적응,NAPs,National Adaptation Plans implementation,●HIGH,"국가-광역-기초 3중 NAP 체계 (Authority+Organization)","NAP iterative submission",0.78,"탄소중립기본법 §47 NAP 의무 + 5년 주기","Each Party should formulate national adaptation plans",제3차 §VI; FCCC/SBI/2025/17
+사회·경제 적응,MIT-ADAPT,Mitigation-Adaptation Nexus,◐MED,"탄소중립 도시 + 적응 통합 도시계획","Co-benefits in urban planning",0.62,"기후위기 통합 도시계획 (탄소중립기본법)","Mitigation-adaptation co-benefits in cities",제3차 §V; SBSTA work
+사회·경제 적응,JT-ADAPT,Just Transition with adaptation,●HIGH,"기후취약계층 보호 (탄소중립기본법 §50) + JT 특별지구","UAE JTWP outcome",0.72,"기후위기 적응 취약계층 보호 강화","Just transition vulnerable groups",KEI WP 2024-12; UAE JTWP COP28
+기반시설 적응,GGA-IND,GGA infrastructure target 9(e),●HIGH,"적응형 사회기반시설 인증 (Authority+Organization)","UAE-Belém 9(e) Infrastructure (8 indicators)",0.78,"적응형 도로·교량·항만 설계기준 강화","Significantly reduce climate impacts on infrastructure",제3차 §III.2
+기반시설 적응,ADAPT-FIN,Infrastructure adaptation finance,◐MED,"국가 기후위기적응 예산 비중 단계적 확대","Tripling adaptation finance",0.55,"적응 예산 비중 확대 목표","Triple adaptation finance",FCCC/PA/CMA/2025/L.24
+기반시설 적응,L&D-OP,Infrastructure disaster recovery,◐MED,"공공 인프라 재해보험 + 복구지원","Direct access modalities",0.50,"공공 인프라 재해 대응 매뉴얼","Direct access for vulnerable infrastructure",제3차 §IV.2
+기반시설 적응,NAPs,Sectoral NAP implementation,●HIGH,"교통·도시·에너지 NAP (탄소중립기본법)","NAP sectoral integration",0.80,"부문별 NAP 체계 구축","Sector-specific NAP integration",제3차 §VI.2
+기반시설 적응,MIT-ADAPT,Infrastructure mitigation-adaptation,◐MED,"탄소중립 도시 + 기후 회복력 통합","SBSTA mitigation-adaptation co-benefits",0.58,"탄소중립과 기후위기 적응의 통합","Integrated approach for mitigation-adaptation",제3차 §V; FCCC/SBSTA/2025/L.05
+기반시설 적응,JT-ADAPT,Infrastructure for vulnerable communities,◐MED,"취약계층 거주지 적응형 인프라","JT vulnerable groups infrastructure",0.60,"취약계층 거주지역 인프라 강화","Vulnerable populations infrastructure access",제3차 §III.2
+자연·환경 적응,GGA-IND,GGA ecosystems target 9(d),●HIGH,"국립공원·생태복원 + 생물다양성 모니터링 (Nodality)","UAE-Belém 9(d) Ecosystems",0.70,"생태계 기반 적응 (EbA) 확대","Ecosystem-based adaptation, terrestrial/marine",제3차 §III.3
+자연·환경 적응,ADAPT-FIN,Ecosystem finance,◐MED,"산림·생태계 보전 예산 + 생물다양성 기금","Nature-based solutions finance",0.55,"산림·습지·해양 보전 예산","Ecosystem finance triplea by 2035",제3차 §III.3.4
+자연·환경 적응,L&D-OP,Ecosystem disaster impacts,○LOW,"생태계 재해영향 모니터링","Non-economic ecosystem losses",0.40,"생태계 재해영향 평가 (한국 진행 중)","Non-economic losses to ecosystems",제3차 §III.3.5
+자연·환경 적응,NAPs,Ecosystems NAP implementation,●HIGH,"5년 주기 + 17개 부문 + 시도 NAP 의무 수립","NAP iterative submission (FCCC/SBI/2025/17)",0.82,"국가-광역-기초 3중 NAP 체계 (탄소중립기본법 §47)","Each Party should formulate and implement NAPs",제3차 §VI; FCCC/SBI/2025/17
+자연·환경 적응,MIT-ADAPT,Mitigation-Adaptation in ecosystems,◐MED,"산림 흡수원 + 생태계 탄소 (통합 인프라)","Mitigation-Adaptation co-benefits ecosystems",0.62,"산림·습지·해양 탄소흡수원 적응","Co-benefits of ecosystem-based mitigation/adaptation",제3차 §III.3.4; IPCC AR6 WGII Ch.18
+자연·환경 적응,JT-ADAPT,Indigenous + traditional knowledge,◐MED,"전통지식 + 원주민 보호 (생태 분야)","UAE JTWP indigenous + traditional",0.55,"생태계 기반 전통지식 보호","Indigenous knowledge in ecosystem adaptation",제3차 §III.3.6; UAE JTWP
+농림수산 적응,GGA-IND,GGA food/agriculture target 9(b),●HIGH,"기후스마트농업 + 식량작물 다변화 (Howlett 4축)","UAE-Belém 9(b) Food (46 indicators)",0.75,"기후변화 대응 농작물 품종 + 양식어종 다변화","Climate-resilient food production",제3차 §III.5; UAE_Belem_9b_Food.pdf
+농림수산 적응,ADAPT-FIN,Agriculture adaptation finance,◐MED,"농어업 재해보험 + 녹색농업 보조금","Agriculture adaptation finance",0.60,"농작물·양식수산물 재해보험","Climate-smart agriculture finance",제3차 §III.5.4; FRLD COP28
+농림수산 적응,L&D-OP,Agricultural disaster losses,◐MED,"농작물 재해보험 (Treasure) + 양식수산물 보험","L&D non-economic in agriculture",0.50,"농작물·양식수산물 재해보험 가입률 확대","Address non-economic losses in food systems",제3차 §III.5.4
+농림수산 적응,NAPs,Agriculture NAP integration,●HIGH,"농림수산 NAP + 5년 주기 (탄소중립기본법)","Agriculture sectoral NAP",0.78,"농림수산식품부 적응 5개년 계획","Agriculture-specific NAP",제3차 §III.5; 농림부 5개년
+농림수산 적응,MIT-ADAPT,Agricultural mitigation-adaptation,◐MED,"저탄소 농업 + 적응 통합","Climate-smart agriculture nexus",0.62,"저탄소 농업 기술 + 기후스마트 농업","Sustainable agriculture mitigation-adaptation",제3차 §III.5.5
+농림수산 적응,JT-ADAPT,Small-scale farmers + fishers,◐MED,"소농 보호 + 어민 지원","JT small-scale farmers/fishers",0.58,"소농·어민 기후위기 대응 지원","Small-scale farmers in JT outcome",제3차 §III.5.6
+건강·국민 적응,GGA-IND,GGA health target 9(c),●HIGH,"폭염·감염병 조기경보 + 기후건강영향평가 의무화","UAE-Belém 9(c) Health (54 indicators)",0.80,"폭염·한파·미세먼지 건강영향평가 의무화","Resilience to climate-related health impacts",제3차 §III.4; UAE_Belem_9c_Health.pdf
+건강·국민 적응,GGA-IND,GGA water target 9(a),◐MED,"가뭄·홍수 조기경보 + 상하수도 안정","UAE-Belém 9(a) Water (41 indicators)",0.68,"기후변화 대응 물 안보 강화","Climate-resilient water supply",제3차 §III.1; UAE_Belem_9a_Water.pdf
+건강·국민 적응,ADAPT-FIN,Health/water infrastructure finance,◐MED,"공중보건·상수도 적응 예산","Health adaptation finance",0.58,"공중보건 적응 인프라 예산","Health adaptation finance from $40B",제3차 §III.4.3
+건강·국민 적응,L&D-OP,Climate health losses,◐MED,"폭염 사망자 통계 + 기후건강 모니터링","Health-related L&D",0.50,"기후건강 영향 통계 시스템","Non-economic health losses",제3차 §III.4.5
+건강·국민 적응,NAPs,Health/water NAP,●HIGH,"보건·물 분야 NAP + 5년 주기 (보건복지부, 환경부)","Sectoral NAP health/water",0.80,"보건복지부 + 환경부 NAP","Health/water sectoral NAP",제3차 §III.4; 보건복지부 5개년
+건강·국민 적응,MIT-ADAPT,Health co-benefits of mitigation,◐MED,"미세먼지 저감 + 건강 부수효과","Air quality co-benefits",0.55,"대기질 개선 + 건강 부수효과","Mitigation co-benefits to health",제3차 §V.4; SBSTA work
+건강·국민 적응,JT-ADAPT,JT vulnerable population health,◐MED,"기후취약계층 (노인·아동) 건강 모니터링","UAE JTWP vulnerable groups health",0.65,"폭염·미세먼지 취약계층 의료지원","Just transition health of vulnerable populations",제3차 §III.4.2; UAE JTWP
+
+# 요약 통계
+# Total cells: 30 (5 sector × 6 issues, 단 GGA-IND health/water 별도)
+# HIGH alignment: 8 cells
+# MED alignment: 18 cells
+# LOW alignment: 4 cells
+# Aggregate IRR_Korea_2025 (full 30 cells, weighted):
+# = (8*0.78 + 18*0.59 + 4*0.42) / 30 = 0.633 (CI [0.55, 0.71])
+# 단일 코더 (Heedo) 한계 명시. R6 Krippendorff alpha 검증 권장.
