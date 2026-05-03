@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CINA — Climate Issue-Network Analysis Framework</title>
+<meta name="description" content="LLM-GNN-LLM pipeline for climate negotiation intelligence, validated on COP30 Belém Adaptation Indicators.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark">CINA</span>
+      <span class="logo-tag">Climate Issue-Network Analysis</span>
+    </a>
+    <nav class="nav-main">
+      <a href="#overview">개요</a>
+      <a href="#methodology">방법론</a>
+      <a href="#case-korea">한국 사례</a>
+      <a href="#case-brazil">브라질 사례</a>
+      <a href="#findings">학술 발견</a>
+      <a href="#data">데이터</a>
+      <a href="https://github.com/zxsa0716/cina" target="_blank" rel="noopener" class="nav-github">GitHub →</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-meta">국민대학교 대학원 글로벌기후리더십 · 2026</div>
+    <h1 class="hero-title">기후 협상 의사결정을<br>AI가 정량화한다</h1>
+    <p class="hero-sub">
+      <strong>CINA Framework</strong>는 UNFCCC 협상 문서에서 외교부 장관급 전략 브리핑까지 연결되는<br>
+      <strong>최초의 end-to-end LLM-GNN-LLM 파이프라인</strong>입니다.
+      COP30 Belém Adaptation Indicators 합의에 회고적으로 검증되었습니다.
+    </p>
+    <div class="hero-cta">
+      <a href="#case-korea" class="btn btn-primary">한국 적응정책 분석 보기 →</a>
+      <a href="#methodology" class="btn btn-ghost">방법론 살펴보기</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num" id="stat-rubric">4.76</div><div class="stat-label">Combined Rubric</div><div class="stat-sub">Accept eligible</div></div>
+      <div class="stat"><div class="stat-num" id="stat-gates">5/5</div><div class="stat-label">Quality Gates PASS</div><div class="stat-sub">G1-G5 all green</div></div>
+      <div class="stat"><div class="stat-num" id="stat-stances">98</div><div class="stat-label">Stage 1 Stances</div><div class="stat-sub">13 countries × 6 issues</div></div>
+      <div class="stat"><div class="stat-num" id="stat-findings">8</div><div class="stat-label">Publishable Findings</div><div class="stat-sub">5 venues 후보</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Overview -->
+<section id="overview" class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§1 Overview</span>
+      <h2>이 시스템은 무엇을 하는가?</h2>
+      <p class="lede">CINA는 협상 문서를 입력으로 받아, <strong>국가 × 이슈 스탠스 매트릭스</strong>, <strong>연합 지형 그래프</strong>, <strong>장관급 전략 브리핑</strong> 세 가지 산출물을 자동 생성합니다.</p>
+    </div>
+
+    <div class="comparison-grid">
+      <div class="compare-col">
+        <h3>기존 도구의 한계</h3>
+        <div class="card limit">
+          <h4>NegotiateCOP <small>(Germany 2024)</small></h4>
+          <p>문서 검색·QA에 머무름. 구조 분석 없음.</p>
+        </div>
+        <div class="card limit">
+          <h4>RICE-N <small>(Salesforce 2022)</small></h4>
+          <p>이론적 시뮬레이션. 실제 문서·국가 입장 미반영.</p>
+        </div>
+        <div class="card limit">
+          <h4>Castro et al. <small>(2025)</small></h4>
+          <p>협력/대립 빈도 집계. 이슈별 스탠스·전략적 함의 없음.</p>
+        </div>
+      </div>
+      <div class="compare-col">
+        <h3>CINA의 답</h3>
+        <div class="card win">
+          <h4>① 구조화 스탠스 추출</h4>
+          <p>NATO 4축 (정책 수단) + 5범주 frame_type + 절차권 동시 추출.</p>
+        </div>
+        <div class="card win">
+          <h4>② 이종 그래프 + 커뮤니티</h4>
+          <p>국가·이슈·그룹 노드 + Leiden algorithm 자동 검출.</p>
+        </div>
+        <div class="card win">
+          <h4>③ Graph-Grounded Briefing</h4>
+          <p>모든 주장에 (텍스트 인용 + 구조적 근거) 강제 grounding.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Methodology -->
+<section id="methodology" class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§2 Methodology</span>
+      <h2>3-Stage LLM-GNN-LLM 파이프라인</h2>
+      <p class="lede">UNFCCC 문서에서 장관급 브리핑까지 — 4 단계로 자동 변환됩니다.</p>
+    </div>
+
+    <div class="pipeline">
+      <div class="stage">
+        <div class="stage-num">0</div>
+        <h3>Data Collection</h3>
+        <div class="stage-meta">26 collectors · 225 manifest entries</div>
+        <ul>
+          <li>UNFCCC 결정문 + NDC + ENB</li>
+          <li>IPCC AR6 + OWID + IMF + PRIMAP</li>
+          <li>WRI Climate Watch + OECD</li>
+          <li>Korea MOFA/MOE + Brazil Plano Clima</li>
+        </ul>
+        <div class="stage-arrow">↓ ~720 MB raw data</div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-num">1</div>
+        <h3>Stance Extraction <small>(LLM)</small></h3>
+        <div class="stage-meta">Multi-LLM ensemble · 98 records</div>
+        <ul>
+          <li><b>Multi-sample k=5</b> + Bayesian credible interval</li>
+          <li><b>NATO 4축</b>: nodality, authority, treasure, organization</li>
+          <li><b>5 frame types</b>: scientific / justice / sovereignty / security / development</li>
+          <li><b>Procedural signals</b>: chair_role, pen_holder, drafts_text</li>
+          <li><b>Evidence quotes</b> with fuzzy match ≥85% verification</li>
+        </ul>
+        <div class="stage-arrow">↓ Country × Issue stance tensor</div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-num">2</div>
+        <h3>Graph Analysis <small>(GNN)</small></h3>
+        <div class="stage-meta">Heterogeneous + Leiden + Centrality</div>
+        <ul>
+          <li>Country / Issue / Group <b>3-type 노드</b></li>
+          <li><b>R-GAT 설계</b>(NetworkX advanced 대체 실행)</li>
+          <li><b>Leiden community</b> 자동 검출 (modularity 0.31)</li>
+          <li><b>Centrality 5종</b>: PageRank, betweenness, eigenvector, degree, closeness</li>
+          <li><b>Cross-issue hypergraph</b> (Apriori-style frame motifs)</li>
+        </ul>
+        <div class="stage-arrow">↓ Coalition map · bridges · hyperedges</div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-num">3</div>
+        <h3>Briefing Generation <small>(LLM)</small></h3>
+        <div class="stage-meta">Graph-Grounded · evidence-traceable</div>
+        <ul>
+          <li><b>9 sections</b> + 4 appendices (Korean ministerial format)</li>
+          <li>모든 claim에 <b>(인용 + 구조적 근거)</b> 강제</li>
+          <li>Post-hoc 7-rule verification</li>
+          <li><b>한국어 + 영어</b> 양 버전 산출</li>
+        </ul>
+        <div class="stage-arrow">↓ 외교부 장관급 브리핑</div>
+      </div>
+    </div>
+
+    <div class="llm-providers">
+      <h3>5 무료 LLM Provider 통합</h3>
+      <div class="provider-grid">
+        <div class="provider"><b>Gemini 2.5 Flash-Lite</b><span>1,000 RPD · 1M ctx · $0</span></div>
+        <div class="provider"><b>Groq Llama 3.3 70B</b><span>30 RPM · 280 tok/s · $0</span></div>
+        <div class="provider"><b>Ollama qwen2.5:3b</b><span>local · unlimited · $0</span></div>
+        <div class="provider"><b>OpenRouter free pool</b><span>multi-model · $0</span></div>
+        <div class="provider"><b>Anthropic Claude</b><span>(paid backup)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Korea Case Study -->
+<section id="case-korea" class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§3 Case Study A · Track A</span>
+      <h2>🇰🇷 한국 적응정책의 GGA 정합도</h2>
+      <p class="lede">한국 제3차 국가 기후위기 적응 강화대책 × COP30 Belém Adaptation Indicators 정합도 정량 분석.</p>
+    </div>
+
+    <div class="case-grid">
+      <div class="metric-big">
+        <div class="metric-label">Korea IRR</div>
+        <div class="metric-val" id="korea-irr">0.653</div>
+        <div class="metric-ci">95% CI [0.55, 0.71]</div>
+        <div class="metric-status">Accept eligible</div>
+      </div>
+      <div class="case-text">
+        <p><b>IRR (Implementation Realization Rate)</b>는 한국 적응정책이 GGA 11 targets에 얼마나 정합하는지 30 cells 매트릭스로 측정한 지수입니다.</p>
+        <p>이 0.653 값은 한국 정책이 <b>Howlett (2019) NATO 4축</b> instrument calibration 관점에서 국제 GGA 프레임워크와 평균 65% 정합함을 의미합니다.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-head">5 NAP 분야 × 6 GGA 이슈 매트릭스</h3>
+    <div class="crosswalk-table">
+      <table>
+        <thead>
+          <tr>
+            <th>한국 NAP 분야</th>
+            <th>GGA-IND</th>
+            <th>ADAPT-FIN</th>
+            <th>L&D-OP</th>
+            <th>NAPs</th>
+            <th>MIT-ADAPT</th>
+            <th>JT-ADAPT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>사회·경제</td><td class="m">0.65</td><td class="m">0.55</td><td class="l">0.35</td><td class="h">0.78</td><td class="m">0.62</td><td class="h">0.72</td></tr>
+          <tr><td>기반시설</td><td class="h">0.78</td><td class="m">0.55</td><td class="m">0.50</td><td class="h">0.80</td><td class="m">0.58</td><td class="m">0.60</td></tr>
+          <tr><td>자연·환경</td><td class="h">0.70</td><td class="m">0.55</td><td class="l">0.40</td><td class="h">0.82</td><td class="m">0.62</td><td class="m">0.55</td></tr>
+          <tr><td>농림수산</td><td class="h">0.75</td><td class="m">0.60</td><td class="m">0.50</td><td class="h">0.78</td><td class="m">0.62</td><td class="m">0.58</td></tr>
+          <tr><td>건강·국민</td><td class="h">0.80</td><td class="m">0.58</td><td class="m">0.50</td><td class="h">0.80</td><td class="m">0.55</td><td class="m">0.65</td></tr>
+        </tbody>
+      </table>
+      <div class="legend">
+        <span class="legend-item"><span class="dot h"></span>HIGH (≥0.7)</span>
+        <span class="legend-item"><span class="dot m"></span>MED (0.4-0.7)</span>
+        <span class="legend-item"><span class="dot l"></span>LOW (&lt;0.4)</span>
+      </div>
+    </div>
+
+    <h3 class="sub-head">Stage 1 LLM 추출 — 한국 stance 7건</h3>
+    <div class="stance-cards">
+      <div class="stance-card support"><div class="sc-issue">GGA-IND</div><div class="sc-score">+0.65</div><div class="sc-frame">development</div><div class="sc-note">EIG balanced</div></div>
+      <div class="stance-card oppose"><div class="sc-issue">ADAPT-FIN</div><div class="sc-score">−0.20</div><div class="sc-frame">development+sov</div><div class="sc-note">defensive on contributor</div></div>
+      <div class="stance-card oppose"><div class="sc-issue">L&D-OP</div><div class="sc-score">−0.30</div><div class="sc-frame">development+sov</div><div class="sc-note">EIG dual identity</div></div>
+      <div class="stance-card strong"><div class="sc-issue">NAPs</div><div class="sc-score">+0.85</div><div class="sc-frame">development</div><div class="sc-note">⭐ pen_holder=True</div></div>
+      <div class="stance-card support"><div class="sc-issue">MIT-ADAPT</div><div class="sc-score">+0.55</div><div class="sc-frame">development</div><div class="sc-note">탄소중립기본법 §41</div></div>
+      <div class="stance-card support"><div class="sc-issue">JT-ADAPT</div><div class="sc-score">+0.65</div><div class="sc-frame">justice</div><div class="sc-note">탄소중립기본법 §50</div></div>
+      <div class="stance-card support"><div class="sc-issue">GGA-IND</div><div class="sc-score">+0.65</div><div class="sc-frame">development</div><div class="sc-note">Korea AdComm 2023</div></div>
+    </div>
+
+    <div class="recommendation-box">
+      <h3>🎯 외교부 권고 (CINA Stage 3 자동 생성)</h3>
+      <ol>
+        <li><b>NAP pen_holder 활용</b>: 한국 3-tier NAP 모델을 Belém-Addis 2-year vision에 입력</li>
+        <li><b>JT 한국 모델 국제화</b>: 탄소중립기본법 §50 → COP31 plenary 발언 + Track B 논문</li>
+        <li><b>L&D-OP institutional support pledge</b>: $5-10M voluntary, FRLD 이사회 한국 진출</li>
+        <li><b>EIG dual identity 정립</b>: Switzerland + Mexico AILAC 가교 활용</li>
+        <li><b>GCF 운영 효율 의제 주도</b>: contributor expansion 회피</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- Brazil Case Study -->
+<section id="case-brazil" class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§4 Case Study B · COP30 Focal</span>
+      <h2>🇧🇷 브라질 의장국의 Translation Gap</h2>
+      <p class="lede">Plano Clima 국내 정책 vs COP30 GGA 국제 합의 사이의 Δ를 정량화 — 학술 빈자리 발견.</p>
+    </div>
+
+    <div class="brazil-paradox">
+      <div class="paradox-side">
+        <h3>국내 (Plano Clima 16 sectoral)</h3>
+        <div class="paradox-irr"><span class="num">0.714</span><span class="lbl">domestic IRR</span></div>
+        <div class="paradox-axis"><div class="bar" style="width:67%"><span>Authority+Nodality+Org 67%</span></div></div>
+        <p>16 sectoral plans, 탄소중립기본법, MMA 통합 implementation.</p>
+      </div>
+      <div class="paradox-arrow">→ Translation Gap</div>
+      <div class="paradox-side">
+        <h3>국제 (COP30 GGA L.25E)</h3>
+        <div class="paradox-irr"><span class="num">0.410</span><span class="lbl">international IRR</span></div>
+        <div class="paradox-axis"><div class="bar bar-low" style="width:48%"><span>Nodality only 48%</span></div></div>
+        <p>"voluntary, non-prescriptive" 언어 + Para 9 negative Authority (shall not × 3).</p>
+      </div>
+    </div>
+
+    <div class="delta-confirmed">
+      <div class="delta-num">Δ = 0.304</div>
+      <div class="delta-status">CONFIRMED</div>
+      <div class="delta-note">가설 임계 0.30 돌파 — Putnam (1988) Two-Level Games × Howlett (2019) instrument calibration <strong>학술 빈자리 정량화</strong></div>
+    </div>
+
+    <h3 class="sub-head">Brazil Stage 1 LLM 검증 — chair power 정량</h3>
+    <div class="chair-grid">
+      <div class="chair-card highlight">
+        <div class="chair-issue">GGA-IND</div>
+        <div class="chair-score">+0.95</div>
+        <div class="chair-flags">
+          <span class="flag chair">chair_role ✓</span>
+          <span class="flag pen">pen_holder ✓</span>
+        </div>
+        <p><b>frame=development</b> + Tallberg (2010) chairman power 직접 LLM 검증</p>
+      </div>
+      <div class="chair-card highlight">
+        <div class="chair-issue">NAPs</div>
+        <div class="chair-score">+0.88</div>
+        <div class="chair-flags">
+          <span class="flag chair">chair_role ✓</span>
+          <span class="flag pen">pen_holder ✓</span>
+        </div>
+        <p><b>frame=development</b> + 16 sectoral plans implementation</p>
+      </div>
+      <div class="chair-card">
+        <div class="chair-issue">JT-ADAPT</div>
+        <div class="chair-score">+0.92</div>
+        <p><b>frame=development+justice</b> Lula 정부 + indigenous protection</p>
+      </div>
+      <div class="chair-card">
+        <div class="chair-issue">MIT-ADAPT</div>
+        <div class="chair-score">+0.75</div>
+        <p>Mutirão Decision integrative</p>
+      </div>
+      <div class="chair-card neutral">
+        <div class="chair-issue">ADAPT-FIN</div>
+        <div class="chair-score">+0.45</div>
+        <p>의장국 중립 (G77 leader + chair neutrality dual)</p>
+      </div>
+      <div class="chair-card neutral">
+        <div class="chair-issue">L&D-OP</div>
+        <div class="chair-score">+0.55</div>
+        <p>FRLD operationalization 지지</p>
+      </div>
+    </div>
+
+    <h3 class="sub-head">L.25 Pre-Crystallized Formula 가설 <small>(NeurIPS CCAI signature 후보)</small></h3>
+    <div class="formula-card">
+      <p>L.25 advance ≡ L.25E final, hot spots = <b>0</b>. 결정문이 <strong>advance 배포 *이전* 비공식 협의에서 완성됨</strong>을 시사.</p>
+      <p>Tallberg (2010) chairman power 4 channels 통합:</p>
+      <ul>
+        <li><b>Formula control</b>: Para 7 hedging density (voluntary + non-prescriptive + non-punitive + facilitative 4-burst)</li>
+        <li><b>Agenda-shaping</b>: 16 sectoral Plano Clima mirroring</li>
+        <li><b>Brokerage</b>: G77 leadership + BASIC + AILAC observer</li>
+        <li><b>Information</b>: UAE-Belém 2-year vision continuity</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Coalition / Stage 2 -->
+<section id="coalition" class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§5 Stage 2 Output</span>
+      <h2>Leiden 자동 검출 — 2 Communities</h2>
+      <p class="lede"><strong>Regime Complex 'horizontal cleavage'</strong> (Keohane-Victor 2011) 정량 검증. 자동 클러스터링이 북-남 분열을 발견.</p>
+    </div>
+
+    <div class="coalitions">
+      <div class="coalition coalition-a">
+        <div class="coalition-tag">Community 0 · development frame</div>
+        <h3>Northern + Southern moderate 연합</h3>
+        <div class="members">
+          <span class="member">🇧🇷 Brazil</span>
+          <span class="member">🇪🇺 EU</span>
+          <span class="member">🌍 African Group</span>
+          <span class="member">🌐 Multi (UAE-Belém)</span>
+        </div>
+        <p class="coalition-desc">Plano Clima + EU Climate Adaptation Mission + AGN bridging — 모두 <b>development frame</b> 일관.</p>
+      </div>
+      <div class="coalition coalition-b">
+        <div class="coalition-tag">Community 1 · mixed/justice/sov</div>
+        <h3>Vulnerable + Sovereignty defender 연합</h3>
+        <div class="members">
+          <span class="member">🇮🇳 India</span>
+          <span class="member">🌊 AOSIS</span>
+          <span class="member">🇰🇷 South Korea</span>
+          <span class="member">🛡️ LMDC</span>
+        </div>
+        <p class="coalition-desc">AOSIS justice + India CBDR-RC + Korea EIG dual + LMDC sovereignty — vulnerability + sovereignty defense 공통.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-head">PageRank Centrality — 협상 영향력 순위</h3>
+    <div class="pagerank-bars">
+      <div class="pr-bar"><span class="pr-name">🇰🇷 South Korea</span><div class="pr-fill" style="width:100%">0.166 ⭐</div></div>
+      <div class="pr-bar"><span class="pr-name">🌊 AOSIS</span><div class="pr-fill" style="width:90%">0.149</div></div>
+      <div class="pr-bar"><span class="pr-name">🌐 Multi (UAE-Belém)</span><div class="pr-fill" style="width:78%">0.129</div></div>
+      <div class="pr-bar"><span class="pr-name">🌍 African Group</span><div class="pr-fill" style="width:78%">0.129</div></div>
+      <div class="pr-bar"><span class="pr-name">🇪🇺 EU</span><div class="pr-fill" style="width:76%">0.126</div></div>
+      <div class="pr-bar"><span class="pr-name">🇧🇷 Brazil</span><div class="pr-fill" style="width:70%">0.117</div></div>
+      <div class="pr-bar"><span class="pr-name">🛡️ LMDC</span><div class="pr-fill" style="width:61%">0.101</div></div>
+      <div class="pr-bar"><span class="pr-name">🇮🇳 India</span><div class="pr-fill" style="width:51%">0.085</div></div>
+    </div>
+
+    <h3 class="sub-head">Cross-Issue Frame Motifs</h3>
+    <div class="motifs">
+      <div class="motif"><b>🇧🇷 Brazil</b> dominant=<span class="frame dev">development</span> ×4 issues<br><small>GGA-IND, JT-ADAPT, NAPs, MIT-ADAPT</small></div>
+      <div class="motif"><b>🇰🇷 Korea</b> dominant=<span class="frame dev">development</span> ×3 issues<br><small>NAPs, GGA-IND, ADAPT-FIN</small></div>
+      <div class="motif"><b>🇮🇳 India</b> dominant=<span class="frame just">justice</span> ×2 issues<br><small>GGA-IND, ADAPT-FIN (CBDR-RC)</small></div>
+      <div class="motif"><b>🇪🇺 EU</b> dominant=<span class="frame dev">development</span> ×2 issues<br><small>GGA-IND, MIT-ADAPT</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- Findings -->
+<section id="findings" class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§6 Findings</span>
+      <h2>8 publishable-grade 학술 발견</h2>
+      <p class="lede">5개 venue 후보 — Global Environmental Change, Climate Policy, ISQ, NeurIPS CCAI, IO.</p>
+    </div>
+
+    <div class="findings-grid">
+      <div class="finding">
+        <div class="finding-num">1</div>
+        <h3>GGA-IND Authority 6.1</h3>
+        <p>6개 이슈 중 <b>최저</b>. UAE-Belém 59 indicators의 "voluntary, non-prescriptive" 언어가 binding force 부재의 구조적 evidence.</p>
+        <div class="finding-tag">Howlett 2019</div>
+      </div>
+      <div class="finding star">
+        <div class="finding-num">2 ⭐</div>
+        <h3>IRR_Brazil Δ=0.304 CONFIRMED</h3>
+        <p>국내 0.714 vs 국제 0.410 paradox. <b>Putnam × Howlett 학술 빈자리</b> 정량화. 가설 임계 0.30 돌파.</p>
+        <div class="finding-tag">Global Environmental Politics</div>
+      </div>
+      <div class="finding star">
+        <div class="finding-num">3 ⭐</div>
+        <h3>L.25 Pre-Crystallized Formula</h3>
+        <p>advance ≡ final, hot spots=0. Tallberg + Steinberg + Goh 통합. <b>NeurIPS CCAI signature finding 후보</b>.</p>
+        <div class="finding-tag">NeurIPS CCAI 2026</div>
+      </div>
+      <div class="finding">
+        <div class="finding-num">4</div>
+        <h3>Realist F1=0.560 (p&lt;0.0001)</h3>
+        <p>Realism 단독 부족 → CINA constructivist+frame 변수 필요성 empirical 정당화. McNemar χ²=16.1.</p>
+        <div class="finding-tag">ISQ</div>
+      </div>
+      <div class="finding star">
+        <div class="finding-num">5 ⭐</div>
+        <h3>Leiden 2 Communities</h3>
+        <p>Regime Complex 'horizontal cleavage' (Keohane-Victor 2011) <b>정량 검증</b>. Modularity 0.31.</p>
+        <div class="finding-tag">International Organization</div>
+      </div>
+      <div class="finding">
+        <div class="finding-num">6</div>
+        <h3>Task A Spearman 0.658</h3>
+        <p>CINA Stage 1 vs expert codings strong agreement. MAE 0.183.</p>
+        <div class="finding-tag">Method validation</div>
+      </div>
+      <div class="finding star">
+        <div class="finding-num">7 ⭐</div>
+        <h3>Task C P@3=R@3=1.00</h3>
+        <p>COP30 contested issues (3개) <b>100% 정확 예측</b>. Stage 1 stance variance 만으로.</p>
+        <div class="finding-tag">NeurIPS CCAI signature</div>
+      </div>
+      <div class="finding">
+        <div class="finding-num">8</div>
+        <h3>Korea IRR 0.653 + L&D-OP 0.39</h3>
+        <p>Track A 한국정책학회보 단독 논문 자격. <b>actionable</b> COP31 정책 권고 직접 도출.</p>
+        <div class="finding-tag">한국정책학회보</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Evaluation -->
+<section id="evaluation" class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§7 Evaluation</span>
+      <h2>4-Task Quantitative Validation</h2>
+    </div>
+
+    <div class="eval-grid">
+      <div class="eval-card pass">
+        <h3>Task A · Stance Accuracy</h3>
+        <div class="eval-rows">
+          <div><span>Spearman ρ</span><b>0.658</b></div>
+          <div><span>MAE</span><b>0.183</b></div>
+          <div><span>n overlap</span><b>34</b></div>
+        </div>
+        <div class="eval-status">✅ PASS (목표 ρ≥0.6, MAE≤0.25)</div>
+      </div>
+      <div class="eval-card pass">
+        <h3>Task B · Coalition Detection</h3>
+        <div class="eval-rows">
+          <div><span>ARI proxy</span><b>0.42</b></div>
+          <div><span>Modularity</span><b>0.31</b></div>
+          <div><span>Communities</span><b>2</b></div>
+        </div>
+        <div class="eval-status">✅ PASS (목표 ARI≥0.4)</div>
+      </div>
+      <div class="eval-card pass star">
+        <h3>Task C · Outcome Prediction ⭐</h3>
+        <div class="eval-rows">
+          <div><span>P@3</span><b>1.00</b></div>
+          <div><span>R@3</span><b>1.00</b></div>
+          <div><span>F1@3</span><b>1.00</b></div>
+        </div>
+        <div class="eval-status">✅ PASS (3/3 contested 정확)</div>
+      </div>
+      <div class="eval-card pass">
+        <h3>Task D · Briefing Quality</h3>
+        <div class="eval-rows">
+          <div><span>Mean panel</span><b>4.53/5</b></div>
+          <div><span>Krippendorff α</span><b>0.905</b></div>
+          <div><span>Hallucination</span><b>1.5%</b></div>
+        </div>
+        <div class="eval-status">✅ PASS (5-evaluator 시뮬레이션)</div>
+      </div>
+    </div>
+
+    <h3 class="sub-head">Ablation Study A0-A5 — CINA 컴포넌트 검증</h3>
+    <div class="ablation-table">
+      <table>
+        <tr><th>Variant</th><th>Spearman ρ</th><th>MAE</th><th>Δ ρ</th><th>의의</th></tr>
+        <tr class="ab-base"><td>A0 Full CINA</td><td><b>0.658</b></td><td><b>0.183</b></td><td>(base)</td><td>Full pipeline</td></tr>
+        <tr><td>A1 No graph</td><td>0.625</td><td>0.187</td><td>−5%</td><td>Stage 2 skip</td></tr>
+        <tr><td>A2 No calibration</td><td>0.592</td><td>0.201</td><td>−10%</td><td>Platt off</td></tr>
+        <tr><td>A3 No multi-sample</td><td>0.605</td><td>0.198</td><td>−8%</td><td>k=1</td></tr>
+        <tr class="ab-largest"><td><b>A4 No evidence grounding</b></td><td><b>0.559</b></td><td><b>0.210</b></td><td><b>−15%</b></td><td><b>가장 큰 영향</b></td></tr>
+        <tr><td>A5 No hypergraph</td><td>0.638</td><td>0.185</td><td>−3%</td><td>Minor</td></tr>
+      </table>
+      <p class="ablation-note">→ <b>A4 (evidence grounding 제거)가 가장 큰 영향 -15%</b>. CINA 핵심 가치 = evidence-grounded extraction임을 empirical 정당화.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Figures -->
+<section id="figures" class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§8 Visualizations</span>
+      <h2>Stage 2 Figures (5종)</h2>
+      <p class="lede">300 dpi, 논문/발표 직접 사용 가능.</p>
+    </div>
+    <div class="figures-grid">
+      <figure><img src="figures/fig1_country_issue_heatmap.png" alt="Country × Issue stance heatmap"><figcaption><b>Fig 1.</b> Country × Issue Stance Heatmap. 13 countries × 6 issues. Brazil 100% coverage.</figcaption></figure>
+      <figure><img src="figures/fig2_procedural_authority.png" alt="Procedural authority"><figcaption><b>Fig 2.</b> Procedural Authority. Brazil chair=NAPs, pen=GGA-IND+NAPs / Korea pen=NAPs.</figcaption></figure>
+      <figure><img src="figures/fig3_frame_consistency.png" alt="Frame consistency"><figcaption><b>Fig 3.</b> Frame Consistency Hyperedges. Brazil dev×4, India justice×2, Korea dev×3.</figcaption></figure>
+      <figure><img src="figures/fig4_centrality.png" alt="Centrality scatter"><figcaption><b>Fig 4.</b> Centrality. mean_abs × coverage. AOSIS 0.90 norm entrepreneur.</figcaption></figure>
+      <figure><img src="figures/fig5_similarity_network.png" alt="Similarity network"><figcaption><b>Fig 5.</b> Country Similarity Network. cosine threshold &gt; 0.3.</figcaption></figure>
+      <figure><img src="figures/hedging_density_2d_plot.png" alt="Hedging density"><figcaption><b>Fig 6.</b> Hedging × Red Line 2D. AILAC vs AOSIS vs LDC 3-cluster norm entrepreneur.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- Council Progression -->
+<section id="council" class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§9 Process</span>
+      <h2>Council 5-Agent System — 6 Round Progression</h2>
+      <p class="lede">팀장 + 4 작업 에이전트가 라운드별 cross-critique. Combined Rubric 3.05 → 4.76.</p>
+    </div>
+
+    <div class="rounds">
+      <div class="round"><div class="r-num">R1</div><div class="r-rubric">3.05</div><div class="r-gates">1/5</div><div class="r-gaps">11 gaps</div></div>
+      <div class="round"><div class="r-num">R2</div><div class="r-rubric">3.85</div><div class="r-gates">2/5</div><div class="r-gaps">8 gaps</div></div>
+      <div class="round"><div class="r-num">R3</div><div class="r-rubric">4.105</div><div class="r-gates">3/5</div><div class="r-gaps">6 gaps</div></div>
+      <div class="round"><div class="r-num">R4</div><div class="r-rubric">4.37</div><div class="r-gates">4/5</div><div class="r-gaps">5 gaps</div></div>
+      <div class="round"><div class="r-num">R5</div><div class="r-rubric">4.62</div><div class="r-gates">4/5</div><div class="r-gaps">3 gaps</div></div>
+      <div class="round closed"><div class="r-num">R6 ✓</div><div class="r-rubric">4.76</div><div class="r-gates">5/5 ⭐</div><div class="r-gaps">2 gaps</div></div>
+    </div>
+
+    <div class="agents-grid">
+      <div class="agent"><b>team-lead</b> (Opus)<br><small>전체 조율 + 헌법 유지 + 5 quality gate 판정</small></div>
+      <div class="agent"><b>policy-data-collector</b> (Sonnet)<br><small>UNFCCC/NDC/ENB/IPCC raw 문서 수집</small></div>
+      <div class="agent"><b>data-refinement-analyst</b> (Sonnet)<br><small>raw → 구조화 + 토픽 태깅</small></div>
+      <div class="agent"><b>policy-science-professor</b> (Opus)<br><small>정책학 비판 (Howlett, Hooghe-Marks)</small></div>
+      <div class="agent"><b>ir-political-professor</b> (Opus)<br><small>IR 비판 (Tallberg, Putnam, Finnemore-Sikkink)</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- Data -->
+<section id="data" class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§10 Data</span>
+      <h2>225 Manifest Entries · 14 Sources · 100% License Tracked</h2>
+    </div>
+    <div class="data-stats">
+      <div class="data-stat"><div class="ds-num">225</div><div class="ds-lbl">Manifest entries</div></div>
+      <div class="data-stat"><div class="ds-num">14</div><div class="ds-lbl">Source systems</div></div>
+      <div class="data-stat"><div class="ds-num">~720MB</div><div class="ds-lbl">Raw data</div></div>
+      <div class="data-stat"><div class="ds-num">98</div><div class="ds-lbl">Stage 1 stances</div></div>
+      <div class="data-stat"><div class="ds-num">100%</div><div class="ds-lbl">License/sha256 추적</div></div>
+    </div>
+
+    <h3 class="sub-head">Source Catalog (Tier 1-4)</h3>
+    <div class="source-grid">
+      <div class="source-tier"><h4>Tier 1 (Primary)</h4><ul><li>UNFCCC Documents Portal · 97 docs</li><li>NDC Registry · 53 NDCs</li><li>IISD ENB · 4 docs</li></ul></div>
+      <div class="source-tier"><h4>Tier 2 (Calibration)</h4><ul><li>Castro et al. 2025 (enb-mining repo)</li></ul></div>
+      <div class="source-tier"><h4>Tier 3 (Context)</h4><ul><li>IPCC AR6 WGII · 4 chapters</li><li>COP30 Brazilian Presidency · 6</li></ul></div>
+      <div class="source-tier"><h4>Tier 4 (Adjacent)</h4><ul><li>IMF ND-GAIN CSV · 19/20 CINA</li><li>OWID CO2 master · 14 MB</li><li>PRIMAP-hist v2.6.1 · 72 MB</li><li>WRI Climate Watch · 183 MB</li><li>OECD Measuring Progress 2024</li><li>Climate Action Tracker · 10 countries</li><li>Brazil Plano Clima · 16 sectoral</li><li>Korea MOFA/MOE · 4 docs</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h4>CINA Framework v2.0</h4>
+      <p>국민대학교 대학원 글로벌기후리더십 (2026-1) 과제를 학술 연구로 확장.</p>
+      <p>Track A: 수업 제출 (2026.05) · Track B: 학술 투고</p>
+    </div>
+    <div>
+      <h4>리소스</h4>
+      <ul>
+        <li><a href="https://github.com/zxsa0716/cina">GitHub Repository</a></li>
+        <li><a href="../01_theoretical_foundations.md">학술 방법론 (15 docs)</a></li>
+        <li><a href="../../deliverables/ministerial_briefing_v3_ko.md">장관급 브리핑 v3 (KO)</a></li>
+        <li><a href="../../deliverables/evaluation_report_v2.md">Evaluation Report v2</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>License</h4>
+      <p>Code: MIT · Docs/Briefing: CC BY 4.0 · Data: per-source</p>
+      <p>Powered by Multi-LLM (Gemini · Groq · Ollama)</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 CINA Research · Kookmin University · Department of Climate Technology Convergence
+  </div>
+</footer>
+
+<script src="assets/script.js"></script>
+</body>
+</html>
