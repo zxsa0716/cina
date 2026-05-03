@@ -13,6 +13,11 @@
 
 ---
 
+> 📦 **모든 산출물 보기**: [ALL_OUTPUTS_INDEX.md](ALL_OUTPUTS_INDEX.md) — 학술 페이퍼 · 장관급 브리핑 · 정량 검증 보고서 8종 · Stage 2 figures 7종 · 방법론 문서 15종 · 데이터/코드 인덱스
+> 🌐 **웹 데모**: [docs/web/index.html](docs/web/index.html) (deploy 후: https://zxsa0716.github.io/cina/web/)
+
+---
+
 ## TL;DR
 
 CINA fills three gaps left by existing climate negotiation AI tools:
@@ -179,16 +184,29 @@ python -m src.evaluation.run_full_evaluation
 
 ---
 
+## Author
+
+**Heedo Choi** (최희도)
+Graduate Student, Department of Climate Technology Convergence (기후기술융합학과)
+Kookmin University, Seoul, Republic of Korea
+✉️  zxsa0716@kookmin.ac.kr  ·  GitHub: [@zxsa0716](https://github.com/zxsa0716)
+
+Research focus: Graph Attention Networks (GAT) · Explainable AI (XAI) · Urban climate analytics · Climate justice quantification
+
 ## Citation
 
 ```bibtex
-@misc{cina2026,
-  title  = {CINA: Climate Issue-Network Analysis — An LLM-GNN Pipeline for Climate Negotiation Intelligence, Retrospectively Validated on COP30 Adaptation Outcomes},
-  year   = {2026},
-  institution = {Kookmin University, Department of Climate Technology Convergence},
-  url    = {https://github.com/zxsa0716/cina}
+@misc{choi2026cina,
+  author       = {Choi, Heedo},
+  title        = {{CINA}: Climate Issue-Network Analysis --- An LLM-GNN Pipeline for Climate Negotiation Intelligence, Retrospectively Validated on COP30 Adaptation Outcomes},
+  year         = {2026},
+  institution  = {Kookmin University, Department of Climate Technology Convergence},
+  howpublished = {\url{https://github.com/zxsa0716/cina}},
+  note         = {Graduate research project, Global Climate Leadership programme (2026 Spring)}
 }
 ```
+
+**APA**: Choi, H. (2026). *CINA: Climate Issue-Network Analysis — An LLM-GNN pipeline for climate negotiation intelligence, retrospectively validated on COP30 adaptation outcomes* [Computer software]. Kookmin University, Department of Climate Technology Convergence. https://github.com/zxsa0716/cina
 
 ---
 

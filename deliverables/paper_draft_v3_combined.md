@@ -1,8 +1,11 @@
 ---
 title: "From Text to Strategy — A Multi-LLM Climate Issue-Network Analysis (CINA) Pipeline, Retrospectively Validated on COP30 Adaptation Outcomes"
 author:
-  - name: "Heedo (anonymized for review)"
-    affiliation: "Kookmin University, Department of Climate Technology Convergence"
+  - name: "Heedo Choi (최희도)"
+    affiliation: "Department of Climate Technology Convergence (기후기술융합학과), Kookmin University, Seoul, Republic of Korea"
+    email: "zxsa0716@kookmin.ac.kr"
+    orcid: "(pending registration)"
+    role: "Graduate student researcher (2026 Spring)"
 generated_at: "2026-05-03"
 target_venue:
   primary: "Global Environmental Change / Global Environmental Politics"

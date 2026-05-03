@@ -180,3 +180,13 @@ deliverables/hedging_density_2d_data.json
 *.pdf
 !data/raw/**/*.pdf
 !docs/**/*.pdf
+
+# === EXTRA HARDENING (final pass 2026-05-04) ===
+# Council sessions root — entire folder is internal research log
+council_sessions/
+
+# Round 8+ R-GAT training research code (deferred to next phase, not for v2.0 release)
+src/stage2_graph/rgat_training.py
+
+# ALL_OUTPUTS_INDEX is public, but BUILD_AUDIT and process logs remain private
+ALL_OUTPUTS_INDEX_DRAFT*.md

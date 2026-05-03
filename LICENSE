@@ -1,7 +1,10 @@
 MIT License (Code) + CC BY 4.0 (Documentation & Data)
 
 CINA: Climate Issue-Network Analysis Framework
-Copyright (c) 2026 Heedo, Kookmin University Department of Climate Technology Convergence
+Copyright (c) 2026 Heedo Choi (최희도)
+Graduate Student, Department of Climate Technology Convergence (기후기술융합학과)
+Kookmin University, Seoul, Republic of Korea
+Contact: zxsa0716@kookmin.ac.kr  ·  https://github.com/zxsa0716
 
 ================================================================================
 PART A — MIT LICENSE (applies to all code in src/, .claude/, *.py)
@@ -44,9 +47,9 @@ Under the following terms:
                   license, and indicate if changes were made.
 
 Citation:
-  Heedo (2026). CINA: Climate Issue-Network Analysis Framework.
-  Kookmin University Department of Climate Technology Convergence.
-  https://github.com/[USERNAME]/cina
+  Choi, Heedo (2026). CINA: Climate Issue-Network Analysis Framework.
+  Department of Climate Technology Convergence (기후기술융합학과),
+  Kookmin University. https://github.com/zxsa0716/cina
 
 ================================================================================
 PART C — Third-Party Data (data/raw/ — NOT in this repository)

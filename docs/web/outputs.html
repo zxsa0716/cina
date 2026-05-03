@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CINA — Outputs Showcase | All Deliverables, Figures, Reports</title>
+<meta name="description" content="CINA 프로젝트의 모든 산출물 — 보고서, 시각화, 평가 결과, 데이터셋. Heedo Choi · Kookmin University.">
+<meta name="author" content="Heedo Choi (최희도) — Kookmin University, Department of Climate Technology Convergence">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .outputs-hero { padding: 4rem 0 2rem; text-align: center; background: linear-gradient(180deg, #0b0d12 0%, #131722 100%); }
+  .outputs-hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); margin: 0 0 0.6rem; }
+  .outputs-hero p { color: var(--c-fg-mute); max-width: 720px; margin: 0 auto; }
+  .out-section { padding: 3rem 0; }
+  .out-section + .out-section { border-top: 1px solid var(--c-border); }
+  .out-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.2rem; margin-top: 1.6rem; }
+  .out-card { background: var(--c-card); border: 1px solid var(--c-border); border-radius: 12px; padding: 1.2rem; transition: border-color 0.2s, transform 0.2s; }
+  .out-card:hover { border-color: var(--c-accent); transform: translateY(-2px); }
+  .out-card .badge { display: inline-block; font-size: 0.7em; padding: 0.15rem 0.55rem; border-radius: 999px; background: rgba(110, 168, 255, 0.12); color: var(--c-accent); font-weight: 600; margin-bottom: 0.6rem; }
+  .out-card h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+  .out-card p { color: var(--c-fg-mute); font-size: 0.92em; margin: 0 0 0.7rem; line-height: 1.5; }
+  .out-card .meta { font-size: 0.78em; color: var(--c-fg-mute); display: flex; gap: 0.7rem; flex-wrap: wrap; }
+  .out-card a { color: var(--c-accent); text-decoration: none; font-weight: 500; }
+  .out-card a:hover { text-decoration: underline; }
+  .fig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.2rem; margin-top: 1.6rem; }
+  .fig-card { background: var(--c-card); border: 1px solid var(--c-border); border-radius: 12px; overflow: hidden; }
+  .fig-card img { width: 100%; height: 260px; object-fit: contain; background: #fff; padding: 0.8rem; }
+  .fig-card .fig-body { padding: 1rem 1.2rem 1.2rem; }
+  .fig-card h4 { margin: 0 0 0.3rem; font-size: 1rem; }
+  .fig-card p { color: var(--c-fg-mute); font-size: 0.88em; margin: 0; line-height: 1.5; }
+  .stat-bar { display: flex; gap: 2rem; flex-wrap: wrap; padding: 1.4rem 1.6rem; background: var(--c-card); border: 1px solid var(--c-border); border-radius: 12px; margin: 1.5rem 0; }
+  .stat-bar .item { flex: 1; min-width: 140px; }
+  .stat-bar .item .v { font-size: 1.8rem; font-weight: 700; color: var(--c-accent); }
+  .stat-bar .item .l { font-size: 0.85em; color: var(--c-fg-mute); }
+  .toc { position: sticky; top: 80px; background: var(--c-card); border: 1px solid var(--c-border); padding: 1rem 1.4rem; border-radius: 12px; margin-bottom: 2rem; }
+  .toc strong { display: block; margin-bottom: 0.5rem; color: var(--c-fg); }
+  .toc ul { margin: 0; padding-left: 1.2rem; }
+  .toc a { color: var(--c-fg-mute); text-decoration: none; font-size: 0.92em; }
+  .toc a:hover { color: var(--c-accent); }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">CINA</span>
+      <span class="logo-tag">Outputs Showcase</span>
+    </a>
+    <nav class="nav-main">
+      <a href="index.html">← 메인</a>
+      <a href="#deliverables">Deliverables</a>
+      <a href="#figures">Figures</a>
+      <a href="#evaluations">Evaluations</a>
+      <a href="#data">Data</a>
+      <a href="https://github.com/zxsa0716/cina" target="_blank" rel="noopener" class="nav-github">GitHub →</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="outputs-hero">
+  <div class="container">
+    <h1>📦 모든 산출물 (Outputs Showcase)</h1>
+    <p>CINA 프로젝트의 <strong>전 산출물</strong> — 학술 페이퍼, 장관급 브리핑, 정량 평가 보고서, Stage 2 시각화, 데이터셋. 모든 항목은 GitHub repository에서 직접 열람 가능합니다.</p>
+    <div class="stat-bar" style="margin-top: 2rem;">
+      <div class="item"><div class="v">3</div><div class="l">학술 논문 / 브리핑</div></div>
+      <div class="item"><div class="v">8</div><div class="l">정량 검증 보고서</div></div>
+      <div class="item"><div class="v">7</div><div class="l">Stage 2 Figures</div></div>
+      <div class="item"><div class="v">15</div><div class="l">방법론 문서</div></div>
+      <div class="item"><div class="v">225</div><div class="l">데이터 manifest</div></div>
+      <div class="item"><div class="v">98</div><div class="l">Stage 1 stances</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="container" style="margin-top: 2rem;">
+  <div class="toc">
+    <strong>📑 Table of Contents</strong>
+    <ul>
+      <li><a href="#deliverables">§1 Deliverables — 학술/정책 산출물 (3 + 8)</a></li>
+      <li><a href="#figures">§2 Figures — Stage 2 시각화 (7 PNG)</a></li>
+      <li><a href="#evaluations">§3 Evaluations — Phase 5 4-Task + Ablation</a></li>
+      <li><a href="#methodology">§4 Methodology Docs — 학술 방법론 (15 문서)</a></li>
+      <li><a href="#data">§5 Data Architecture — Manifest + Schema</a></li>
+      <li><a href="#code">§6 Code — Pipeline + Council + Evaluation</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Section 1: Deliverables -->
+<section id="deliverables" class="out-section">
+  <div class="container">
+    <h2>§1 Deliverables — 학술 페이퍼 + 장관급 브리핑 + 정량 검증</h2>
+    <p style="color: var(--c-fg-mute);">
+      Track A (수업 제출 — 장관급 브리핑) + Track B (학술 투고 — 페이퍼) 듀얼 트랙 산출물 일체.
+    </p>
+
+    <h3 class="sub-head">📄 Headline 산출물 (3)</h3>
+    <div class="out-grid">
+      <div class="out-card">
+        <span class="badge">Track B · Paper</span>
+        <h3>📘 paper_draft_v3_combined.md</h3>
+        <p>3,428 words · 23 references · 7 sections + KO summary. <strong>Target venue</strong>: Global Environmental Change / NeurIPS CCAI 2026 / 한국정책학회보. Inline figure refs (1-6).</p>
+        <div class="meta">
+          <span>📐 EN + KO</span>
+          <span>📊 23 citations</span>
+          <a href="https://github.com/zxsa0716/cina/blob/main/deliverables/paper_draft_v3_combined.md" target="_blank">View on GitHub →</a>
+        </div>
+      </div>
+      <div class="out-card">
+        <span class="badge">Track A · Briefing (KO)</span>
+        <h3>🇰🇷 ministerial_briefing_v3_ko.md</h3>
+        <p>외교부 장관급 협상 전략 브리핑 (한국어). 9 섹션 + 4 부록(증거 추적성, 데이터 lineage, 불확실성, LLM provider attribution).</p>
+        <div class="meta">
+          <span>📐 9 sections</span>
+          <span>📎 4 appendices</span>
+          <a href="https://github.com/zxsa0716/cina/blob/main/deliverables/ministerial_briefing_v3_ko.md" target="_blank">View on GitHub →</a>
+        </div>
+      </div>
+      <div class="out-card">
+        <span class="badge">Track A · Briefing (EN)</span>
+        <h3>🇬🇧 ministerial_briefing_v3_en.md</h3>
+        <p>English version of the ministerial briefing — 310 lines. Direct translation with same evidence-grounded structure for international circulation.</p>
+        <div class="meta">
+          <span>📐 310 lines</span>
+          <span>📐 mirror of KO</span>
+          <a href="https://github.com/zxsa0716/cina/blob/main/deliverables/ministerial_briefing_v3_en.md" target="_blank">View on GitHub →</a>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-head" style="margin-top: 2.5rem;">🔬 정량 검증 보고서 (8)</h3>
+    <div class="out-grid">
+      <div class="out-card">
+        <span class="badge">Finding 1</span>
+        <h3>🌍 IRR_Korea_2025_v2.md</h3>
+        <p><strong>IRR_Korea = 0.653</strong>, CI [0.55, 0.71]. 30/30 cells (5 NAP 섹터 × 6 GGA 이슈) Korean NAP × GGA crosswalk 적용.</p>
+        <div class="meta">
+          <span>IRR = 0.653</span>
+          <a href="https://github.com/zxsa0716/cina/blob/main/deliverables/IRR_Korea_2025_v2.md" target="_blank">View →</a>
+        </div>
+      </div>
+      <div class="out-card">
+        <span class="badge">Finding 2 ⭐</span>
+        <h3>🇧🇷 IRR_Brazil_2025_v2_negAuth.md</h3>
+        <p>Brazil <strong>Translation Gap Δ = 0.304 CONFIRMED</strong> (Plano Clima 67% → GGA voluntary 48%). Putnam × Howlett gap 정량화 — NeurIPS CCAI signature finding.</p>
+        <div class="meta">
+          <span>Δ = 0.304</span>
+          <a href="https://github.com/zxsa0716/cina/blob/main/deliverables/IRR_Brazil_2025_v2_negAuth.md" target="_blank">View →</a>
+        </div>
+      </div>
+      <div class="out-card">
+        <span class="badge">Finding 3</span>
+        <h3>📜 L25_formula_control_evidence.md</h3>
+        <p>L.25 pre-crystallized formula 가설 — Tallberg 2010 procedural authority + Steinberg 2002 + Goh 2007 통합 검증.</p>
+        <div class="meta">
+          <span>NeurIPS CCAI 후보</span>
+          <a href="https://github.com/zxsa0716/cina/blob/main/deliverables/L25_formula_control_evidence.md" target="_blank">View →</a>
+        </div>
+      </div>
+      <div class="out-card">
+        <span class="badge">Finding 4</span>
+        <h3>📊 realist_b0_statistics.md</h3>
+        <p><strong>Realist B0 F1 = 0.560</strong>, McNemar p<0.0001, κ=0.216. Constructivist + frame variables 경험적 정당성 확보.</p>
+        <div class="meta">
+          <span>F1 = 0.560</span>
+          <a href="https://github.com/zxsa0716/cina/blob/main/deliverables/realist_b0_statistics.md" target="_blank">View →</a>
+        </div>
+      </div>
+      <div class="out-card">
+        <span class="badge">Finding 5 ⭐</span>
+        <h3>🌐 AILAC_norm_entrepreneur_quantification.md</h3>
+        <p>AILAC norm entrepreneur 가설 — Finnemore-Sikkink (1998) <strong>4 criteria 3.5/4 PASS</strong>. NES = 0.86. Tactical diplomatic framing 정량화.</p>
+        <div class="meta">
+          <span>NES = 0.86</span>
+          <a href="https://github.com/zxsa0716/cina/blob/main/deliverables/AILAC_norm_entrepreneur_quantification.md" target="_blank">View →</a>
+        </div>
+      </div>
+      <div class="out-card">
+        <span class="badge">Phase 5 Final ⭐</span>
+        <h3>📈 evaluation_report_v2.md</h3>
+        <p>Phase 5 4-task 정량 검증. <strong>Spearman ρ=0.658, P@3=R@3=1.00, Mean 4.53/5, α=0.905</strong>. Ablation A0-A5 + 5/5 PASS.</p>
+        <div class="meta">
+          <span>5/5 PASS</span>
+          <a href="https://github.com/zxsa0716/cina/blob/main/deliverables/evaluation_report_v2.md" target="_blank">View →</a>
+        </div>
+      </div>
+      <div class="out-card">
+        <span class="badge">Crosswalk</span>
+        <h3>📋 korean_nap_gga_crosswalk_v3.csv</h3>
+        <p>Korean National Adaptation Plan × GGA 5 NAP × 6 GGA = 30 cells. IRR_Korea 산출 기반.</p>
+        <div class="meta">
+          <span>30 cells</span>
+          <a href="https://github.com/zxsa0716/cina/blob/main/deliverables/korean_nap_gga_crosswalk_v3.csv" target="_blank">View →</a>
+        </div>
+      </div>
+      <div class="out-card">
+        <span class="badge">Pre-analytic</span>
+        <h3>🎯 country_selection.md / sector_focus.md / agenda_matrix.md</h3>
+        <p>Brazil 선정 근거 + Adaptation 섹터 정당성 + COP30 6-issue 매트릭스 (수업 과제 사전 분석).</p>
+        <div class="meta">
+          <span>3 docs</span>
+          <a href="https://github.com/zxsa0716/cina/tree/main/deliverables" target="_blank">Folder →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 2: Figures -->
+<section id="figures" class="out-section">
+  <div class="container">
+    <h2>§2 Figures — Stage 2 시각화 (7 PNG · 300 dpi)</h2>
+    <p style="color: var(--c-fg-mute);">
+      모든 figure는 <code>data/processed/figures/</code> 또는 <code>deliverables/</code>에서 생성 — matplotlib + networkx, reproducible via <code>src/stage2_graph/generate_figures.py</code>.
+    </p>
+    <div class="fig-grid">
+      <div class="fig-card">
+        <img src="figures/fig1_country_issue_heatmap.png" alt="Country × Issue Stance Heatmap">
+        <div class="fig-body">
+          <h4>Figure 1. Country × Issue Stance Heatmap</h4>
+          <p>13 countries × 6 issues stance tensor (Stage 1 산출). 적색=opposing, 청색=supporting. 페이퍼 §3 anchor figure.</p>
+        </div>
+      </div>
+      <div class="fig-card">
+        <img src="figures/fig2_procedural_authority.png" alt="Procedural Authority Distribution">
+        <div class="fig-body">
+          <h4>Figure 2. Procedural Authority Distribution</h4>
+          <p>Tallberg 2010 framework: chair_role + pen_holder + drafts_text 신호 분포. Brazil COP30 chair authority 정량화.</p>
+        </div>
+      </div>
+      <div class="fig-card">
+        <img src="figures/fig3_frame_consistency.png" alt="Frame Consistency by Country Group">
+        <div class="fig-body">
+          <h4>Figure 3. Frame Consistency by Group</h4>
+          <p>5-frame typology (scientific/justice/sovereignty/security/development) × 그룹별 빈도. AOSIS=justice, Saudi+India=sovereignty.</p>
+        </div>
+      </div>
+      <div class="fig-card">
+        <img src="figures/fig4_centrality.png" alt="Centrality Top-K">
+        <div class="fig-body">
+          <h4>Figure 4. Centrality Rankings</h4>
+          <p>5 centrality (PageRank·betweenness·eigenvector·degree·closeness) Top-K. Brazil 의장국 + EU 펜홀더 우위.</p>
+        </div>
+      </div>
+      <div class="fig-card">
+        <img src="figures/fig5_similarity_network.png" alt="Country Similarity Network with Leiden Communities">
+        <div class="fig-body">
+          <h4>Figure 5. Leiden Community Network</h4>
+          <p>Leiden 2 communities: C0={Brazil, Multi, AGN, EU} development / C1={AOSIS, India, Korea, LMDC} mixed. Keohane-Victor 'horizontal cleavage' 정량 검증.</p>
+        </div>
+      </div>
+      <div class="fig-card">
+        <img src="figures/hedging_density_2d_plot.png" alt="Hedging × Red Line 2D">
+        <div class="fig-body">
+          <h4>Figure 6. Hedging Density × Red Line 2D</h4>
+          <p>AILAC (high hedging + mod RL — tactical), AOSIS (low hedging + high RL — principled), LDC (mod + low — vulnerable). Finnemore-Sikkink norm typology 시각 검증.</p>
+        </div>
+      </div>
+      <div class="fig-card">
+        <img src="figures/hedging_vs_redline_2d.png" alt="Hedging vs Red Line — 보강 v2">
+        <div class="fig-body">
+          <h4>Figure 7. Hedging vs Red Line (v2 보강)</h4>
+          <p>Round 5 IR 교수 권고 반영 보강판 — 추가 그룹 라벨링 + 95% confidence ellipse.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: Evaluations -->
+<section id="evaluations" class="out-section">
+  <div class="container">
+    <h2>§3 Evaluations — Phase 5 4-Task + Ablation A0-A5</h2>
+
+    <div class="stat-bar">
+      <div class="item"><div class="v">0.658</div><div class="l">Task A · Spearman ρ ✅</div></div>
+      <div class="item"><div class="v">0.42</div><div class="l">Task B · ARI proxy ✅</div></div>
+      <div class="item"><div class="v">1.00 / 1.00</div><div class="l">Task C · P@3 / R@3 ⭐</div></div>
+      <div class="item"><div class="v">4.53/5</div><div class="l">Task D · Mean panel ✅</div></div>
+      <div class="item"><div class="v">0.905</div><div class="l">Task D · Krippendorff α ✅</div></div>
+      <div class="item"><div class="v">5/5</div><div class="l">Quality Gates PASS ⭐</div></div>
+    </div>
+
+    <h3 class="sub-head">🔍 Ablation Study (A0-A5)</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; background: var(--c-card); border: 1px solid var(--c-border); border-radius: 8px;">
+      <thead style="background: rgba(110,168,255,0.08);">
+        <tr><th style="text-align:left; padding: 0.7rem 1rem;">Ablation</th><th style="text-align:left; padding: 0.7rem 1rem;">Removed</th><th style="text-align:right; padding: 0.7rem 1rem;">Spearman ρ Δ</th></tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding: 0.6rem 1rem;">A0 (full)</td><td style="padding: 0.6rem 1rem;">— (baseline)</td><td style="padding: 0.6rem 1rem; text-align:right; color: var(--c-accent);">0.658</td></tr>
+        <tr><td style="padding: 0.6rem 1rem;">A1</td><td style="padding: 0.6rem 1rem;">Bayesian CI</td><td style="padding: 0.6rem 1rem; text-align:right;">−0.05</td></tr>
+        <tr><td style="padding: 0.6rem 1rem;">A2</td><td style="padding: 0.6rem 1rem;">NATO 4-axis</td><td style="padding: 0.6rem 1rem; text-align:right;">−0.07</td></tr>
+        <tr><td style="padding: 0.6rem 1rem;">A3</td><td style="padding: 0.6rem 1rem;">Frame typology</td><td style="padding: 0.6rem 1rem; text-align:right;">−0.04</td></tr>
+        <tr><td style="padding: 0.6rem 1rem;"><strong>A4</strong></td><td style="padding: 0.6rem 1rem;"><strong>Evidence grounding</strong></td><td style="padding: 0.6rem 1rem; text-align:right; color: #ff6b6b;"><strong>−0.15</strong></td></tr>
+        <tr><td style="padding: 0.6rem 1rem;">A5</td><td style="padding: 0.6rem 1rem;">Multi-LLM ensemble</td><td style="padding: 0.6rem 1rem; text-align:right;">−0.06</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 1rem; color: var(--c-fg-mute); font-size: 0.92em;">→ <strong>Evidence grounding (A4) is the single most load-bearing component</strong> — 페이퍼 §5.3 핵심 발견.</p>
+
+    <div class="out-grid" style="margin-top: 2rem;">
+      <div class="out-card">
+        <span class="badge">Phase 5 raw</span>
+        <h3>📊 evaluation_report_v2.json</h3>
+        <p>raw 평가 데이터 (machine-readable). Task A/B/C/D + Ablation 전체 메트릭 + per-record breakdowns.</p>
+        <div class="meta">
+          <a href="https://github.com/zxsa0716/cina/blob/main/deliverables/evaluation_report_v2.json" target="_blank">View JSON →</a>
+        </div>
+      </div>
+      <div class="out-card">
+        <span class="badge">Pipeline</span>
+        <h3>🐍 src/evaluation/run_full_evaluation.py</h3>
+        <p>Phase 5 4-task 평가 재현 스크립트. <code>python -m src.evaluation.run_full_evaluation</code>으로 모든 메트릭 재생성.</p>
+        <div class="meta">
+          <a href="https://github.com/zxsa0716/cina/blob/main/src/evaluation/run_full_evaluation.py" target="_blank">View Code →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 4: Methodology -->
+<section id="methodology" class="out-section">
+  <div class="container">
+    <h2>§4 Methodology Documents — 학술 방법론 (15 docs)</h2>
+    <p style="color: var(--c-fg-mute);">논문 §2-3 (이론·방법론)의 직접 구성 요소. <code>docs/</code> 폴더 내 15개 markdown 일체.</p>
+    <div class="out-grid">
+      <div class="out-card"><span class="badge">Theory</span><h3>01 Theoretical Foundations</h3><p>Regime Complex (Keohane-Victor) · Two-Level Games (Putnam) · Issue Linkage (Tollison-Willett) · Epistemic Communities (Haas)</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/01_theoretical_foundations.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">Method</span><h3>02 Methodology</h3><p>Three-stage pipeline 공식 정의. Stage 1 LLM extraction · Stage 2 graph analysis · Stage 3 generation.</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/02_methodology.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">Schema</span><h3>03 Data Architecture</h3><p>StanceRecord schema v1.3 + 모든 필드 정의 + JSONL 포맷 사양.</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/03_data_architecture.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">Stage 1</span><h3>04 Stage 1 Stance Extraction</h3><p>Multi-sample k=5 + Bayesian credible interval + Platt calibration + evidence_quote 강제.</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/04_stage1_stance_extraction.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">Stage 2</span><h3>05 Stage 2 Graph Analysis</h3><p>R-GAT 이론 사양 + Leiden community + Apriori-style hyperedge mining.</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/05_stage2_graph_analysis.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">Stage 3</span><h3>06 Stage 3 Briefing Generation</h3><p>Graph-Grounded Generation + 7-rule post-hoc verification.</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/06_stage3_briefing_generation.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">Eval</span><h3>07 Evaluation Protocol</h3><p>Task A-D 사양 + threshold 정의 + ablation matrix.</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/07_evaluation_protocol.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">Position</span><h3>08 Novelty Positioning</h3><p>학술 기여 C1-C10 + baseline 비교 (NegotiateCOP/RICE-N/Castro 2025).</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/08_novelty_positioning.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">Brief</span><h3>09 Ministerial Briefing Template</h3><p>Track A 산출 양식 — 9 섹션 + 4 부록 사양.</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/09_ministerial_briefing_template.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">Council</span><h3>10 Council Protocol</h3><p>5-agent council 구조 + Phase A-E + Quality Gate 5종.</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/10_council_protocol.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">Sources</span><h3>11 Source Catalog</h3><p>Tier 1-4 소스 분류 + 14 source systems + per-source license.</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/11_source_catalog.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">Plan</span><h3>12 Data Collection Master Plan</h3><p>225 manifest entries 수집 계획 + checkpoint resumability.</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/12_data_collection_master_plan.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">Reference</span><h3>13 Reference Tables</h3><p>20 countries × 12 groups × 6 issues × 16 sessions identifiers.</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/13_reference_tables.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">v1.3</span><h3>14 Schema v1.3 Changes</h3><p>NATO 4-axis + frame_type + procedural_signals 추가 changelog.</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/14_schema_v1_3_changes.md" target="_blank">View →</a></div>
+      <div class="out-card"><span class="badge">v2</span><h3>15 Stage 2 Features v2</h3><p>chair_status + drafts_text edge type + chair authority weighting.</p><a href="https://github.com/zxsa0716/cina/blob/main/docs/15_stage2_features_v2.md" target="_blank">View →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 5: Data -->
+<section id="data" class="out-section">
+  <div class="container">
+    <h2>§5 Data Architecture — Manifest + Schema</h2>
+    <div class="stat-bar">
+      <div class="item"><div class="v">225</div><div class="l">Manifest entries</div></div>
+      <div class="item"><div class="v">14</div><div class="l">Source systems</div></div>
+      <div class="item"><div class="v">~720MB</div><div class="l">Raw data (Zenodo 별도)</div></div>
+      <div class="item"><div class="v">100%</div><div class="l">License + sha256 추적</div></div>
+      <div class="item"><div class="v">98</div><div class="l">Stage 1 stances</div></div>
+      <div class="item"><div class="v">2</div><div class="l">Leiden communities</div></div>
+    </div>
+    <div class="out-grid">
+      <div class="out-card">
+        <span class="badge">Public</span>
+        <h3>📋 data/manifest/manifest.jsonl</h3>
+        <p>225 raw 문서 metadata 추적 (license, sha256, source, version, collected_at).</p>
+        <a href="https://github.com/zxsa0716/cina/blob/main/data/manifest/manifest.jsonl" target="_blank">View JSONL →</a>
+      </div>
+      <div class="out-card">
+        <span class="badge">Public</span>
+        <h3>📊 coverage_summary.json</h3>
+        <p>소스별 커버리지 통계 — 14 source systems 수집 현황.</p>
+        <a href="https://github.com/zxsa0716/cina/blob/main/data/manifest/coverage_summary.json" target="_blank">View JSON →</a>
+      </div>
+      <div class="out-card">
+        <span class="badge">Web demo</span>
+        <h3>🌐 docs/web/assets/data.json</h3>
+        <p>웹사이트 시각화에 임베딩된 실데이터. Stage 1 stances + Leiden + IRR + Task A-D.</p>
+        <a href="https://github.com/zxsa0716/cina/blob/main/docs/web/assets/data.json" target="_blank">View JSON →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 6: Code -->
+<section id="code" class="out-section">
+  <div class="container">
+    <h2>§6 Code — Pipeline + Council + Evaluation</h2>
+    <p style="color: var(--c-fg-mute);">전 파이프라인은 MIT 라이선스로 GitHub에 공개 — 재현 가능한 reproducibility 우선.</p>
+    <div class="out-grid">
+      <div class="out-card">
+        <span class="badge">CLI</span>
+        <h3>🚀 src/pipeline.py</h3>
+        <p>End-to-end CLI: <code>python -m src.pipeline --country Brazil --cop 30 --sector adaptation --stages 1,2,3</code>.</p>
+        <a href="https://github.com/zxsa0716/cina/blob/main/src/pipeline.py" target="_blank">View →</a>
+      </div>
+      <div class="out-card">
+        <span class="badge">Stage 1</span>
+        <h3>🤖 src/stage1_extract/</h3>
+        <p>5 LLM provider abstraction (Gemini/Groq/Ollama/OpenRouter/Anthropic) + multi-sample + calibration.</p>
+        <a href="https://github.com/zxsa0716/cina/tree/main/src/stage1_extract" target="_blank">Folder →</a>
+      </div>
+      <div class="out-card">
+        <span class="badge">Stage 2</span>
+        <h3>🕸️ src/stage2_graph/</h3>
+        <p>NetworkX heterogeneous graph + Leiden (igraph) + 5 centralities + figure 생성.</p>
+        <a href="https://github.com/zxsa0716/cina/tree/main/src/stage2_graph" target="_blank">Folder →</a>
+      </div>
+      <div class="out-card">
+        <span class="badge">Stage 3</span>
+        <h3>📝 src/stage3_brief/</h3>
+        <p>Graph-Grounded Generation + 7-rule verification.</p>
+        <a href="https://github.com/zxsa0716/cina/tree/main/src/stage3_brief" target="_blank">Folder →</a>
+      </div>
+      <div class="out-card">
+        <span class="badge">Eval</span>
+        <h3>📈 src/evaluation/</h3>
+        <p>Phase 5 4-task 평가 + Ablation A0-A5 + Krippendorff α.</p>
+        <a href="https://github.com/zxsa0716/cina/tree/main/src/evaluation" target="_blank">Folder →</a>
+      </div>
+      <div class="out-card">
+        <span class="badge">Council</span>
+        <h3>🏛️ src/council/</h3>
+        <p>5-agent council Phase A-E orchestration + state_manager + quality gate.</p>
+        <a href="https://github.com/zxsa0716/cina/tree/main/src/council" target="_blank">Folder →</a>
+      </div>
+      <div class="out-card">
+        <span class="badge">Collect</span>
+        <h3>📥 src/collect/</h3>
+        <p>26 collectors (UNFCCC, NDC, ENB, IPCC, IMF, PRIMAP, WRI, Brazil, Korea, Castro 2025).</p>
+        <a href="https://github.com/zxsa0716/cina/tree/main/src/collect" target="_blank">Folder →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h4>CINA Outputs Showcase</h4>
+      <p>국민대학교 대학원 글로벌기후리더십 (2026-1). 전 산출물 공개 인덱스.</p>
+      <p style="margin-top: 0.8rem; font-size: 0.85em; color: var(--c-fg-mute);">
+        <strong>저자(Author)</strong>: Heedo Choi (최희도)<br>
+        Graduate Student · 기후기술융합학과<br>
+        Kookmin University · zxsa0716@kookmin.ac.kr
+      </p>
+    </div>
+    <div>
+      <h4>리소스</h4>
+      <ul>
+        <li><a href="index.html">← 메인 페이지</a></li>
+        <li><a href="https://github.com/zxsa0716/cina">GitHub Repository</a></li>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/ALL_OUTPUTS_INDEX.md">All Outputs Index (MD)</a></li>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/README.md">README</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>License</h4>
+      <p>Code: MIT · Docs/Briefing: CC BY 4.0 · Data: per-source</p>
+      <p>Powered by Multi-LLM (Gemini · Groq · Ollama)</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 <strong>Heedo Choi (최희도)</strong> · Kookmin University, Department of Climate Technology Convergence (기후기술융합학과) · Code MIT · Docs CC BY 4.0
+  </div>
+</footer>
+
+<script src="assets/script.js"></script>
+</body>
+</html>
