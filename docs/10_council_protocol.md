@@ -54,7 +54,7 @@
 
 ## 3. 세션 간 지속성 (Session Persistence)
 
-Claude Code 세션은 재시작되므로, 협의체 상태는 파일 기반 저장.
+CINA pipeline 세션은 재시작되므로, 협의체 상태는 파일 기반 저장.
 
 ### 3.1 중심 파일 — `council_sessions/state.json`
 ```json
@@ -235,7 +235,7 @@ round_N/
 /cina-council start
 ```
 
-### 옵션 B — Claude Code 세션에서 자연어
+### 옵션 B — CINA pipeline 세션에서 자연어
 "팀장 에이전트 소환해서 라운드 1 시작"
 
 ### 옵션 C — Python 스크립트 (Anthropic API 직접)

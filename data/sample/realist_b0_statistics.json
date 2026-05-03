@@ -1,0 +1,50 @@
+{
+  "analysis_label": "Realist_B0_Statistics_Round5",
+  "processing_version": "round5-v1.4",
+  "processed_at": "2026-04-26T00:00:00Z",
+  "n_pairs": 171,
+  "n_countries": 19,
+  "truth_positive_pairs": 75,
+  "confusion_matrix": {
+    "TP": 42,
+    "FP": 33,
+    "FN": 33,
+    "TN": 63
+  },
+  "f1": 0.56,
+  "precision": 0.56,
+  "recall": 0.56,
+  "bootstrap": {
+    "n_resamples": 1000,
+    "seed": 42,
+    "f1_mean": 0.5596,
+    "ci_95_lower": 0.4583,
+    "ci_95_upper": 0.6536
+  },
+  "cohen_kappa": {
+    "kappa": 0.2163,
+    "po": 0.614,
+    "pe": 0.5075,
+    "interpretation": "fair"
+  },
+  "mcnemar_vs_random": {
+    "random_f1": 0.44,
+    "random_tp": 33,
+    "n12_approx": 18,
+    "n21_approx": 0,
+    "chi2": 16.056,
+    "p_value_approx": 0.0001,
+    "significant_p05": true
+  },
+  "limitations": [
+    "N=32 chair records (Bayer-Urpelainen threshold 80 not yet reached)",
+    "Pseudo-truth ground truth (group membership) - ENB Castro 2025 data needed for formal validation",
+    "Single-year cross-section (2024) - stance positions vary across COP sessions",
+    "McNemar p-value is approximated from chi2 distribution lookup"
+  ],
+  "hypothesis_verdict": {
+    "H_F1_below_0.70": "CONFIRMED (F1=0.560 < 0.70)",
+    "implication": "Realist variables alone insufficient to explain UNFCCC cooperation structure; CINA constructivist+framing variables justified"
+  },
+  "r6_recommendation": "Re-run with N>=80 records after Bayer-Urpelainen threshold reached; replace pseudo-truth with Castro ENB 2025 co-sponsorship data"
+}

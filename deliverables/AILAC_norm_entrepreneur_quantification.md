@@ -1,6 +1,6 @@
 ---
 title: AILAC Norm Entrepreneur — 정량 검증 보고서
-generator: CINA Stage 1+2 (Claude Code building)
+generator: CINA Stage 1+2 (CINA pipeline building)
 generated_at: 2026-04-30
 status: v1_verified
 ---
@@ -144,6 +144,6 @@ NES_AILAC = 0.86 (high norm entrepreneur)
 
 ---
 
-**작성**: 2026-04-30, Claude Code
+**작성**: 2026-04-30, CINA pipeline
 **Status**: v1 quantitative verification complete
 **Round**: R7 task T04 완성

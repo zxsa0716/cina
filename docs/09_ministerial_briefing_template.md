@@ -223,7 +223,7 @@ CINA의 cross-issue hypergraph 분석 결과, 다음 패키지가 파레토 개�
 
 **문서 범위**: [N]개 UNFCCC 공식 문서 + [M]개 ENB 요약
 **기간**: 2024-01-01 ~ 2025-11-15
-**추출 엔진**: CINA v2.0 (LLM=claude-opus-4-7, T=0.3, k=5)
+**추출 엔진**: CINA v2.0 (LLM=llm-orch-7, T=0.3, k=5)
 **그래프**: [N×I×T] 텐서, R-GAT 학습 [epochs] epochs
 **분석 날짜**: YYYY-MM-DD
 

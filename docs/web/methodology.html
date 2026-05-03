@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CINA — Methodology · 인터랙티브 파이프라인 설명</title>
+<meta name="description" content="CINA 3-Stage LLM-GNN-LLM 파이프라인 인터랙티브 설명. Heedo Choi · Kookmin University.">
+<meta name="author" content="Heedo Choi (최희도) — Kookmin University, Department of Climate Technology Convergence">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  /* Methodology page additions */
+  .meth-hero { padding: 5rem 0 3rem; text-align: center; background:
+    radial-gradient(ellipse at top, rgba(110, 168, 255, 0.15) 0%, transparent 60%),
+    linear-gradient(180deg, #0b0d12 0%, #131722 100%); }
+  .meth-hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); margin: 0 0 0.8rem; }
+  .meth-hero p { color: var(--c-fg-mute); max-width: 760px; margin: 0 auto; font-size: 1.05em; }
+
+  /* Pipeline visualization */
+  .pipeline-wrap { padding: 3rem 0; }
+  .pipeline-svg-container { background: var(--c-card); border: 1px solid var(--c-border); border-radius: 16px; padding: 2rem; overflow-x: auto; }
+  svg.pipeline { display: block; margin: 0 auto; max-width: 100%; }
+
+  .stage-node { cursor: pointer; transition: all 0.3s; }
+  .stage-node:hover .node-rect { stroke-width: 3; filter: brightness(1.15); }
+  .stage-node text { pointer-events: none; }
+  .node-rect { fill: #1c2536; stroke: var(--c-accent); stroke-width: 2; rx: 12; }
+  .node-rect.input { fill: #1e3a5f; stroke: #6ea8ff; }
+  .node-rect.process { fill: #2a5298; stroke: #6ea8ff; }
+  .node-rect.output { fill: #10b981; stroke: #10b981; }
+  .node-rect.eval { fill: #f59e0b; stroke: #f59e0b; }
+  .node-rect.data { fill: #4338ca; stroke: #818cf8; }
+  .node-title { fill: #fff; font-weight: 700; font-size: 13px; }
+  .node-sub { fill: rgba(255,255,255,0.85); font-size: 10.5px; }
+  .edge { stroke: var(--c-fg-mute); stroke-width: 2; fill: none; marker-end: url(#arrow); }
+  .edge.eval { stroke: #f59e0b; stroke-dasharray: 5 4; }
+
+  /* Stage detail cards (revealed on click) */
+  .stage-detail { display: none; margin-top: 1.5rem; padding: 1.6rem 2rem; background: var(--c-card); border: 1px solid var(--c-accent); border-radius: 12px; animation: fadeIn 0.4s ease; }
+  .stage-detail.active { display: block; }
+  .stage-detail h3 { margin-top: 0; color: var(--c-accent); }
+  .stage-detail .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; margin-top: 1rem; }
+  .stage-detail .grid-2 > div { background: rgba(110, 168, 255, 0.05); padding: 1rem 1.2rem; border-radius: 8px; }
+  .stage-detail h5 { margin: 0 0 0.4rem; font-size: 0.92em; color: var(--c-accent); text-transform: uppercase; letter-spacing: 0.04em; }
+  .stage-detail ul { margin: 0; padding-left: 1.3rem; line-height: 1.6; }
+  .stage-detail code { background: rgba(110, 168, 255, 0.12); padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.92em; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .theory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.6rem; }
+  .theory-card { background: var(--c-card); border: 1px solid var(--c-border); border-radius: 10px; padding: 1.1rem 1.3rem; }
+  .theory-card h4 { margin: 0 0 0.4rem; font-size: 1em; color: var(--c-accent); }
+  .theory-card p { margin: 0; font-size: 0.88em; color: var(--c-fg-mute); line-height: 1.55; }
+
+  .step-by-step { counter-reset: step; margin-top: 2rem; }
+  .step { counter-increment: step; padding: 1.2rem 1.4rem 1.2rem 4.2rem; position: relative; background: var(--c-card); border: 1px solid var(--c-border); border-radius: 12px; margin-bottom: 1rem; }
+  .step::before { content: counter(step); position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); width: 2.4rem; height: 2.4rem; background: var(--c-accent); color: #0b0d12; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.05em; }
+  .step h4 { margin: 0 0 0.3rem; color: var(--c-fg); }
+  .step p { margin: 0; color: var(--c-fg-mute); font-size: 0.95em; line-height: 1.6; }
+  .step code { background: rgba(110, 168, 255, 0.12); padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.92em; }
+
+  .data-flow-table { width: 100%; border-collapse: collapse; margin-top: 1.4rem; }
+  .data-flow-table th, .data-flow-table td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid var(--c-border); }
+  .data-flow-table th { background: rgba(110, 168, 255, 0.08); font-weight: 600; color: var(--c-accent); }
+  .data-flow-table code { font-size: 0.88em; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">CINA</span>
+      <span class="logo-tag">Methodology</span>
+    </a>
+    <nav class="nav-main">
+      <a href="index.html">← 메인</a>
+      <a href="#flowchart">Flowchart</a>
+      <a href="#stages">Stages</a>
+      <a href="#theory">Theory</a>
+      <a href="#dataflow">Data Flow</a>
+      <a href="visualizations.html">Visualizations</a>
+      <a href="outputs.html">Outputs</a>
+      <a href="https://github.com/zxsa0716/cina" target="_blank" rel="noopener" class="nav-github">GitHub →</a>
+    </nav>
+  </div>
+</header>
+
+<section class="meth-hero">
+  <div class="container">
+    <h1>🔬 연구 방법론 (Methodology)</h1>
+    <p>CINA는 UNFCCC 협상 텍스트를 외교부가 즉시 사용 가능한 전략 인텔리전스로 변환하는 <strong>3단계 파이프라인</strong>입니다. 각 단계는 학술 이론에 정박해 있으며, 모든 산출물은 (텍스트 인용 + 구조적 근거) 이중 grounding으로 검증됩니다.</p>
+  </div>
+</section>
+
+<!-- Interactive Flowchart -->
+<section id="flowchart" class="pipeline-wrap">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§1 Interactive</span>
+      <h2>인터랙티브 파이프라인 (노드를 클릭하세요)</h2>
+      <p class="lede">각 단계 노드를 클릭하면 입력·처리·출력·이론 근거가 펼쳐집니다.</p>
+    </div>
+
+    <div class="pipeline-svg-container">
+      <svg class="pipeline" viewBox="0 0 1100 720" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#a0a8b8"/>
+          </marker>
+          <linearGradient id="bgGradient" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#0f1420"/>
+            <stop offset="100%" stop-color="#1c2536"/>
+          </linearGradient>
+        </defs>
+        <rect width="1100" height="720" fill="url(#bgGradient)" rx="12"/>
+
+        <!-- Stage 0: Data Sources -->
+        <g class="stage-node" data-stage="stage0">
+          <rect class="node-rect input" x="40" y="40" width="220" height="100"/>
+          <text class="node-title" x="150" y="68" text-anchor="middle">📥 Stage 0</text>
+          <text class="node-sub" x="150" y="88" text-anchor="middle">Data Collection</text>
+          <text class="node-sub" x="150" y="108" text-anchor="middle">UNFCCC · NDC · ENB · IPCC</text>
+          <text class="node-sub" x="150" y="125" text-anchor="middle">225 manifest · ~720MB</text>
+        </g>
+
+        <!-- Edge 0->1 -->
+        <path class="edge" d="M 260 90 L 380 90"/>
+
+        <!-- Stage 1 -->
+        <g class="stage-node" data-stage="stage1">
+          <rect class="node-rect process" x="380" y="30" width="260" height="120"/>
+          <text class="node-title" x="510" y="58" text-anchor="middle">🤖 Stage 1: Stance Extraction</text>
+          <text class="node-sub" x="510" y="78" text-anchor="middle">Multi-LLM ensemble (k=5 sampling)</text>
+          <text class="node-sub" x="510" y="96" text-anchor="middle">Bayesian credible interval</text>
+          <text class="node-sub" x="510" y="113" text-anchor="middle">NATO 4-axis · 5 frames</text>
+          <text class="node-sub" x="510" y="130" text-anchor="middle">Procedural authority signals</text>
+        </g>
+
+        <!-- Edge 1->Tensor -->
+        <path class="edge" d="M 640 90 L 760 90"/>
+
+        <!-- Output: Stance Tensor -->
+        <g class="stage-node" data-stage="tensor">
+          <rect class="node-rect data" x="760" y="40" width="280" height="100"/>
+          <text class="node-title" x="900" y="68" text-anchor="middle">📊 Country × Issue Tensor</text>
+          <text class="node-sub" x="900" y="88" text-anchor="middle">98 stance records</text>
+          <text class="node-sub" x="900" y="106" text-anchor="middle">13 countries × 6 issues</text>
+          <text class="node-sub" x="900" y="123" text-anchor="middle">w/ evidence quotes</text>
+        </g>
+
+        <!-- Edge Tensor->Stage 2 -->
+        <path class="edge" d="M 900 140 L 510 220"/>
+
+        <!-- Stage 2 -->
+        <g class="stage-node" data-stage="stage2">
+          <rect class="node-rect process" x="380" y="220" width="260" height="120"/>
+          <text class="node-title" x="510" y="248" text-anchor="middle">🕸️ Stage 2: Graph Analysis</text>
+          <text class="node-sub" x="510" y="268" text-anchor="middle">Heterogeneous graph (NetworkX)</text>
+          <text class="node-sub" x="510" y="286" text-anchor="middle">Leiden community detection</text>
+          <text class="node-sub" x="510" y="303" text-anchor="middle">5 centralities + Apriori hyperedges</text>
+          <text class="node-sub" x="510" y="320" text-anchor="middle">chair_status · drafts_text edges</text>
+        </g>
+
+        <!-- Edge Stage2->Coalition -->
+        <path class="edge" d="M 640 280 L 760 280"/>
+
+        <!-- Output: Coalition Map -->
+        <g class="stage-node" data-stage="coalition">
+          <rect class="node-rect data" x="760" y="230" width="280" height="100"/>
+          <text class="node-title" x="900" y="258" text-anchor="middle">🌐 Coalition Map</text>
+          <text class="node-sub" x="900" y="278" text-anchor="middle">Leiden 2 communities</text>
+          <text class="node-sub" x="900" y="296" text-anchor="middle">Bridge nodes (PageRank)</text>
+          <text class="node-sub" x="900" y="313" text-anchor="middle">Cross-issue motifs</text>
+        </g>
+
+        <!-- Edge Coalition->Stage 3 -->
+        <path class="edge" d="M 900 330 L 510 410"/>
+
+        <!-- Stage 3 -->
+        <g class="stage-node" data-stage="stage3">
+          <rect class="node-rect process" x="380" y="410" width="260" height="120"/>
+          <text class="node-title" x="510" y="438" text-anchor="middle">📝 Stage 3: Briefing Generation</text>
+          <text class="node-sub" x="510" y="458" text-anchor="middle">Graph-Grounded Generation</text>
+          <text class="node-sub" x="510" y="476" text-anchor="middle">Every claim ⊨ (quote + struct fact)</text>
+          <text class="node-sub" x="510" y="493" text-anchor="middle">7-rule post-hoc verification</text>
+          <text class="node-sub" x="510" y="510" text-anchor="middle">Korean + English output</text>
+        </g>
+
+        <!-- Edge Stage3->Outputs -->
+        <path class="edge" d="M 640 470 L 760 470"/>
+
+        <!-- Output: Final Outputs -->
+        <g class="stage-node" data-stage="outputs">
+          <rect class="node-rect output" x="760" y="420" width="280" height="100"/>
+          <text class="node-title" x="900" y="448" text-anchor="middle">🎯 Final Outputs</text>
+          <text class="node-sub" x="900" y="468" text-anchor="middle">📘 학술 페이퍼 1</text>
+          <text class="node-sub" x="900" y="486" text-anchor="middle">🇰🇷 장관급 브리핑 KO + EN</text>
+          <text class="node-sub" x="900" y="503" text-anchor="middle">🔬 정량 검증 보고서 8</text>
+        </g>
+
+        <!-- Phase 5 Eval (validation) -->
+        <g class="stage-node" data-stage="eval">
+          <rect class="node-rect eval" x="380" y="600" width="640" height="80"/>
+          <text class="node-title" x="700" y="628" text-anchor="middle" fill="#000">📈 Phase 5 평가 (4-Task + Ablation A0-A5)</text>
+          <text class="node-sub" x="700" y="648" text-anchor="middle" fill="#000">Spearman ρ=0.658 · ARI=0.42 · P@3=R@3=1.00 · Mean 4.53/5 · α=0.905</text>
+          <text class="node-sub" x="700" y="665" text-anchor="middle" fill="#000">Combined Rubric 4.76/5 · 5/5 Quality Gates PASS</text>
+        </g>
+
+        <!-- Eval connections (dashed) -->
+        <path class="edge eval" d="M 700 600 L 900 530"/>
+        <path class="edge eval" d="M 510 600 L 510 540"/>
+
+      </svg>
+    </div>
+
+    <!-- Stage detail panels -->
+    <div id="detail-stage0" class="stage-detail">
+      <h3>📥 Stage 0: Data Collection</h3>
+      <p>UNFCCC 공식 포털, NDC 레지스트리, IISD ENB 요약, IPCC AR6, OECD, IMF ND-GAIN 등 14개 소스 시스템으로부터 협상 관련 문서 225개를 수집합니다. 모든 문서는 license + sha256 + source URL이 추적되어 manifest.jsonl에 기록됩니다.</p>
+      <div class="grid-2">
+        <div>
+          <h5>📥 입력</h5>
+          <ul>
+            <li>UNFCCC Documents Portal (97 docs)</li>
+            <li>NDC Registry (53 NDCs)</li>
+            <li>IISD ENB summaries</li>
+            <li>IPCC AR6 WGII chapters</li>
+            <li>Brazil Plano Clima · Korea MOFA/MOE</li>
+          </ul>
+        </div>
+        <div>
+          <h5>📤 출력</h5>
+          <ul>
+            <li><code>data/manifest/manifest.jsonl</code> (225 entries)</li>
+            <li><code>data/manifest/coverage_summary.json</code></li>
+            <li>Raw HTML/PDF in <code>data/raw/</code></li>
+          </ul>
+        </div>
+        <div>
+          <h5>🔧 처리</h5>
+          <ul>
+            <li>Rate-limited HTTP fetching</li>
+            <li>Checkpoint resumability</li>
+            <li>License attribution per document</li>
+            <li>SHA-256 integrity hash</li>
+          </ul>
+        </div>
+        <div>
+          <h5>📚 코드</h5>
+          <ul>
+            <li><code>src/collect/</code> (26 collectors)</li>
+            <li><code>src/collect/manifest.py</code> (license tracker)</li>
+            <li><code>src/collect/orchestrate.py</code> (parallel fetch)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="detail-stage1" class="stage-detail">
+      <h3>🤖 Stage 1: Stance Extraction</h3>
+      <p>각 (국가, 이슈) 쌍에 대해 LLM을 k=5번 호출하여 stance score (-1~+1) + Bayesian credible interval을 산출합니다. 동시에 NATO 4축 정책수단 (Hood 1983, Howlett 2019), 5-frame typology (Snow-Benford 1988), procedural authority 신호 (Tallberg 2010)를 함께 추출합니다. 모든 결과에 evidence quote가 강제됩니다 (할루시네이션 방지).</p>
+      <div class="grid-2">
+        <div>
+          <h5>📥 입력</h5>
+          <ul>
+            <li>225 raw 문서 (Stage 0)</li>
+            <li>StanceRecord schema v1.3</li>
+            <li>5-LLM provider config (Gemini/Groq/Ollama/OpenRouter/Anthropic)</li>
+          </ul>
+        </div>
+        <div>
+          <h5>📤 출력</h5>
+          <ul>
+            <li>98 stance records (JSONL)</li>
+            <li>샘플: <code>data/sample/stances_sample_10.jsonl</code></li>
+            <li>각 record: stance_score + CI + evidence + frame + NATO + procedural</li>
+          </ul>
+        </div>
+        <div>
+          <h5>🧠 이론 근거</h5>
+          <ul>
+            <li><strong>Hood 1983 / Howlett 2019</strong>: NATO 4축 정책수단 (nodality/authority/treasure/organization)</li>
+            <li><strong>Snow-Benford 1988</strong>: 5 frame types (scientific/justice/sovereignty/security/development)</li>
+            <li><strong>Tallberg 2010</strong>: procedural authority (chair_role / pen_holder / drafts_text)</li>
+            <li><strong>Bayesian inference</strong>: k=5 multi-sample → credible interval</li>
+          </ul>
+        </div>
+        <div>
+          <h5>📚 코드</h5>
+          <ul>
+            <li><code>src/stage1_extract/extract.py</code></li>
+            <li><code>src/stage1_extract/extract_v2.py</code></li>
+            <li><code>src/stage1_extract/providers/</code> (5 backends)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="detail-tensor" class="stage-detail">
+      <h3>📊 Stage 1 산출물: Country × Issue Stance Tensor</h3>
+      <p>13개 주요 협상 국가/그룹 × 6개 적응 이슈 = 78 cells 매트릭스. 각 cell은 stance score, CI, evidence quote, frame, NATO axis, procedural status를 담습니다.</p>
+      <div class="grid-2">
+        <div>
+          <h5>📐 차원</h5>
+          <ul>
+            <li><strong>국가/그룹 (13)</strong>: Brazil, EU, USA, China, India, AOSIS, Korea, Japan, Saudi, ZAF, AILAC, LDC, LMDC</li>
+            <li><strong>이슈 (6)</strong>: GGA-IND, GGA-MOI, NAPs, JT-ADAPT, L&D-OP, FINANCE-ADAPT</li>
+          </ul>
+        </div>
+        <div>
+          <h5>🔍 핵심 발견</h5>
+          <ul>
+            <li>Brazil GGA-IND = 0.95 (chair authority)</li>
+            <li>AOSIS L&D = 0.90 (principled)</li>
+            <li>Korea L&D-OP = 0.39 (weakness)</li>
+            <li>Saudi GGA-MOI = -0.65 (resist)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="detail-stage2" class="stage-detail">
+      <h3>🕸️ Stage 2: Graph Analysis</h3>
+      <p>Stance tensor를 이종 그래프로 변환합니다. 노드 = (국가, 이슈, 그룹), 엣지 = stance similarity + chair_status + drafts_text. Leiden 알고리즘으로 community를 탐지하고 5 centralities로 영향력 노드를 식별합니다.</p>
+      <div class="grid-2">
+        <div>
+          <h5>📥 입력</h5>
+          <ul>
+            <li>98 stance records (Stage 1)</li>
+            <li>Edge types: similarity / chair / drafts_text</li>
+          </ul>
+        </div>
+        <div>
+          <h5>📤 출력</h5>
+          <ul>
+            <li>Leiden 2 communities</li>
+            <li>PageRank rankings</li>
+            <li>Cross-issue Apriori hyperedges</li>
+            <li>샘플: <code>data/sample/graph_analysis.json</code></li>
+          </ul>
+        </div>
+        <div>
+          <h5>🧠 이론 근거</h5>
+          <ul>
+            <li><strong>Keohane-Victor 2011</strong>: Regime Complex 'horizontal cleavage' 정량 검증</li>
+            <li><strong>Traag-Waltman-van Eck 2019</strong>: Leiden algorithm (modularity 최적화)</li>
+            <li><strong>Tollison-Willett 1979</strong>: Issue Linkage Theory (cross-issue motifs)</li>
+          </ul>
+        </div>
+        <div>
+          <h5>📚 코드</h5>
+          <ul>
+            <li><code>src/stage2_graph/advanced_analysis.py</code></li>
+            <li><code>src/stage2_graph/generate_figures.py</code></li>
+            <li>Dependencies: NetworkX + igraph + leidenalg</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="detail-coalition" class="stage-detail">
+      <h3>🌐 Stage 2 산출물: Coalition Map</h3>
+      <p>Leiden community detection 결과 2개 community가 식별됩니다. C0 (development frame) = {Brazil, Multi, AGN, EU}, C1 (mixed) = {AOSIS, India, Korea, LMDC}. 이는 Keohane-Victor (2011)의 regime complex 'horizontal cleavage' 가설을 정량 검증합니다.</p>
+    </div>
+
+    <div id="detail-stage3" class="stage-detail">
+      <h3>📝 Stage 3: Briefing Generation (Graph-Grounded)</h3>
+      <p>모든 brief 문장에 (1) 텍스트 인용 + (2) 구조적 근거 (Stage 2 그래프 fact) 이중 grounding을 강제합니다. 7-rule post-hoc verifier가 hallucination, 수치 조작, 미존재 국가 언급을 자동 검출합니다.</p>
+      <div class="grid-2">
+        <div>
+          <h5>🛡️ 7 Verification Rules</h5>
+          <ul>
+            <li>모든 수치는 원본 데이터에서 grounded</li>
+            <li>모든 국가/그룹은 Stage 1에 존재</li>
+            <li>모든 인용 quote는 raw 문서에 verbatim 매칭</li>
+            <li>모든 stance claim은 ±0.05 이내 정확도</li>
+            <li>모든 community claim은 Stage 2 결과와 일치</li>
+            <li>모든 procedural claim은 chair metadata와 일치</li>
+            <li>전체 brief에 평균 hallucination ≤ 1%</li>
+          </ul>
+        </div>
+        <div>
+          <h5>📚 코드</h5>
+          <ul>
+            <li><code>src/stage3_brief/</code></li>
+            <li><code>src/validate/</code> (evidence validator)</li>
+            <li>Output: <code>deliverables/ministerial_briefing_*.md</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="detail-outputs" class="stage-detail">
+      <h3>🎯 최종 산출물</h3>
+      <p>Track A (수업 제출) — 장관급 협상 브리핑. Track B (학술) — 논문 + 정량 검증 보고서.</p>
+      <ul>
+        <li><strong>📘 학술 페이퍼</strong>: <code>deliverables/paper.md</code> (3,428 words, 23 references)</li>
+        <li><strong>🇰🇷 장관급 브리핑</strong>: <code>ministerial_briefing_ko.md</code> + <code>_en.md</code> (9 sections + 4 appendices)</li>
+        <li><strong>🔬 검증 보고서 8</strong>: IRR_Korea/Brazil, L25 formula, Realist B0, AILAC NES, Eval Report 등</li>
+        <li><strong>🎨 figures 7</strong>: heatmap, network, hedging × red line, centrality, frame consistency 등</li>
+      </ul>
+    </div>
+
+    <div id="detail-eval" class="stage-detail">
+      <h3>📈 Phase 5 평가 (4-Task + Ablation)</h3>
+      <p>전 파이프라인을 4가지 정량 task로 검증. Ablation A0-A5는 각 컴포넌트의 marginal contribution을 측정합니다.</p>
+      <div class="grid-2">
+        <div>
+          <h5>📊 평가 메트릭</h5>
+          <ul>
+            <li>Task A (Stance): Spearman ρ=0.658, MAE=0.183 ✅</li>
+            <li>Task B (Coalition): ARI proxy=0.42 ✅</li>
+            <li>Task C (Outcome): P@3=R@3=1.00 ⭐</li>
+            <li>Task D (Brief): Mean 4.53/5, α=0.905 ✅</li>
+          </ul>
+        </div>
+        <div>
+          <h5>🔍 Ablation 핵심</h5>
+          <ul>
+            <li><strong>A4 (evidence grounding 제거): −15% ρ</strong> — 가장 load-bearing</li>
+            <li>A2 (NATO 4축 제거): −7%</li>
+            <li>A5 (Multi-LLM ensemble): −6%</li>
+            <li>A1 (Bayesian CI): −5%</li>
+            <li>A3 (Frame typology): −4%</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stages step-by-step -->
+<section id="stages" class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§2 Step by Step</span>
+      <h2>한 줄로 따라가는 파이프라인</h2>
+      <p class="lede">"무엇을 넣으면 무엇이 나오는가" — 단계별 입출력을 한눈에.</p>
+    </div>
+
+    <div class="step-by-step">
+      <div class="step">
+        <h4>UNFCCC 공식 문서를 모은다</h4>
+        <p><strong>입력</strong>: 협상 세션, 국가 코드 (예: COP30, Brazil) → <strong>실행</strong>: <code>python -m src.collect.run --session COP30</code> → <strong>출력</strong>: <code>data/raw/cop30_official/</code> + <code>manifest.jsonl</code> 항목 추가.</p>
+      </div>
+      <div class="step">
+        <h4>Stage 1 LLM이 stance를 뽑는다</h4>
+        <p><strong>입력</strong>: 위 raw 문서 + StanceRecord schema → <strong>실행</strong>: <code>python -m src.pipeline --country Brazil --cop 30 --sector adaptation --stages 1</code> → <strong>출력</strong>: <code>data/processed/stances_complete_v1.jsonl</code> (60+ records, 각 record에 evidence quote + Bayesian CI 포함).</p>
+      </div>
+      <div class="step">
+        <h4>Stage 2 그래프 분석으로 연합 지형 그린다</h4>
+        <p><strong>입력</strong>: Stage 1 stance JSONL → <strong>실행</strong>: <code>python -m src.stage2_graph.advanced_analysis</code> → <strong>출력</strong>: <code>graph_analysis_v2.json</code> (Leiden 2 communities, PageRank 13 nodes, cross-issue motifs).</p>
+      </div>
+      <div class="step">
+        <h4>Stage 3 LLM이 장관급 브리핑을 쓴다</h4>
+        <p><strong>입력</strong>: Stage 2 그래프 + 9-section template → <strong>실행</strong>: <code>python -m src.stage3_brief.generate_briefing</code> → <strong>출력</strong>: <code>deliverables/ministerial_briefing_ko.md</code> + <code>_en.md</code> (모든 claim에 인용 + 구조적 근거).</p>
+      </div>
+      <div class="step">
+        <h4>Phase 5 평가로 검증한다</h4>
+        <p><strong>입력</strong>: 위 모든 산출물 + expert simulation 5 personas → <strong>실행</strong>: <code>python -m src.evaluation.run_full_evaluation</code> → <strong>출력</strong>: <code>deliverables/evaluation_report.md</code> (Spearman 0.658, P@3=1.00, α=0.905, Combined Rubric 4.76/5).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Theory Foundations -->
+<section id="theory" class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§3 Theory</span>
+      <h2>이론적 정초 (Theoretical Foundations)</h2>
+      <p class="lede">CINA의 모든 method choice는 학술 이론에 정박해 있다. 단순 AI 활용이 아니라 <strong>이론 기반 quantification</strong>.</p>
+    </div>
+
+    <div class="theory-grid">
+      <div class="theory-card">
+        <h4>Regime Complex Theory</h4>
+        <p><strong>Keohane & Victor (2011)</strong> — climate governance는 단일 regime이 아니라 부분적으로 중첩된 regimes의 complex. CINA Stage 2 Leiden 2 communities로 'horizontal cleavage' 가설 정량 검증.</p>
+      </div>
+      <div class="theory-card">
+        <h4>Two-Level Games</h4>
+        <p><strong>Putnam (1988)</strong> — 외교는 국제 협상 + 국내 비준 양 레벨. Brazil IRR Translation Gap Δ=0.304는 국내(Plano Clima) ↔ 국제(GGA voluntary) 정책수단 분기를 정량화.</p>
+      </div>
+      <div class="theory-card">
+        <h4>Issue Linkage Theory</h4>
+        <p><strong>Tollison & Willett (1979)</strong>, <strong>Sebenius (1983)</strong> — 협상은 이슈 간 거래로 형성. CINA Apriori-style cross-issue hyperedge mining으로 motif 자동 검출.</p>
+      </div>
+      <div class="theory-card">
+        <h4>Epistemic Communities</h4>
+        <p><strong>Haas (1992)</strong> — 전문가 네트워크가 정책 신념 변화 매개. CINA stance에 cites_ipcc + epistemic_alignment 필드로 epistemic 영향 추적.</p>
+      </div>
+      <div class="theory-card">
+        <h4>Procedural Authority</h4>
+        <p><strong>Tallberg (2010)</strong>, <strong>Goh (2007)</strong>, <strong>Steinberg (2002)</strong> — 의장국·pen-holder가 협상 결과에 비대칭 영향. CINA Stage 1에 chair_role, pen_holder, drafts_text 신호 강제 추출.</p>
+      </div>
+      <div class="theory-card">
+        <h4>NATO Policy Instruments</h4>
+        <p><strong>Hood (1983)</strong>, <strong>Howlett (2019)</strong> — 정책수단을 4축 (Nodality/Authority/Treasure/Organization)으로 분류. CINA NATO 4-axis instrument extraction은 instrument calibration을 자동화한 첫 시도.</p>
+      </div>
+      <div class="theory-card">
+        <h4>Norm Entrepreneur</h4>
+        <p><strong>Finnemore & Sikkink (1998)</strong> — small/medium states가 norm entrepreneur 역할. AILAC NES = 0.86으로 4 criteria 중 3.5개 PASS, tactical diplomatic framing 정량 확인.</p>
+      </div>
+      <div class="theory-card">
+        <h4>Frame Theory</h4>
+        <p><strong>Snow & Benford (1988)</strong>, <strong>Goffman (1974)</strong> — collective action frame은 의미 구조. CINA 5 frame types (scientific/justice/sovereignty/security/development) 자동 분류.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Data Flow Schema -->
+<section id="dataflow" class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§4 Data Flow</span>
+      <h2>스테이지별 정확한 입출력 (재현성 우선)</h2>
+      <p class="lede">모든 단계의 파일 경로 · 형식 · 행 수를 명시. <code>data/sample/</code>의 sanitized 샘플로 직접 확인 가능.</p>
+    </div>
+
+    <table class="data-flow-table">
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>입력</th>
+          <th>처리 스크립트</th>
+          <th>출력 파일</th>
+          <th>형식</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Stage 0</td>
+          <td>UNFCCC URLs · NDC API · ENB pages</td>
+          <td><code>src/collect/orchestrate.py</code></td>
+          <td><code>data/raw/</code> · <code>manifest.jsonl</code></td>
+          <td>HTML/PDF + JSONL</td>
+        </tr>
+        <tr>
+          <td>Stage 1</td>
+          <td><code>data/raw/*</code> + schema v1.3 prompts</td>
+          <td><code>src/stage1_extract/extract_v2.py</code></td>
+          <td><code>data/processed/stances_complete_v1.jsonl</code></td>
+          <td>JSONL (98 records)</td>
+        </tr>
+        <tr>
+          <td>Stage 2</td>
+          <td>stances JSONL</td>
+          <td><code>src/stage2_graph/advanced_analysis.py</code></td>
+          <td><code>data/processed/graph_analysis_v2.json</code></td>
+          <td>JSON (graph + Leiden + centralities)</td>
+        </tr>
+        <tr>
+          <td>Stage 2 Figures</td>
+          <td>graph_analysis JSON</td>
+          <td><code>src/stage2_graph/generate_figures.py</code></td>
+          <td><code>docs/web/figures/fig{1-5}_*.png</code></td>
+          <td>PNG (300 dpi, 7 figures)</td>
+        </tr>
+        <tr>
+          <td>Stage 3</td>
+          <td>graph + 9-section template</td>
+          <td><code>src/stage3_brief/generate_briefing.py</code></td>
+          <td><code>deliverables/ministerial_briefing_{ko,en}.md</code></td>
+          <td>Markdown</td>
+        </tr>
+        <tr>
+          <td>Phase 5 Eval</td>
+          <td>전 산출물 + expert personas</td>
+          <td><code>src/evaluation/run_full_evaluation.py</code></td>
+          <td><code>deliverables/evaluation_report.{md,json}</code></td>
+          <td>Markdown + JSON</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top: 2rem; padding: 1.2rem 1.4rem; background: rgba(110, 168, 255, 0.05); border-left: 3px solid var(--c-accent); border-radius: 6px; font-size: 0.92em; color: var(--c-fg-mute);">
+      💡 <strong>샘플 직접 보기</strong>: <code>data/sample/stances_sample_10.jsonl</code> (Stage 1 산출 10개), <code>data/sample/graph_analysis.json</code> (Stage 2 산출), <code>data/sample/irr_brazilian_translation_gap.json</code> (Brazil Δ=0.304 raw)는 GitHub에 공개되어 있습니다. 전체 데이터셋(225 raw 문서, ~720MB)은 license 제약으로 Zenodo에 별도 공개 예정.
+    </p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h4>CINA Methodology</h4>
+      <p>3-Stage LLM-GNN-LLM pipeline. 이론 기반 정량화. 재현 가능한 학술 연구.</p>
+      <p style="margin-top: 0.8rem; font-size: 0.85em; color: var(--c-fg-mute);">
+        <strong>저자(Author)</strong>: Heedo Choi (최희도)<br>
+        Graduate Student · 기후기술융합학과<br>
+        Kookmin University · zxsa0716@kookmin.ac.kr
+      </p>
+    </div>
+    <div>
+      <h4>다른 페이지</h4>
+      <ul>
+        <li><a href="index.html">← 메인 (Hero + 핵심 발견)</a></li>
+        <li><a href="visualizations.html">Visualizations (D3 인터랙티브)</a></li>
+        <li><a href="outputs.html">Outputs Showcase</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>학술 문서</h4>
+      <ul>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/docs/01_theoretical_foundations.md">01 Theoretical Foundations</a></li>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/docs/02_methodology.md">02 Methodology (full)</a></li>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/deliverables/paper.md">📘 Paper draft</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 <strong>Heedo Choi (최희도)</strong> · Kookmin University, Department of Climate Technology Convergence (기후기술융합학과) · Code MIT · Docs CC BY 4.0
+  </div>
+</footer>
+
+<script>
+  // Stage node click → reveal detail
+  document.querySelectorAll('.stage-node').forEach(node => {
+    node.addEventListener('click', () => {
+      const stage = node.getAttribute('data-stage');
+      // Hide all details
+      document.querySelectorAll('.stage-detail').forEach(d => d.classList.remove('active'));
+      // Show selected
+      const target = document.getElementById('detail-' + stage);
+      if (target) {
+        target.classList.add('active');
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  });
+
+  // Show stage1 by default
+  document.getElementById('detail-stage1').classList.add('active');
+
+  console.log('CINA Methodology page — 8 stage nodes interactive');
+</script>
+</body>
+</html>

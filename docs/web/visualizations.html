@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CINA — Interactive Visualizations</title>
+<meta name="description" content="CINA 인터랙티브 시각화 — coalition network, IRR radar, stance heatmap. Heedo Choi · Kookmin University.">
+<meta name="author" content="Heedo Choi (최희도) — Kookmin University, Department of Climate Technology Convergence">
+<link rel="stylesheet" href="assets/style.css">
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  .viz-hero { padding: 5rem 0 2rem; text-align: center;
+    background: radial-gradient(ellipse at top, rgba(245, 158, 11, 0.12) 0%, transparent 60%),
+    linear-gradient(180deg, #0b0d12 0%, #131722 100%); }
+  .viz-hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); margin: 0 0 0.8rem; }
+  .viz-hero p { color: var(--c-fg-mute); max-width: 760px; margin: 0 auto; font-size: 1.05em; }
+
+  .viz-block { padding: 3.5rem 0; border-top: 1px solid var(--c-border); }
+  .viz-block:first-of-type { border-top: none; }
+  .viz-frame { background: var(--c-card); border: 1px solid var(--c-border); border-radius: 16px; padding: 1.6rem; margin-top: 1.6rem; }
+  .viz-controls { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .viz-controls button { background: rgba(110, 168, 255, 0.1); border: 1px solid var(--c-accent); color: var(--c-fg); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9em; transition: all 0.2s; }
+  .viz-controls button:hover, .viz-controls button.active { background: var(--c-accent); color: #0b0d12; }
+
+  /* Network */
+  #network-svg { width: 100%; height: 560px; background: #0f1420; border-radius: 8px; }
+  .node circle { stroke: #0b0d12; stroke-width: 2; cursor: pointer; transition: stroke-width 0.15s; }
+  .node:hover circle { stroke-width: 4; }
+  .node text { fill: #fff; font-size: 11px; font-weight: 600; pointer-events: none; text-anchor: middle; }
+  .link { stroke: rgba(160, 168, 184, 0.35); stroke-width: 1; transition: stroke 0.2s; }
+  .link.highlight { stroke: var(--c-accent); stroke-width: 2.5; }
+  .link.chair { stroke: #f59e0b; stroke-dasharray: 4 3; }
+
+  .legend { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-top: 1rem; padding: 0.8rem 1rem; background: rgba(110, 168, 255, 0.05); border-radius: 8px; font-size: 0.88em; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+  .legend-dot { width: 14px; height: 14px; border-radius: 50%; }
+
+  /* Heatmap */
+  #heatmap-svg { width: 100%; height: 460px; }
+  .cell { stroke: #0b0d12; stroke-width: 1.5; cursor: pointer; transition: opacity 0.2s; }
+  .cell:hover { opacity: 0.7; }
+  .cell-label { font-size: 11px; fill: #fff; font-weight: 600; pointer-events: none; text-anchor: middle; }
+  .axis text { fill: #d4d8e0; font-size: 11px; }
+  .axis line, .axis path { stroke: rgba(160, 168, 184, 0.3); }
+
+  /* Radar */
+  #radar-svg { display: block; margin: 0 auto; }
+  .radar-axis { stroke: rgba(160, 168, 184, 0.3); }
+  .radar-grid { fill: none; stroke: rgba(160, 168, 184, 0.15); }
+  .radar-shape { fill-opacity: 0.15; stroke-width: 2.5; }
+  .radar-label { fill: #d4d8e0; font-size: 11px; }
+
+  /* Tooltip */
+  .tooltip { position: absolute; background: #0f1420; border: 1px solid var(--c-accent); border-radius: 6px; padding: 0.6rem 0.9rem; font-size: 0.85em; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.4); max-width: 280px; }
+  .tooltip strong { color: var(--c-accent); }
+
+  /* Stat callout */
+  .callout { padding: 1.2rem 1.4rem; background: rgba(245, 158, 11, 0.06); border-left: 3px solid #f59e0b; border-radius: 6px; margin-top: 1.4rem; font-size: 0.92em; color: var(--c-fg-mute); }
+  .callout strong { color: #f59e0b; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">CINA</span>
+      <span class="logo-tag">Visualizations</span>
+    </a>
+    <nav class="nav-main">
+      <a href="index.html">← 메인</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="#network">Coalition Network</a>
+      <a href="#heatmap">Stance Heatmap</a>
+      <a href="#radar">IRR Radar</a>
+      <a href="outputs.html">Outputs</a>
+      <a href="https://github.com/zxsa0716/cina" target="_blank" rel="noopener" class="nav-github">GitHub →</a>
+    </nav>
+  </div>
+</header>
+
+<section class="viz-hero">
+  <div class="container">
+    <h1>📊 인터랙티브 시각화</h1>
+    <p>CINA Stage 2 산출물을 직접 만져볼 수 있는 D3 기반 인터랙티브 시각화. 노드 드래그·클릭, 셀 hover, 그룹 토글로 데이터 안에 들어가 보세요.</p>
+  </div>
+</section>
+
+<!-- 1. Coalition Network -->
+<section id="network" class="viz-block">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§1 Force-Directed</span>
+      <h2>🌐 Coalition Network — Leiden 2 Communities</h2>
+      <p class="lede">Stage 2 그래프 분석 결과. 노드 색깔 = community, 노드 크기 = PageRank, 점선 = chair authority edge. <strong>드래그하여 움직여보세요.</strong></p>
+    </div>
+
+    <div class="viz-frame">
+      <div class="viz-controls">
+        <button class="active" data-mode="all">전체 보기</button>
+        <button data-mode="c0">C0 (Development)</button>
+        <button data-mode="c1">C1 (Mixed)</button>
+        <button data-mode="chair">의장국 강조</button>
+      </div>
+      <svg id="network-svg"></svg>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#6ea8ff"></div> C0: Development frame (Brazil-EU-Multi 등)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> C1: Mixed/Justice (AOSIS-Korea-LMDC-India)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#10b981; border:2px solid #f59e0b"></div> Chair (Brazil COP30)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ec4899"></div> Bridge node (high betweenness)</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>학술 의의</strong>: Leiden 2 communities는 <em>Keohane & Victor (2011) Regime Complex 'horizontal cleavage'</em> 가설을 정량 검증합니다. C0 (development)와 C1 (mixed)의 분리는 modularity 0.31로 통계적으로 유의미합니다.
+    </div>
+  </div>
+</section>
+
+<!-- 2. Stance Heatmap -->
+<section id="heatmap" class="viz-block">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§2 Animated</span>
+      <h2>🔥 Stance Heatmap — Country × Issue Tensor</h2>
+      <p class="lede">Stage 1 LLM 추출 stance score. 색깔 = stance 강도 (-1 oppose ~ +1 support). 셀 hover로 evidence quote 확인.</p>
+    </div>
+
+    <div class="viz-frame">
+      <div class="viz-controls">
+        <button class="active" data-sort="default">기본 정렬</button>
+        <button data-sort="score">평균 score 순</button>
+        <button data-sort="group">그룹별 묶기</button>
+      </div>
+      <svg id="heatmap-svg"></svg>
+    </div>
+
+    <div class="callout">
+      <strong>핵심 발견</strong>: Brazil GGA-IND = +0.95 (chair authority, 강한 지지) ↔ Saudi GGA-MOI = -0.65 (resistance). Korea L&D-OP = +0.39 (lowest, 약점) → COP31 actionable 권고.
+    </div>
+  </div>
+</section>
+
+<!-- 3. IRR Radar -->
+<section id="radar" class="viz-block">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§3 Comparative</span>
+      <h2>🎯 IRR Radar — 한국 적응정책 GGA 이행률</h2>
+      <p class="lede">Korean NAP × GGA 6 이슈 30-cell crosswalk. 각 축 = GGA 이슈, 값 = IRR (0~1). <strong>L&D-OP 0.39가 약점</strong>으로 도드라집니다.</p>
+    </div>
+
+    <div class="viz-frame">
+      <svg id="radar-svg" width="560" height="500"></svg>
+    </div>
+
+    <div class="callout">
+      <strong>정책 함의</strong>: 평균 IRR_Korea = 0.653 (CI [0.55, 0.71])이지만 <strong>L&D-OP 0.39</strong>가 가장 낮음. COP31 협상에서 L&D 운영 framework 강화가 필요. JT-ADAPT (0.78)와 NAPs (0.75)는 강점.
+    </div>
+  </div>
+</section>
+
+<!-- 4. Translation Gap -->
+<section id="trans-gap" class="viz-block">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§4 Brazil Paradox</span>
+      <h2>🇧🇷 Translation Gap Δ = 0.304 — 국내↔국제 정책수단 분기</h2>
+      <p class="lede">Brazil이 국내(Plano Clima)에서는 NATO 4축 모두 강하게 사용하지만, 국제(L.25E)에서는 voluntary 언어로 후퇴. <strong>Putnam (1988) Two-Level Games × Howlett (2019) instrument calibration 정량화</strong>.</p>
+    </div>
+
+    <div class="viz-frame">
+      <svg id="gap-svg" width="100%" height="320" viewBox="0 0 880 320"></svg>
+    </div>
+
+    <div class="callout">
+      <strong>NeurIPS CCAI 2026 signature finding</strong>: Plano Clima 국내 정책의 NATO 4축 (Authority + Nodality + Treasure + Organization) 사용률 67% → L.25E 국제 voluntary는 Nodality only 48%. <strong>Δ = 0.304</strong> (negative authority 분리 후, hypothesis threshold 0.30 초과).
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h4>CINA Visualizations</h4>
+      <p>D3.js 기반 인터랙티브. Stage 2 산출물 직접 탐색.</p>
+      <p style="margin-top: 0.8rem; font-size: 0.85em; color: var(--c-fg-mute);">
+        <strong>저자(Author)</strong>: Heedo Choi (최희도)<br>
+        Graduate Student · 기후기술융합학과<br>
+        Kookmin University · zxsa0716@kookmin.ac.kr
+      </p>
+    </div>
+    <div>
+      <h4>다른 페이지</h4>
+      <ul>
+        <li><a href="index.html">← 메인</a></li>
+        <li><a href="methodology.html">Methodology (Pipeline)</a></li>
+        <li><a href="outputs.html">Outputs Showcase</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>데이터 출처</h4>
+      <ul>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/data/sample/graph_analysis.json">graph_analysis.json (Stage 2)</a></li>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/data/sample/stances_sample_10.jsonl">stances sample (Stage 1)</a></li>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/deliverables/korean_nap_gga_crosswalk.csv">korean_nap_gga_crosswalk.csv</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 <strong>Heedo Choi (최희도)</strong> · Kookmin University, Department of Climate Technology Convergence (기후기술융합학과) · Code MIT · Docs CC BY 4.0
+  </div>
+</footer>
+
+<div id="tt" class="tooltip"></div>
+
+<script>
+// ============================================================
+// 1. Force-Directed Coalition Network
+// ============================================================
+const networkData = {
+  nodes: [
+    { id: 'Brazil', group: 'c0', pagerank: 0.166, chair: true,  betweenness: 0.42, frame: 'development' },
+    { id: 'EU',     group: 'c0', pagerank: 0.142, chair: false, betweenness: 0.31, frame: 'development' },
+    { id: 'Multi',  group: 'c0', pagerank: 0.110, chair: false, betweenness: 0.18, frame: 'mixed' },
+    { id: 'AGN',    group: 'c0', pagerank: 0.085, chair: false, betweenness: 0.12, frame: 'development' },
+    { id: 'AOSIS',  group: 'c1', pagerank: 0.135, chair: false, betweenness: 0.38, frame: 'justice' },
+    { id: 'India',  group: 'c1', pagerank: 0.108, chair: false, betweenness: 0.22, frame: 'sovereignty' },
+    { id: 'Korea',  group: 'c1', pagerank: 0.166, chair: false, betweenness: 0.24, frame: 'mixed' },
+    { id: 'LMDC',   group: 'c1', pagerank: 0.090, chair: false, betweenness: 0.14, frame: 'sovereignty' },
+    { id: 'USA',    group: 'c0', pagerank: 0.125, chair: false, betweenness: 0.28, frame: 'development' },
+    { id: 'China',  group: 'c1', pagerank: 0.118, chair: false, betweenness: 0.26, frame: 'sovereignty' },
+    { id: 'Japan',  group: 'c0', pagerank: 0.075, chair: false, betweenness: 0.10, frame: 'development' },
+    { id: 'Saudi',  group: 'c1', pagerank: 0.082, chair: false, betweenness: 0.13, frame: 'sovereignty' },
+    { id: 'AILAC',  group: 'c1', pagerank: 0.095, chair: false, betweenness: 0.32, frame: 'justice' }
+  ],
+  links: [
+    {source: 'Brazil', target: 'EU',     v: 0.78, type: 'sim'},
+    {source: 'Brazil', target: 'Multi',  v: 0.85, type: 'chair'},
+    {source: 'Brazil', target: 'AGN',    v: 0.65, type: 'sim'},
+    {source: 'Brazil', target: 'USA',    v: 0.62, type: 'sim'},
+    {source: 'Brazil', target: 'AOSIS',  v: 0.45, type: 'chair'},
+    {source: 'EU',     target: 'USA',    v: 0.74, type: 'sim'},
+    {source: 'EU',     target: 'Multi',  v: 0.71, type: 'sim'},
+    {source: 'AOSIS',  target: 'AILAC',  v: 0.82, type: 'sim'},
+    {source: 'AOSIS',  target: 'LMDC',   v: 0.55, type: 'sim'},
+    {source: 'AOSIS',  target: 'Korea',  v: 0.60, type: 'sim'},
+    {source: 'India',  target: 'China',  v: 0.85, type: 'sim'},
+    {source: 'India',  target: 'LMDC',   v: 0.78, type: 'sim'},
+    {source: 'India',  target: 'Saudi',  v: 0.72, type: 'sim'},
+    {source: 'China',  target: 'Saudi',  v: 0.68, type: 'sim'},
+    {source: 'China',  target: 'LMDC',   v: 0.75, type: 'sim'},
+    {source: 'Korea',  target: 'Japan',  v: 0.62, type: 'sim'},
+    {source: 'Korea',  target: 'EU',     v: 0.55, type: 'sim'},
+    {source: 'AILAC',  target: 'AGN',    v: 0.50, type: 'sim'},
+    {source: 'AILAC',  target: 'Korea',  v: 0.48, type: 'sim'},
+    {source: 'AILAC',  target: 'EU',     v: 0.52, type: 'sim'}
+  ]
+};
+
+const colorMap = { c0: '#6ea8ff', c1: '#f59e0b' };
+
+const svg = d3.select('#network-svg');
+const width = svg.node().clientWidth;
+const height = 560;
+
+const simulation = d3.forceSimulation(networkData.nodes)
+  .force('link', d3.forceLink(networkData.links).id(d => d.id).distance(d => 130 - d.v * 60))
+  .force('charge', d3.forceManyBody().strength(-380))
+  .force('center', d3.forceCenter(width / 2, height / 2))
+  .force('collide', d3.forceCollide().radius(d => 8 + d.pagerank * 220));
+
+const linkSel = svg.append('g')
+  .selectAll('line')
+  .data(networkData.links)
+  .join('line')
+  .attr('class', d => 'link' + (d.type === 'chair' ? ' chair' : ''))
+  .attr('stroke-opacity', d => 0.3 + d.v * 0.4)
+  .attr('stroke-width', d => 0.6 + d.v * 1.4);
+
+const tooltip = d3.select('#tt');
+
+const nodeSel = svg.append('g')
+  .selectAll('g')
+  .data(networkData.nodes)
+  .join('g')
+  .attr('class', 'node')
+  .call(d3.drag()
+    .on('start', (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+    .on('drag',  (e, d) => { d.fx = e.x; d.fy = e.y; })
+    .on('end',   (e, d) => { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; }))
+  .on('mouseover', (e, d) => {
+    tooltip.style('opacity', 1)
+      .html(`<strong>${d.id}</strong><br>
+        Community: ${d.group.toUpperCase()} (${d.frame})<br>
+        PageRank: ${d.pagerank.toFixed(3)}<br>
+        Betweenness: ${d.betweenness.toFixed(2)}<br>
+        ${d.chair ? '⭐ Chair (COP30)' : ''}`);
+  })
+  .on('mousemove', e => tooltip.style('left', (e.pageX + 14) + 'px').style('top', (e.pageY + 12) + 'px'))
+  .on('mouseout', () => tooltip.style('opacity', 0));
+
+nodeSel.append('circle')
+  .attr('r', d => 12 + d.pagerank * 100)
+  .attr('fill', d => d.chair ? '#10b981' : (d.betweenness > 0.35 ? '#ec4899' : colorMap[d.group]))
+  .attr('stroke', d => d.chair ? '#f59e0b' : '#0b0d12')
+  .attr('stroke-width', d => d.chair ? 3 : 2);
+
+nodeSel.append('text')
+  .text(d => d.id)
+  .attr('dy', d => 26 + d.pagerank * 100)
+  .attr('font-size', d => 10 + Math.min(d.pagerank * 30, 4));
+
+simulation.on('tick', () => {
+  linkSel
+    .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+    .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+  nodeSel.attr('transform', d => `translate(${d.x},${d.y})`);
+});
+
+// Network filter buttons
+document.querySelectorAll('#network .viz-controls button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#network .viz-controls button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const mode = btn.dataset.mode;
+    nodeSel.selectAll('circle').attr('opacity', d => {
+      if (mode === 'all') return 1;
+      if (mode === 'c0') return d.group === 'c0' ? 1 : 0.18;
+      if (mode === 'c1') return d.group === 'c1' ? 1 : 0.18;
+      if (mode === 'chair') return d.chair ? 1 : 0.25;
+      return 1;
+    });
+    linkSel.attr('opacity', l => {
+      if (mode === 'all') return null;
+      if (mode === 'chair') return l.type === 'chair' ? 0.9 : 0.08;
+      const sg = l.source.group || networkData.nodes.find(n=>n.id===l.source).group;
+      const tg = l.target.group || networkData.nodes.find(n=>n.id===l.target).group;
+      if (mode === 'c0') return (sg === 'c0' && tg === 'c0') ? 0.9 : 0.08;
+      if (mode === 'c1') return (sg === 'c1' && tg === 'c1') ? 0.9 : 0.08;
+      return null;
+    });
+  });
+});
+
+// ============================================================
+// 2. Stance Heatmap (Animated)
+// ============================================================
+const stanceData = [
+  // [country, issue, score, frame, evidence]
+  ['Brazil', 'GGA-IND',     0.95,  'development', 'L.25E para 7: 59 voluntary indicators'],
+  ['Brazil', 'GGA-MOI',     0.78,  'development', 'shall not create new financial obligations'],
+  ['Brazil', 'NAPs',        0.88,  'development', 'Plano Nacional de Adaptação setores'],
+  ['Brazil', 'JT-ADAPT',    0.92,  'development', 'transição justa com inclusão'],
+  ['Brazil', 'L&D-OP',      0.55,  'mixed',       'partial linkage to operational text'],
+  ['Brazil', 'FINANCE-ADAPT', 0.70, 'development', 'tripling adaptation finance to USD 120B'],
+  ['EU',     'GGA-IND',      0.55, 'development', 'support technical group recommendations'],
+  ['EU',     'GGA-MOI',      0.65, 'development', 'standardized methodologies preferred'],
+  ['EU',     'NAPs',         0.72, 'development', 'NDC integration emphasis'],
+  ['EU',     'JT-ADAPT',     0.60, 'development', 'just transition framework'],
+  ['EU',     'L&D-OP',       0.45, 'development', 'cautious on operational L&D'],
+  ['EU',     'FINANCE-ADAPT', 0.58, 'development', 'mobilize private finance'],
+  ['USA',    'GGA-IND',      0.30, 'development', 'voluntary preferred'],
+  ['USA',    'GGA-MOI',      0.20, 'development', 'minimal MOI commitments'],
+  ['USA',    'NAPs',         0.50, 'development', 'NAP Global Network support'],
+  ['USA',    'JT-ADAPT',     0.40, 'development', 'just transition support'],
+  ['USA',    'L&D-OP',      -0.20, 'sovereignty', 'historical responsibility deflection'],
+  ['USA',    'FINANCE-ADAPT', 0.25, 'development', 'limited ODA increase'],
+  ['China',  'GGA-IND',     -0.30, 'sovereignty', 'CBDR principle emphasis'],
+  ['China',  'GGA-MOI',      0.40, 'sovereignty', 'developing country support'],
+  ['China',  'NAPs',         0.55, 'sovereignty', 'national circumstances'],
+  ['China',  'JT-ADAPT',     0.50, 'sovereignty', 'developing country path'],
+  ['China',  'L&D-OP',       0.65, 'sovereignty', 'historical emissions accountability'],
+  ['China',  'FINANCE-ADAPT', 0.70, 'sovereignty', 'developed country obligation'],
+  ['India',  'GGA-IND',     -0.15, 'sovereignty', 'CBDR-RC core'],
+  ['India',  'GGA-MOI',      0.55, 'sovereignty', 'finance + technology transfer'],
+  ['India',  'NAPs',         0.60, 'sovereignty', 'national priority'],
+  ['India',  'JT-ADAPT',     0.45, 'sovereignty', 'energy access'],
+  ['India',  'L&D-OP',       0.85, 'justice',     'climate justice strong'],
+  ['India',  'FINANCE-ADAPT', 0.90, 'justice',     'USD 1.3T per year demand'],
+  ['AOSIS',  'GGA-IND',      0.85, 'justice',     '1.5°C alignment urgency'],
+  ['AOSIS',  'GGA-MOI',      0.90, 'justice',     'detailed reporting required'],
+  ['AOSIS',  'NAPs',         0.78, 'justice',     'urgent NAP implementation'],
+  ['AOSIS',  'JT-ADAPT',     0.65, 'justice',     'transition with vulnerability'],
+  ['AOSIS',  'L&D-OP',       0.95, 'justice',     'L&D Fund operationalization'],
+  ['AOSIS',  'FINANCE-ADAPT', 0.92, 'justice',     'predictable adaptation finance'],
+  ['Korea',  'GGA-IND',      0.65, 'mixed',       'middle-power bridging'],
+  ['Korea',  'GGA-MOI',      0.62, 'mixed',       'standardized indicators support'],
+  ['Korea',  'NAPs',         0.75, 'mixed',       'Korean NAP framework'],
+  ['Korea',  'JT-ADAPT',     0.78, 'justice',     'just transition Act 2024'],
+  ['Korea',  'L&D-OP',       0.39, 'mixed',       'cautious - lowest score'],
+  ['Korea',  'FINANCE-ADAPT', 0.55, 'mixed',       'Green Climate Fund host'],
+  ['Saudi',  'GGA-IND',     -0.55, 'sovereignty', 'mitigation-only oil resistance'],
+  ['Saudi',  'GGA-MOI',     -0.65, 'sovereignty', 'minimize methodology'],
+  ['Saudi',  'NAPs',         0.20, 'sovereignty', 'voluntary'],
+  ['Saudi',  'JT-ADAPT',    -0.30, 'sovereignty', 'oil sector protection'],
+  ['Saudi',  'L&D-OP',       0.10, 'sovereignty', 'limited support'],
+  ['Saudi',  'FINANCE-ADAPT', 0.40, 'sovereignty', 'developed country pay'],
+  ['Japan',  'GGA-IND',      0.45, 'development', 'cooperative'],
+  ['Japan',  'GGA-MOI',      0.50, 'development', 'MRV technical'],
+  ['Japan',  'NAPs',         0.62, 'development', 'NAP technical assistance'],
+  ['Japan',  'JT-ADAPT',     0.55, 'development', 'just transition support'],
+  ['Japan',  'L&D-OP',       0.30, 'development', 'cautious'],
+  ['Japan',  'FINANCE-ADAPT', 0.48, 'development', 'JBIC adaptation finance']
+];
+
+const countriesH = ['Brazil', 'EU', 'USA', 'China', 'India', 'AOSIS', 'Korea', 'Saudi', 'Japan'];
+const issuesH = ['GGA-IND', 'GGA-MOI', 'NAPs', 'JT-ADAPT', 'L&D-OP', 'FINANCE-ADAPT'];
+
+const hSvg = d3.select('#heatmap-svg');
+const hWidth = hSvg.node().clientWidth;
+const hHeight = 460;
+const margin = { top: 30, right: 30, bottom: 30, left: 90 };
+const innerW = hWidth - margin.left - margin.right;
+const innerH = hHeight - margin.top - margin.bottom;
+
+const hG = hSvg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+const xScale = d3.scaleBand().domain(issuesH).range([0, innerW]).padding(0.06);
+const yScale = d3.scaleBand().domain(countriesH).range([0, innerH]).padding(0.06);
+const colorScale = d3.scaleLinear()
+  .domain([-1, 0, 1])
+  .range(['#dc2626', '#1c2536', '#10b981']);
+
+function renderHeatmap(sortMode = 'default') {
+  let countryOrder = countriesH;
+  if (sortMode === 'score') {
+    const meanScores = countriesH.map(c => {
+      const rows = stanceData.filter(d => d[0] === c);
+      return [c, d3.mean(rows, d => d[2])];
+    }).sort((a, b) => b[1] - a[1]);
+    countryOrder = meanScores.map(d => d[0]);
+  } else if (sortMode === 'group') {
+    countryOrder = ['Brazil', 'EU', 'USA', 'Japan', 'AOSIS', 'AILAC', 'Korea', 'India', 'China', 'Saudi', 'LMDC'];
+  }
+  yScale.domain(countryOrder);
+
+  hG.selectAll('.cell').remove();
+  hG.selectAll('.cell-label').remove();
+  hG.selectAll('.axis').remove();
+
+  const cells = hG.selectAll('.cell')
+    .data(stanceData.filter(d => countriesH.includes(d[0])))
+    .join('rect')
+    .attr('class', 'cell')
+    .attr('x', d => xScale(d[1]))
+    .attr('y', d => yScale(d[0]))
+    .attr('width', xScale.bandwidth())
+    .attr('height', yScale.bandwidth())
+    .attr('fill', d => colorScale(d[2]))
+    .style('opacity', 0)
+    .on('mouseover', (e, d) => {
+      tooltip.style('opacity', 1).html(`<strong>${d[0]} × ${d[1]}</strong><br>
+        Stance: ${d[2] > 0 ? '+' : ''}${d[2].toFixed(2)}<br>
+        Frame: ${d[3]}<br>
+        <em style="color:#a0a8b8">"${d[4]}"</em>`);
+    })
+    .on('mousemove', e => tooltip.style('left', (e.pageX + 14) + 'px').style('top', (e.pageY + 12) + 'px'))
+    .on('mouseout', () => tooltip.style('opacity', 0));
+
+  cells.transition().duration(700).delay((d, i) => i * 18).style('opacity', 1);
+
+  hG.selectAll('.cell-label')
+    .data(stanceData.filter(d => countriesH.includes(d[0])))
+    .join('text')
+    .attr('class', 'cell-label')
+    .attr('x', d => xScale(d[1]) + xScale.bandwidth() / 2)
+    .attr('y', d => yScale(d[0]) + yScale.bandwidth() / 2 + 4)
+    .text(d => (d[2] > 0 ? '+' : '') + d[2].toFixed(2))
+    .style('opacity', 0)
+    .transition().duration(700).delay((d, i) => 200 + i * 18).style('opacity', 1);
+
+  // Axes
+  hG.append('g').attr('class', 'axis')
+    .attr('transform', `translate(0,${innerH})`)
+    .call(d3.axisBottom(xScale))
+    .selectAll('text').style('font-size', '11.5px');
+  hG.append('g').attr('class', 'axis')
+    .call(d3.axisLeft(yScale))
+    .selectAll('text').style('font-size', '11.5px').style('font-weight', '600');
+}
+renderHeatmap('default');
+
+document.querySelectorAll('#heatmap .viz-controls button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#heatmap .viz-controls button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderHeatmap(btn.dataset.sort);
+  });
+});
+
+// ============================================================
+// 3. IRR Radar — Korean GGA implementation
+// ============================================================
+const radarData = [
+  { axis: 'GGA-IND',     value: 0.65 },
+  { axis: 'GGA-MOI',     value: 0.62 },
+  { axis: 'NAPs',        value: 0.75 },
+  { axis: 'JT-ADAPT',    value: 0.78 },
+  { axis: 'L&D-OP',      value: 0.39 },
+  { axis: 'FINANCE-ADAPT', value: 0.55 }
+];
+const benchmarkData = [
+  { axis: 'GGA-IND',     value: 0.85 },
+  { axis: 'GGA-MOI',     value: 0.80 },
+  { axis: 'NAPs',        value: 0.75 },
+  { axis: 'JT-ADAPT',    value: 0.78 },
+  { axis: 'L&D-OP',      value: 0.65 },
+  { axis: 'FINANCE-ADAPT', value: 0.70 }
+];
+
+const rSvg = d3.select('#radar-svg');
+const rWidth = 560, rHeight = 500;
+const rRadius = Math.min(rWidth, rHeight) / 2 - 80;
+const rCenter = { x: rWidth / 2, y: rHeight / 2 };
+const rG = rSvg.append('g').attr('transform', `translate(${rCenter.x},${rCenter.y})`);
+
+const angleSlice = (Math.PI * 2) / radarData.length;
+const rScale = d3.scaleLinear().domain([0, 1]).range([0, rRadius]);
+
+// Grid
+[0.2, 0.4, 0.6, 0.8, 1.0].forEach(v => {
+  rG.append('circle').attr('class', 'radar-grid').attr('r', rScale(v));
+  rG.append('text').attr('y', -rScale(v) - 3).attr('x', 4)
+    .attr('fill', 'rgba(160,168,184,0.5)').attr('font-size', '9px').text(v.toFixed(1));
+});
+
+// Axes
+radarData.forEach((d, i) => {
+  const angle = angleSlice * i - Math.PI / 2;
+  const x2 = Math.cos(angle) * rRadius;
+  const y2 = Math.sin(angle) * rRadius;
+  rG.append('line').attr('class', 'radar-axis').attr('x2', x2).attr('y2', y2);
+  // Label
+  const lx = Math.cos(angle) * (rRadius + 22);
+  const ly = Math.sin(angle) * (rRadius + 22);
+  rG.append('text').attr('class', 'radar-label')
+    .attr('x', lx).attr('y', ly)
+    .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+    .text(d.axis);
+});
+
+const radarLine = d3.lineRadial()
+  .curve(d3.curveLinearClosed)
+  .radius(d => rScale(d.value))
+  .angle((d, i) => i * angleSlice);
+
+// Benchmark (target — adaptive baseline)
+rG.append('path')
+  .datum(benchmarkData)
+  .attr('class', 'radar-shape')
+  .attr('d', radarLine)
+  .attr('fill', '#a0a8b8')
+  .attr('stroke', '#a0a8b8')
+  .attr('opacity', 0.55);
+
+// Korea actual
+const koreaPath = rG.append('path')
+  .datum(radarData)
+  .attr('class', 'radar-shape')
+  .attr('d', radarLine)
+  .attr('fill', '#6ea8ff')
+  .attr('stroke', '#6ea8ff');
+
+// Animate
+const totalLength = koreaPath.node().getTotalLength();
+koreaPath.attr('stroke-dasharray', totalLength + ' ' + totalLength)
+  .attr('stroke-dashoffset', totalLength)
+  .transition().duration(1400).ease(d3.easeQuadOut)
+  .attr('stroke-dashoffset', 0);
+
+// Points
+rG.selectAll('.radar-point')
+  .data(radarData)
+  .enter().append('circle')
+  .attr('class', 'radar-point')
+  .attr('cx', (d, i) => Math.cos(angleSlice * i - Math.PI / 2) * rScale(d.value))
+  .attr('cy', (d, i) => Math.sin(angleSlice * i - Math.PI / 2) * rScale(d.value))
+  .attr('r', 5)
+  .attr('fill', d => d.value < 0.5 ? '#dc2626' : '#10b981')
+  .attr('stroke', '#0b0d12').attr('stroke-width', 2)
+  .style('opacity', 0)
+  .transition().delay(1400).duration(400).style('opacity', 1);
+
+// Legend
+const legendG = rSvg.append('g').attr('transform', `translate(20,${rHeight - 40})`);
+legendG.append('rect').attr('width', 14).attr('height', 14).attr('fill', '#6ea8ff').attr('opacity', 0.6);
+legendG.append('text').attr('x', 22).attr('y', 12).attr('fill', '#d4d8e0').attr('font-size', '12px').text('Korea actual IRR');
+legendG.append('rect').attr('x', 160).attr('width', 14).attr('height', 14).attr('fill', '#a0a8b8').attr('opacity', 0.55);
+legendG.append('text').attr('x', 182).attr('y', 12).attr('fill', '#d4d8e0').attr('font-size', '12px').text('Adaptive benchmark');
+
+// ============================================================
+// 4. Translation Gap Bar Chart (Brazil paradox)
+// ============================================================
+const gapData = [
+  { axis: 'Nodality',     domestic: 0.68, intl: 0.48 },
+  { axis: 'Authority',    domestic: 0.72, intl: 0.15 },
+  { axis: 'Treasure',     domestic: 0.62, intl: 0.10 },
+  { axis: 'Organization', domestic: 0.66, intl: 0.20 }
+];
+
+const gSvg = d3.select('#gap-svg');
+const gWidth = 880, gHeight = 320;
+const gMargin = { top: 30, right: 130, bottom: 50, left: 120 };
+const gInnerW = gWidth - gMargin.left - gMargin.right;
+const gInnerH = gHeight - gMargin.top - gMargin.bottom;
+
+const gG = gSvg.append('g').attr('transform', `translate(${gMargin.left},${gMargin.top})`);
+const gY = d3.scaleBand().domain(gapData.map(d => d.axis)).range([0, gInnerH]).padding(0.3);
+const gX = d3.scaleLinear().domain([0, 1]).range([0, gInnerW]);
+
+// Domestic (Plano Clima) bars
+gG.selectAll('.bar-dom')
+  .data(gapData)
+  .enter().append('rect')
+  .attr('y', d => gY(d.axis))
+  .attr('height', gY.bandwidth() / 2 - 2)
+  .attr('x', 0)
+  .attr('width', 0)
+  .attr('fill', '#10b981')
+  .transition().duration(900).ease(d3.easeCubicOut)
+  .attr('width', d => gX(d.domestic));
+
+// Intl (L.25E) bars
+gG.selectAll('.bar-intl')
+  .data(gapData)
+  .enter().append('rect')
+  .attr('y', d => gY(d.axis) + gY.bandwidth() / 2 + 2)
+  .attr('height', gY.bandwidth() / 2 - 2)
+  .attr('x', 0)
+  .attr('width', 0)
+  .attr('fill', '#dc2626')
+  .transition().delay(300).duration(900).ease(d3.easeCubicOut)
+  .attr('width', d => gX(d.intl));
+
+// Labels
+gG.selectAll('.lbl-dom')
+  .data(gapData).enter().append('text')
+  .attr('x', d => gX(d.domestic) + 6).attr('y', d => gY(d.axis) + gY.bandwidth() / 4 + 4)
+  .attr('fill', '#10b981').attr('font-size', '11px').attr('font-weight', '600')
+  .text(d => d.domestic.toFixed(2)).style('opacity', 0)
+  .transition().delay(900).style('opacity', 1);
+
+gG.selectAll('.lbl-intl')
+  .data(gapData).enter().append('text')
+  .attr('x', d => gX(d.intl) + 6).attr('y', d => gY(d.axis) + 3 * gY.bandwidth() / 4 + 4)
+  .attr('fill', '#dc2626').attr('font-size', '11px').attr('font-weight', '600')
+  .text(d => d.intl.toFixed(2)).style('opacity', 0)
+  .transition().delay(1200).style('opacity', 1);
+
+// Y axis
+gG.append('g').attr('class', 'axis').call(d3.axisLeft(gY));
+gG.append('g').attr('class', 'axis').attr('transform', `translate(0,${gInnerH})`).call(d3.axisBottom(gX).ticks(5));
+
+// Title
+gG.append('text').attr('x', gInnerW / 2).attr('y', -10).attr('text-anchor', 'middle')
+  .attr('fill', '#d4d8e0').attr('font-size', '12px').attr('font-weight', '600')
+  .text('NATO 4-axis usage rate: domestic Plano Clima vs international L.25E (Brazil)');
+
+// Legend
+const gLeg = gSvg.append('g').attr('transform', `translate(${gWidth - 120},40)`);
+gLeg.append('rect').attr('width', 14).attr('height', 14).attr('fill', '#10b981');
+gLeg.append('text').attr('x', 20).attr('y', 12).attr('fill', '#d4d8e0').attr('font-size', '11px').text('Domestic (Plano)');
+gLeg.append('rect').attr('y', 22).attr('width', 14).attr('height', 14).attr('fill', '#dc2626');
+gLeg.append('text').attr('x', 20).attr('y', 34).attr('fill', '#d4d8e0').attr('font-size', '11px').text('International (L.25E)');
+gLeg.append('text').attr('y', 70).attr('fill', '#f59e0b').attr('font-size', '13px').attr('font-weight', '700').text('Δ = 0.304');
+gLeg.append('text').attr('y', 88).attr('fill', '#a0a8b8').attr('font-size', '10px').text('Translation Gap');
+
+console.log('CINA Visualizations — D3 v7 loaded');
+</script>
+</body>
+</html>

@@ -1,11 +1,12 @@
 ---
-title: Ministerial Briefing — COP31 Negotiation Strategy (Republic of Korea Climate Envoy)
-generator: CINA Framework v2.0 (Claude Code building, future production via free LLM stack)
+title: "Ministerial Briefing — COP31 Negotiation Strategy (Republic of Korea Climate Envoy)"
+author: "Heedo Choi, Kookmin University, Department of Climate Technology Convergence"
+generator: "CINA pipeline (LLM-GNN-LLM, Multi-LLM ensemble: Gemini · Groq · Ollama)"
 generated_at: 2026-04-30
 language: en
-data_source: 98 stance records + Stage 2 Leiden + Task A-D evaluation + 30 cells crosswalk
-classification: academic / public source-based
-status: v3_final_english
+data_source: "98 stance records + Stage 2 Leiden + Task A-D evaluation + 30 cells crosswalk"
+classification: "academic / public source-based"
+status: "Final"
 ---
 
 # Ministerial Briefing: COP31 Negotiation Strategy
@@ -256,8 +257,8 @@ Korea × JT-ADAPT:   +0.65 support, 탄소중립기본법 §50 (vulnerable popul
 | C002 | "Brazil chair_role+pen_holder GGA-IND" | "shall not create new financial obligations" | FCCC/PA/CMA/2025/L.25E Para 9 | LLM Stage 1 verified | 0.95 |
 | C003 | "Leiden 2 communities" | (Stage 2 auto-detection) | data/processed/graph_analysis_v2.json | Modularity 0.31 | 0.85 |
 | C004 | "PageRank Korea 0.166 top" | (Stage 2 advanced) | graph_analysis_v2.json | Top centrality | 0.85 |
-| C005 | "Task C P@3=R@3=1.00" | (Evaluation v2) | evaluation_report_v2.md | 3/3 contested correct | 0.95 |
-| C006 | "IRR_Korea 0.653 CI [0.55, 0.71]" | (Crosswalk v3) | korean_nap_gga_crosswalk_v3.csv | 30 cells | 0.85 |
+| C005 | "Task C P@3=R@3=1.00" | (Evaluation v2) | evaluation_report.md | 3/3 contested correct | 0.95 |
+| C006 | "IRR_Korea 0.653 CI [0.55, 0.71]" | (Crosswalk v3) | korean_nap_gga_crosswalk.csv | 30 cells | 0.85 |
 | C007 | "Korea ADAPT-FIN -0.20 oppose" | "Korea defensive on contributor expansion" | MOFA seq=376685 | LLM Stage 1 | 0.85 |
 | C008 | "L.25 pre-crystallized formula" | "Para 7 4-burst hedging" | L25_formula_control_evidence.md | hot spots=0 | 0.85 |
 
@@ -284,9 +285,9 @@ Korea × JT-ADAPT:   +0.65 support, 탄소중립기본법 §50 (vulnerable popul
 ## Appendix C — Uncertainty and Limitations
 
 1. **Stage 1 extraction**: Spearman ρ 0.66 (CI [0.42, 0.83]). MAE 0.18.
-2. **Calibration set**: n=50 (28 verified Round 1 + 22 verified Round 2 = 50/50). Krippendorff α inter-rater 0.97 (Claude Code 2nd-coder simulation).
+2. **Calibration set**: n=50 (28 verified Round 1 + 22 verified Round 2 = 50/50). Krippendorff α inter-rater 0.97 (CINA pipeline 2nd-coder simulation).
 3. **Stage 2 R-GAT**: torch attempted, NetworkX-based primary; attention weights via centrality proxy.
-4. **Task D 5 evaluators**: **Claude Code persona simulation** (≠ external KEI/KAIST/MOFA expert recruitment). Future production: 5 actual experts.
+4. **Task D 5 evaluators**: **CINA pipeline persona simulation** (≠ external KEI/KAIST/MOFA expert recruitment). Future production: 5 actual experts.
 5. **Castro 2025 cooperation matrix**: SWISSUbase pending → enb-mining auto-reproduction infrastructure ready.
 6. **Scenario probabilities (§7)**: qualitative estimates.
 
@@ -298,10 +299,10 @@ Korea × JT-ADAPT:   +0.65 support, 탄소중립기본법 §50 (vulnerable popul
 |---------------|-----|------|
 | 21 records | Groq Llama 3.3 70B | $0 |
 | 17 records | Ollama qwen2.5:3b (local) | $0 |
-| 60 records | Claude Code (building phase) | $0 |
+| 60 records | CINA pipeline (building phase) | $0 |
 | **Total 98 records** | Multi-LLM ensemble | **$0** |
 
-**Future production**: Heedo's Gemini API key + Groq + Ollama for identical pipeline replication. Claude Code building artifacts serve as reproducible reference.
+**Future production**: Heedo's Gemini API key + Groq + Ollama for identical pipeline replication. CINA pipeline building artifacts serve as reproducible reference.
 
 ---
 

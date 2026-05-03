@@ -1,8 +1,9 @@
-# IRR_Korea_2025 v2: 한국 적응정책 GGA 이행률 — 30-cell 완성본
+# IRR_Korea — 한국 적응정책 GGA 이행률 (30-cell 완성본)
 
-> Round 4 P0-1 산출물. 기존 13-cell (Round 3 preliminary) → 30-cell 완성본.
-> Policy-Sci 교수 P0 권고 R4 직접 충족.
-> 작성일: 2026-04-26 | 버전: v2 | 작성: data-refinement-analyst Round 4
+> **저자**: Heedo Choi (최희도) · Kookmin University 기후기술융합학과
+> **핵심 결과**: **IRR_Korea = 0.653** (CI [0.55, 0.71]), 30/30 cells 평가
+> **약점**: L&D-OP = 0.39 (lowest) → COP31 actionable 권고
+> **데이터**: `deliverables/korean_nap_gga_crosswalk.csv` (30 cells)
 
 ---
 

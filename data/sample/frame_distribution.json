@@ -1,0 +1,46 @@
+{
+  "round": 3,
+  "processing_version": "round3-v1.4",
+  "processed_at": "2026-04-25T12:00:00+00:00",
+  "total_docs": 114,
+  "frame_counts": {
+    "scientific": 58,
+    "mixed": 37,
+    "sovereignty": 5,
+    "justice": 9,
+    "development": 5
+  },
+  "frame_pcts": {
+    "scientific": 50.9,
+    "mixed": 32.5,
+    "sovereignty": 4.4,
+    "justice": 7.9,
+    "development": 4.4
+  },
+  "round2_frame_counts": {
+    "scientific": 51,
+    "mixed": 24,
+    "sovereignty": 5
+  },
+  "new_in_round3": {
+    "justice": 9,
+    "development": 5,
+    "note": "Activated via AILAC/G77/LDC/GlobalSolidarity (justice+development CBDR-RC) and IIPFCC/AIPP/IWGIA (indigenous justice)"
+  },
+  "all_5_frames_active": true,
+  "cr3_4_note": "CR3.4 resolved: justice (9 docs) and development (5 docs) frames activated",
+  "justice_sources": [
+    "round4_curated-91062f04b898 (IIPFCC_TK)",
+    "round4_curated-0fafb61038f2 (IIPFCC_SBM014)",
+    "round4_curated-8fa41b71d954 (LCIPP_COP30)",
+    "round3_curated-87e79f4af3e3 (AOSIS_SCF)",
+    "round3_curated-7d58413eb1cd (Korean_NAP)"
+  ],
+  "development_sources": [
+    "round3_curated-6f7766a46a86 (Brazil_Plano_Clima_Apresentacao)",
+    "round3_curated-8a2f2dbfb372 (Brazil_Sumario_Executivo)",
+    "round3_curated-b98a46b8ea3e (Brazil_PNA_Vol1)",
+    "round3_curated-cfdd2faec536 (LMDC_GGA)",
+    "round3_curated-b2a594948238 (LMDC_DEA)"
+  ]
+}

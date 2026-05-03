@@ -1,0 +1,332 @@
+{
+  "_meta": {
+    "stage": "Stage 2 Advanced",
+    "n_stances": 38,
+    "n_countries": 8,
+    "providers": [
+      "ollama",
+      "groq"
+    ]
+  },
+  "country_issue_matrix": {
+    "Brazil": {
+      "GGA-IND": -0.40625,
+      "JT-ADAPT": -0.35,
+      "ADAPT-FIN": 0,
+      "L&D-OP": 0,
+      "NAPs": 0.0,
+      "MIT-ADAPT": -0.4
+    },
+    "AOSIS": {
+      "GGA-IND": 1.0,
+      "ADAPT-FIN": 0.0,
+      "L&D-OP": -1
+    },
+    "India": {
+      "GGA-IND": 0.8,
+      "ADAPT-FIN": 1.0
+    },
+    "South Korea": {
+      "NAPs": 0.8,
+      "GGA-IND": 0.8,
+      "ADAPT-FIN": -0.8
+    },
+    "Multi": {
+      "GGA-IND": -0.575
+    },
+    "African Group": {
+      "GGA-IND": -0.8
+    },
+    "LMDC": {
+      "ADAPT-FIN": -0.8
+    },
+    "EU": {
+      "GGA-IND": -0.8,
+      "MIT-ADAPT": -0.8
+    }
+  },
+  "country_metadata": {
+    "Brazil": {
+      "GGA-IND": {
+        "dominant_frame": "development",
+        "is_chair_role": true,
+        "is_pen_holder": true,
+        "mean_confidence": 0.9,
+        "n_extractions": 5
+      },
+      "JT-ADAPT": {
+        "dominant_frame": "development",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 0.9125000000000001,
+        "n_extractions": 4
+      },
+      "ADAPT-FIN": {
+        "dominant_frame": "mixed",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 0.0,
+        "n_extractions": 1
+      },
+      "L&D-OP": {
+        "dominant_frame": "mixed",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 0.0,
+        "n_extractions": 1
+      },
+      "NAPs": {
+        "dominant_frame": "development",
+        "is_chair_role": true,
+        "is_pen_holder": true,
+        "mean_confidence": 0.9,
+        "n_extractions": 2
+      },
+      "MIT-ADAPT": {
+        "dominant_frame": "development",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 0.9,
+        "n_extractions": 3
+      }
+    },
+    "AOSIS": {
+      "GGA-IND": {
+        "dominant_frame": "mixed",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 0.0,
+        "n_extractions": 1
+      },
+      "ADAPT-FIN": {
+        "dominant_frame": "development",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 0.925,
+        "n_extractions": 2
+      },
+      "L&D-OP": {
+        "dominant_frame": "justice",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 1.0,
+        "n_extractions": 1
+      }
+    },
+    "India": {
+      "GGA-IND": {
+        "dominant_frame": "justice",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 0.9,
+        "n_extractions": 2
+      },
+      "ADAPT-FIN": {
+        "dominant_frame": "justice",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 0.9,
+        "n_extractions": 1
+      }
+    },
+    "South Korea": {
+      "NAPs": {
+        "dominant_frame": "development",
+        "is_chair_role": false,
+        "is_pen_holder": true,
+        "mean_confidence": 0.9,
+        "n_extractions": 2
+      },
+      "GGA-IND": {
+        "dominant_frame": "development",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 0.9,
+        "n_extractions": 1
+      },
+      "ADAPT-FIN": {
+        "dominant_frame": "development",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 0.95,
+        "n_extractions": 1
+      }
+    },
+    "Multi": {
+      "GGA-IND": {
+        "dominant_frame": "development",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 0.7571428571428572,
+        "n_extractions": 7
+      }
+    },
+    "African Group": {
+      "GGA-IND": {
+        "dominant_frame": "development",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 0.9,
+        "n_extractions": 1
+      }
+    },
+    "LMDC": {
+      "ADAPT-FIN": {
+        "dominant_frame": "development",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 0.8,
+        "n_extractions": 1
+      }
+    },
+    "EU": {
+      "GGA-IND": {
+        "dominant_frame": "development",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 1.0,
+        "n_extractions": 1
+      },
+      "MIT-ADAPT": {
+        "dominant_frame": "development",
+        "is_chair_role": false,
+        "is_pen_holder": false,
+        "mean_confidence": 1.0,
+        "n_extractions": 1
+      }
+    }
+  },
+  "leiden_communities": {
+    "0": [
+      "Brazil",
+      "Multi",
+      "African Group",
+      "EU"
+    ],
+    "1": [
+      "AOSIS",
+      "India",
+      "South Korea",
+      "LMDC"
+    ]
+  },
+  "centralities_advanced": {
+    "betweenness": {
+      "Brazil": 0.0,
+      "AOSIS": 0.09523809523809523,
+      "India": 0.0,
+      "South Korea": 0.09523809523809523,
+      "Multi": 0.0,
+      "African Group": 0.0,
+      "LMDC": 0.0,
+      "EU": 0.0
+    },
+    "eigenvector": {
+      "Brazil": 0.46874236513824746,
+      "AOSIS": 1.385763408988798e-06,
+      "India": 8.016605798401201e-07,
+      "South Korea": 1.7252965801546298e-06,
+      "Multi": 0.5139979374473452,
+      "African Group": 0.5139979374473452,
+      "LMDC": 1.3034445707696688e-06,
+      "EU": 0.5018892663896224
+    },
+    "degree": {
+      "Brazil": 2.0667245563904135,
+      "AOSIS": 0.8499743947632492,
+      "India": 0.4417261042993862,
+      "South Korea": 0.9855985596534886,
+      "Multi": 2.314371290413692,
+      "African Group": 2.314371290413692,
+      "LMDC": 0.5773502691896257,
+      "EU": 2.266409100309219
+    },
+    "pagerank": {
+      "Brazil": 0.11648845934888578,
+      "AOSIS": 0.1488453006139408,
+      "India": 0.08450035128767064,
+      "South Korea": 0.1654996487123293,
+      "Multi": 0.12857571917557248,
+      "African Group": 0.12857571917557248,
+      "LMDC": 0.10115469938605919,
+      "EU": 0.12636010229996936
+    },
+    "closeness": {
+      "Brazil": 0.6221023898607069,
+      "AOSIS": 0.7004430320356444,
+      "India": 0.4728585462182247,
+      "South Korea": 0.7004430320356444,
+      "Multi": 0.5555350133489018,
+      "African Group": 0.5555350133489018,
+      "LMDC": 0.42996544925130137,
+      "EU": 0.5672913533301946
+    }
+  },
+  "cross_issue_motifs": [
+    {
+      "country": "Brazil",
+      "frame": "development",
+      "n_issues": 4,
+      "issues": [
+        "GGA-IND",
+        "JT-ADAPT",
+        "NAPs",
+        "MIT-ADAPT"
+      ],
+      "motif_type": "frame_consistency_hyperedge"
+    },
+    {
+      "country": "Brazil",
+      "frame": "mixed",
+      "n_issues": 2,
+      "issues": [
+        "ADAPT-FIN",
+        "L&D-OP"
+      ],
+      "motif_type": "frame_consistency_hyperedge"
+    },
+    {
+      "country": "India",
+      "frame": "justice",
+      "n_issues": 2,
+      "issues": [
+        "GGA-IND",
+        "ADAPT-FIN"
+      ],
+      "motif_type": "frame_consistency_hyperedge"
+    },
+    {
+      "country": "South Korea",
+      "frame": "development",
+      "n_issues": 3,
+      "issues": [
+        "NAPs",
+        "GGA-IND",
+        "ADAPT-FIN"
+      ],
+      "motif_type": "frame_consistency_hyperedge"
+    },
+    {
+      "country": "EU",
+      "frame": "development",
+      "n_issues": 2,
+      "issues": [
+        "GGA-IND",
+        "MIT-ADAPT"
+      ],
+      "motif_type": "frame_consistency_hyperedge"
+    }
+  ],
+  "ensemble_quality": {
+    "n_pairs_multi": 8,
+    "mean_score_std": 0.5849347617168267,
+    "frame_agreement_rate": 0.5,
+    "interpretation": "Multi-LLM Krippendorff alpha proxy. Lower std + higher frame agreement = better ensemble."
+  },
+  "graph_summary": {
+    "nodes": 8,
+    "edges": 9,
+    "density": 0.32142857142857145,
+    "connected_components": 2
+  }
+}

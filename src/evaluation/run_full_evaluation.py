@@ -1,7 +1,7 @@
 """Phase 5 Evaluation 4-task — 정량 측정 (Task A/B/C/D + Ablations).
 
 CINA stances vs calibration set ground truth.
-Output: deliverables/evaluation_report_v2.md + figures.
+Output: deliverables/evaluation_report.md + figures.
 """
 from __future__ import annotations
 
@@ -430,7 +430,7 @@ def main() -> int:
     print(json.dumps(abl, indent=2, ensure_ascii=False))
 
     # Save full report
-    out = ROOT / "deliverables" / "evaluation_report_v2.json"
+    out = ROOT / "deliverables" / "evaluation_report.json"
     full_report = {
         "n_stances": len(stances),
         "n_country_issue_pairs": len(cina_agg),

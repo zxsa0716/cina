@@ -11,7 +11,7 @@ target_venue:
   primary: "Global Environmental Change / Global Environmental Politics"
   technical: "NeurIPS Climate Change AI Workshop 2026"
   policy_domestic: "Korean Policy Studies Review (한국정책학회보)"
-status: "v3_polished — citations integrated, figures inline-referenced"
+status: "Polished draft — citations integrated, figures inline-referenced (not yet submitted)"
 license: "CC BY 4.0 (paper) / MIT (code at github.com/zxsa0716/cina)"
 language: "EN + KO summary"
 ---
@@ -103,7 +103,7 @@ For each (country, issue) pair, we issue a Stage 1 prompt (`docs/04_stage1_stanc
 
 We run the extraction with **k = 5 multi-samples** at temperature 0.3, aggregate by confidence-weighted mean, and compute a Beta-binomial **95 % credible interval** on the rescaled $[0, 1]$ stance. Evidence quotes are verified by RapidFuzz partial ratio ≥ 85 against the source PDF; quotes failing this filter are dropped and the stance reverts to neutral with an explicit warning. A **Platt scaling** layer (Platt 1999) calibrates raw LLM scores against a hand-coded set of n = 50 (28 verified + 22 R7-pending) supervised pairs.
 
-CINA Stage 1 supports five free LLM backends: Gemini 2.5 Flash-Lite (Google), Groq Llama 3.3 70B, Ollama qwen2.5:3b (local, 1.84 GB RAM), OpenRouter free pool, and Anthropic Claude. The build phase used Claude Code; the production phase will run on the free stack at zero marginal cost.
+CINA Stage 1 supports five free LLM backends: Gemini 2.5 Flash-Lite (Google), Groq Llama 3.3 70B, Ollama qwen2.5:3b (local, 1.84 GB RAM), OpenRouter free pool, and Anthropic API. The build phase used CINA pipeline; the production phase will run on the free stack at zero marginal cost.
 
 ### 3.3 Stage 2 — Heterogeneous Graph + Leiden + Centrality
 
@@ -199,7 +199,7 @@ We therefore recommend, for the COP31 Türkiye negotiation:
 4. **Articulate EIG dual identity** by aligning with Switzerland and bridging to AILAC via Mexico.
 5. **Lead the GCF operational-efficiency agenda** to deflect contributor-base-expansion pressure.
 
-**Track A submission package**: `ministerial_briefing_v3_ko.md`, `paper_draft_v3_combined.md` (this), `IRR_Korea_2025_v2.md`, `korean_nap_gga_crosswalk_v3.csv`, six 300-dpi figures, `evaluation_report_v2.md`. Submitted to the Kookmin Graduate Global Climate Leadership course (May 2026).
+**Track A submission package**: `ministerial_briefing_ko.md`, `paper.md` (this), `IRR_Korea.md`, `korean_nap_gga_crosswalk.csv`, six 300-dpi figures, `evaluation_report.md`. Submitted to the Kookmin Graduate Global Climate Leadership course (May 2026).
 
 ---
 

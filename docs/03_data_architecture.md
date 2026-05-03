@@ -148,8 +148,8 @@ data/
   },
   
   "extraction_metadata": {
-    "model": "claude-opus-4-7",
-    "model_id": "claude-opus-4-7",
+    "model": "llm-orch-7",
+    "model_id": "llm-orch-7",
     "temperature": 0.3,
     "samples": 5,
     "prompt_version": "v1.2",

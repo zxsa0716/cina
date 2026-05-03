@@ -1,0 +1,114 @@
+{
+  "analysis_label": "IRR_Brazilian_Translation_Gap_v2_NegAuth",
+  "processing_version": "round5-v1.4",
+  "processed_at": "2026-04-26T00:00:00Z",
+  "source_doc": "FCCC/PA/CMA/2025/L.25E (FCCC/PA/CMA/2025/L.25)",
+  "irr_domestic": 0.714,
+  "irr_domestic_note": "Plano Clima (2024-2035) Authority+Organization / Total = (79+1236)/1841",
+  "scenario_A": {
+    "description": "Round 4 baseline - no Authority sign split",
+    "Nodality": 84,
+    "Authority_total": 21,
+    "Treasure": 12,
+    "Organization": 56,
+    "Total": 173,
+    "irr_intl": 0.4451,
+    "delta": 0.2689,
+    "hypothesis_030": "PARTIAL",
+    "note": "Authority_negative tokens counted alongside positive, inflating effective Authority"
+  },
+  "scenario_B": {
+    "description": "Round 5 revised - negative Authority reclassified as constraint/Nodality",
+    "neg_auth_tokens_reclassified": 6,
+    "reclassification_basis": "3 shall_not + 1 should_not + 2 nor_establish (text-verified from para 7, 8, 9, 31)",
+    "Authority_positive": 15,
+    "Authority_negative": 6,
+    "Nodality_revised": 90,
+    "Organization": 56,
+    "Total": 173,
+    "irr_intl": 0.4104,
+    "delta": 0.3036,
+    "hypothesis_030": "CONFIRMED",
+    "note": "Lower effective Authority -> lower IRR_intl -> larger Delta"
+  },
+  "delta_shift_from_R4": 0.0347,
+  "negative_authority_paragraph_evidence": [
+    {
+      "para": 7,
+      "patterns": [
+        "shall not (x2)",
+        "should not (x1)"
+      ],
+      "neg_count": 3
+    },
+    {
+      "para": 8,
+      "patterns": [
+        "nor liability"
+      ],
+      "neg_count": 1
+    },
+    {
+      "para": 9,
+      "patterns": [
+        "shall not",
+        "not create new obligations",
+        "nor establish (x2)"
+      ],
+      "neg_count": 4
+    },
+    {
+      "para": 31,
+      "patterns": [
+        "no single adaptation approach"
+      ],
+      "neg_count": 1
+    }
+  ],
+  "key_evidence_quotes": [
+    {
+      "para": 7,
+      "quote": "Emphasizes that the Belem Adaptation Indicators are voluntary, non-prescriptive, non-punitive, facilitative... shall not become a barrier and shall not be used under any circumstances as a condition for developing country Parties to access funding under the Convention and the Paris Agreement.",
+      "negative_authority_patterns": [
+        "shall not (x2)",
+        "voluntary",
+        "non-prescriptive",
+        "non-punitive",
+        "facilitative"
+      ],
+      "classification": "Nodality x4 + Authority_negative x2"
+    },
+    {
+      "para": 8,
+      "quote": "Also emphasizes that the Belem Adaptation Indicators do not create new financial obligations or commitments, nor liability or compensation.",
+      "negative_authority_patterns": [
+        "nor liability"
+      ],
+      "classification": "Authority_negative x1"
+    },
+    {
+      "para": 9,
+      "quote": "Affirms that the Belem Adaptation Indicators... shall not create new obligations for developing country Parties, benchmarks or evaluation criteria, nor establish global standardized methodologies or data-collection processes, nor establish any compliance frameworks.",
+      "negative_authority_patterns": [
+        "shall not",
+        "not create new obligations",
+        "nor establish (x2)"
+      ],
+      "classification": "Authority_negative x4 (strongest)"
+    },
+    {
+      "para": 31,
+      "quote": "Emphasizes that no single adaptation approach shall be presented as the default, superior or universally applicable pathway.",
+      "negative_authority_patterns": [
+        "no single",
+        "should not"
+      ],
+      "classification": "Authority_negative x1 + sovereignty protection"
+    }
+  ],
+  "interpretation": {
+    "scenario_B_meaning": "When negative Authority (shall NOT constraints) are reclassified as Nodality/constraint language rather than binding obligations, IRR_intl drops from 0.445 to 0.410, increasing Delta to 0.304.",
+    "policy_critique_c1_verdict": "CONFIRMED",
+    "theoretical_implication": "Para 7 and 9 of L.25E represent a deliberate strategy by Brazil (as COP30 chair) to protect G77 sovereignty by embedding negative obligations alongside voluntary Nodality language - a dual rhetorical device that simultaneously signals ambition (adopting indicators) and restraint (shall NOT create new obligations)."
+  }
+}

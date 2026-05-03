@@ -1,0 +1,65 @@
+{
+  "total_records": 56,
+  "by_source": {
+    "cop30_curated": 13,
+    "brazilian_gov": 1,
+    "iisd_enb": 3,
+    "ndc": 7,
+    "round3_curated": 3,
+    "round4_curated": 5,
+    "round4_t01_chair": 24
+  },
+  "by_cop_session": {
+    "COP21": 4,
+    "COP30": 24,
+    "COP29": 2,
+    "COP26": 6,
+    "COP28": 10,
+    "COP22": 3,
+    "COP23": 1,
+    "COP24": 2,
+    "COP25": 2,
+    "COP27": 2
+  },
+  "by_presidency_country": {
+    "Brazil": 9,
+    "UAE": 1,
+    "Azerbaijan": 1,
+    "France": 2,
+    "Morocco": 2,
+    "Fiji": 1,
+    "Poland": 2,
+    "Chile": 2,
+    "UK": 5,
+    "Egypt": 2
+  },
+  "energy_exporter_presidencies_count": 2,
+  "energy_exporter_presidencies": [
+    [
+      "COP24",
+      "Poland"
+    ]
+  ],
+  "scanned_pdf_count": 1,
+  "tallberg_channel_distribution": {
+    "information": 1,
+    "formula_control": 3,
+    "brokerage": 19,
+    "agenda_shaping": 1
+  },
+  "cop_coverage": [
+    "COP21",
+    "COP22",
+    "COP23",
+    "COP24",
+    "COP25",
+    "COP26",
+    "COP27",
+    "COP28",
+    "COP29",
+    "COP30"
+  ],
+  "bayer_urpelainen_threshold_80_status": "56/80 = 70.0%",
+  "processing_version": "round5-v1.4",
+  "processed_at": "2026-04-26T00:00:00Z"
+}

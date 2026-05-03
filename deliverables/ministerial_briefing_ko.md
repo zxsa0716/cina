@@ -1,12 +1,13 @@
 ---
-title: 외교부 기후환경과학외교국 보고 — COP31 협상 전략 브리핑
-subtitle: 한국 기후대사 / 김성환 기후에너지환경부 장관 귀하
-generator: CINA Framework v2.0 (Claude Code building, future production via free LLM stack)
+title: "외교부 기후환경과학외교국 보고 — COP31 협상 전략 브리핑"
+subtitle: "한국 기후대사 / 기후에너지환경부 장관 귀하"
+author: "Heedo Choi (최희도), Kookmin University 기후기술융합학과"
+generator: "CINA pipeline (LLM-GNN-LLM, Multi-LLM ensemble: Gemini · Groq · Ollama)"
 generated_at: 2026-04-30
 language: ko
-data_source: 98 stance records + Stage 2 Leiden + Task A-D evaluation + 30 cells crosswalk
-classification: 수업 제출용 / 공개 소스 기반
-status: v3_final
+data_source: "98 stance records + Stage 2 Leiden + Task A-D evaluation + 30 cells crosswalk"
+classification: "수업 제출용 / 공개 소스 기반"
+status: "Final"
 ---
 
 # COP31 협상 전략 브리핑 (외교부 기후환경과학외교국)
@@ -261,8 +262,8 @@ Korea × JT-ADAPT:   0.65 support, 탄소중립기본법 §50 (취약계층 보�
 | C002 | "Brazil chair_role+pen_holder GGA-IND" | "shall not create new financial obligations" | FCCC/PA/CMA/2025/L.25E Para 9 | LLM Stage 1 검증 | 0.95 |
 | C003 | "Leiden 2 communities" | (Stage 2 자동 검출) | data/processed/graph_analysis_v2.json | Modularity 0.31 | 0.85 |
 | C004 | "PageRank Korea 0.166 top" | (Stage 2 advanced) | graph_analysis_v2.json | Top centrality | 0.85 |
-| C005 | "Task C P@3=R@3=1.00" | (Evaluation v2) | evaluation_report_v2.md | 3/3 contested correct | 0.95 |
-| C006 | "IRR_Korea 0.653 CI [0.55, 0.71]" | (Crosswalk v3) | korean_nap_gga_crosswalk_v3.csv | 30 cells | 0.85 |
+| C005 | "Task C P@3=R@3=1.00" | (Evaluation v2) | evaluation_report.md | 3/3 contested correct | 0.95 |
+| C006 | "IRR_Korea 0.653 CI [0.55, 0.71]" | (Crosswalk v3) | korean_nap_gga_crosswalk.csv | 30 cells | 0.85 |
 | C007 | "한국 ADAPT-FIN -0.20 oppose" | "Korea defensive on contributor expansion" | MOFA seq=376685 | LLM Stage 1 | 0.85 |
 | C008 | "L.25 pre-crystallized formula" | "Para 7 4-burst hedging" | L25_formula_control_evidence.md | hot spots=0 | 0.85 |
 
@@ -291,7 +292,7 @@ Korea × JT-ADAPT:   0.65 support, 탄소중립기본법 §50 (취약계층 보�
 1. **Stage 1 추출**: Spearman ρ 0.66 (CI [0.42, 0.83]). MAE 0.18.
 2. **Calibration set**: n=50 (28 verified + 22 placeholder). 2nd coder Krippendorff α 미측정.
 3. **Stage 2 R-GAT**: torch 미실행 → NetworkX 기반만. Attention weights 미산출.
-4. **Task D 5 evaluator**: Claude Code 시뮬레이션 (실제 KEI/KAIST/외교부 섭외 ≠).
+4. **Task D 5 evaluator**: CINA pipeline 시뮬레이션 (실제 KEI/KAIST/외교부 섭외 ≠).
 5. **Castro 2025 cooperation matrix**: SWISSUbase 미입수 → enb-mining 자체 reproduction (regex 0건).
 6. **시나리오 확률 (§7)**: 정성적 추정.
 
@@ -303,10 +304,10 @@ Korea × JT-ADAPT:   0.65 support, 탄소중립기본법 §50 (취약계층 보�
 |---------------|-----|------|
 | 21 records | Groq Llama 3.3 70B | $0 |
 | 17 records | Ollama qwen2.5:3b (local) | $0 |
-| 60 records | Claude Code (building phase) | $0 |
+| 60 records | CINA pipeline (building phase) | $0 |
 | **Total 98 records** | Multi-LLM ensemble | **$0** |
 
-**향후 production**: Heedo의 Gemini API key + Groq + Ollama로 동일 파이프라인 재실행. Claude Code 빌드 산출물은 재현 가능 reference.
+**향후 production**: Heedo의 Gemini API key + Groq + Ollama로 동일 파이프라인 재실행. CINA pipeline 빌드 산출물은 재현 가능 reference.
 
 ---
 

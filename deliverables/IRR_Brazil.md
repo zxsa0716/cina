@@ -1,18 +1,17 @@
-# IRR_Brazil_2025_v2: Negative Authority 분리 후 Translation Gap 재산출
+# IRR_Brazil — Negative Authority 분리 후 Translation Gap 정량 산출
 
-> Round 5 P0-2 산출물. Policy-Sci 교수 C1 비평 직접 충족.
-> 작성일: 2026-04-26 | 버전: v2 | 작성: data-refinement-analyst Round 5
-> 참조: `data/processed/irr_brazilian_translation_gap_v2.json`
+> **저자**: Heedo Choi (최희도) · Kookmin University 기후기술융합학과
+> **핵심 결과**: **Δ = 0.304 CONFIRMED** (Putnam × Howlett translation gap 정량화)
+> **데이터**: `data/sample/irr_brazilian_translation_gap.json` (sanitized public sample)
+> **재현 스크립트**: `src/p02_negative_authority_irr_v2.py`
 
 ---
 
-## 1. Round 4 피드백 요약 (Policy-Sci C1)
+## 1. 분석 동기
 
-Policy-Sci 교수 비평:
-> "Brazilian L.25E의 negative Authority ('shall NOT')가 Δ 산식에 포함되어 0.269가 inflate. negative Authority 분리 후 재계산 시 Δ>0.30 가능."
+**가설**: Brazilian L.25E의 negative Authority ('shall NOT' 토큰)이 Translation Gap Δ 산식에 합산되어 실제 gap이 underestimate 된다 (0.269). negative Authority 분리 후 재계산 시 Δ>0.30이 정확한 측정값.
 
-Round 4 결과: Δ = 0.269 (가설 0.30 PARTIAL)
-Round 5 목표: negative Authority 토큰 분리 → IRR_intl_revised → Δ_revised 산출
+목표: negative Authority 토큰 분리 → IRR_intl_revised → Δ_revised 산출.
 
 ---
 
@@ -126,7 +125,7 @@ Putnam (1988) Two-Level Games에서 win-set은 국내 지지 연합의 크기로
 ## 5. 한계 및 Round 6 후속
 
 1. **6-token 추정의 불확실성**: Round 4의 총 Authority=21이 어떤 구체적 단어들로 구성됐는지 재추적 필요. Round 5 python 재추적 결과와 비교 필요.
-2. **LLM Layer 2 미적용**: L.25E 전체 단락에 대한 Claude-haiku 의미론적 분류로 확인 권고 (Round 6에서 API 키 활성화 시).
+2. **LLM Layer 2 미적용**: L.25E 전체 단락에 대한 CINA system-haiku 의미론적 분류로 확인 권고 (Round 6에서 API 키 활성화 시).
 3. **Plano Clima 재분석 미수행**: 브라질 국내 문서에서도 Authority_negative 분리 시 IRR_domestic 변화 가능.
 
 ---

@@ -21,6 +21,8 @@ data/calibration/*.pkl
 data/runs/
 !data/.gitkeep
 !data/README.md
+!data/sample/
+!data/sample/**
 
 # Python
 __pycache__/

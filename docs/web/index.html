@@ -29,6 +29,8 @@
       <a href="#case-brazil">브라질 사례</a>
       <a href="#findings">학술 발견</a>
       <a href="#data">데이터</a>
+      <a href="methodology.html">Methodology ↗</a>
+      <a href="visualizations.html">Visualizations ↗</a>
       <a href="outputs.html">결과물 ↗</a>
       <a href="https://github.com/zxsa0716/cina" target="_blank" rel="noopener" class="nav-github">GitHub →</a>
     </nav>
@@ -55,6 +57,134 @@
       <div class="stat"><div class="stat-num" id="stat-stances">98</div><div class="stat-label">Stage 1 Stances</div><div class="stat-sub">13 countries × 6 issues</div></div>
       <div class="stat"><div class="stat-num" id="stat-findings">8</div><div class="stat-label">Publishable Findings</div><div class="stat-sub">5 venues 후보</div></div>
     </div>
+  </div>
+</section>
+
+<!-- Animated Pipeline Visualization -->
+<section id="flowchart" class="section section-flow">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">§ Pipeline Visualization</span>
+      <h2>전체 연구 흐름 — 3단계 LLM-GNN-LLM 파이프라인</h2>
+      <p class="lede">UNFCCC 결정문에서 외교부 장관급 브리핑까지, 데이터가 어떻게 흘러가는지 한눈에.</p>
+    </div>
+
+    <!-- Animated SVG Pipeline -->
+    <div class="svg-pipeline-wrap">
+      <svg viewBox="0 0 1200 480" xmlns="http://www.w3.org/2000/svg" class="svg-pipeline" preserveAspectRatio="xMidYMid meet" role="img" aria-label="CINA 파이프라인 단계별 흐름도">
+        <defs>
+          <linearGradient id="g0" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#1e3a5f"/><stop offset="100%" stop-color="#2563eb"/>
+          </linearGradient>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#60a5fa"/>
+          </linearGradient>
+          <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#a78bfa"/>
+          </linearGradient>
+          <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#34d399"/>
+          </linearGradient>
+          <linearGradient id="g4" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#fbbf24"/>
+          </linearGradient>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#6ea8ff"/>
+          </marker>
+        </defs>
+
+        <!-- Stage boxes -->
+        <g class="stage-svg" data-step="0">
+          <rect x="20" y="80" width="180" height="140" rx="14" fill="url(#g0)" stroke="#fff" stroke-opacity="0.15" stroke-width="2"/>
+          <text x="110" y="115" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">Stage 0</text>
+          <text x="110" y="138" text-anchor="middle" fill="#fff" font-size="12.5">Data Collection</text>
+          <text x="110" y="165" text-anchor="middle" fill="#cfe1ff" font-size="11">26 collectors</text>
+          <text x="110" y="182" text-anchor="middle" fill="#cfe1ff" font-size="11">225 docs · ~720MB</text>
+          <text x="110" y="205" text-anchor="middle" fill="#cfe1ff" font-size="10.5" font-style="italic">UNFCCC · NDC · ENB · IPCC</text>
+        </g>
+
+        <g class="stage-svg" data-step="1">
+          <rect x="240" y="80" width="200" height="140" rx="14" fill="url(#g1)" stroke="#fff" stroke-opacity="0.15" stroke-width="2"/>
+          <text x="340" y="115" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">Stage 1 · LLM</text>
+          <text x="340" y="138" text-anchor="middle" fill="#fff" font-size="12.5">Stance Extraction</text>
+          <text x="340" y="162" text-anchor="middle" fill="#dbeafe" font-size="11">Multi-sample k=5 · CI</text>
+          <text x="340" y="178" text-anchor="middle" fill="#dbeafe" font-size="11">NATO 4-axis · 5 frames</text>
+          <text x="340" y="194" text-anchor="middle" fill="#dbeafe" font-size="11">Procedural authority</text>
+          <text x="340" y="212" text-anchor="middle" fill="#dbeafe" font-size="10.5" font-style="italic">→ 98 stance records</text>
+        </g>
+
+        <g class="stage-svg" data-step="2">
+          <rect x="480" y="80" width="200" height="140" rx="14" fill="url(#g2)" stroke="#fff" stroke-opacity="0.15" stroke-width="2"/>
+          <text x="580" y="115" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">Stage 2 · GNN</text>
+          <text x="580" y="138" text-anchor="middle" fill="#fff" font-size="12.5">Graph Analysis</text>
+          <text x="580" y="162" text-anchor="middle" fill="#ede9fe" font-size="11">Heterogeneous graph</text>
+          <text x="580" y="178" text-anchor="middle" fill="#ede9fe" font-size="11">Leiden community</text>
+          <text x="580" y="194" text-anchor="middle" fill="#ede9fe" font-size="11">5 centralities</text>
+          <text x="580" y="212" text-anchor="middle" fill="#ede9fe" font-size="10.5" font-style="italic">→ 2 communities · bridges</text>
+        </g>
+
+        <g class="stage-svg" data-step="3">
+          <rect x="720" y="80" width="200" height="140" rx="14" fill="url(#g3)" stroke="#fff" stroke-opacity="0.15" stroke-width="2"/>
+          <text x="820" y="115" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">Stage 3 · LLM</text>
+          <text x="820" y="138" text-anchor="middle" fill="#fff" font-size="12.5">Briefing Generation</text>
+          <text x="820" y="162" text-anchor="middle" fill="#d1fae5" font-size="11">Graph-Grounded Gen</text>
+          <text x="820" y="178" text-anchor="middle" fill="#d1fae5" font-size="11">인용 + 구조 강제</text>
+          <text x="820" y="194" text-anchor="middle" fill="#d1fae5" font-size="11">7-rule verification</text>
+          <text x="820" y="212" text-anchor="middle" fill="#d1fae5" font-size="10.5" font-style="italic">→ KO + EN 9 sections</text>
+        </g>
+
+        <g class="stage-svg" data-step="4">
+          <rect x="960" y="80" width="200" height="140" rx="14" fill="url(#g4)" stroke="#fff" stroke-opacity="0.15" stroke-width="2"/>
+          <text x="1060" y="115" text-anchor="middle" fill="#000" font-weight="700" font-size="15">Phase 5</text>
+          <text x="1060" y="138" text-anchor="middle" fill="#000" font-size="12.5">Evaluation</text>
+          <text x="1060" y="162" text-anchor="middle" fill="#1c1917" font-size="11">Spearman ρ = 0.658</text>
+          <text x="1060" y="178" text-anchor="middle" fill="#1c1917" font-size="11">P@3 = R@3 = 1.00 ⭐</text>
+          <text x="1060" y="194" text-anchor="middle" fill="#1c1917" font-size="11">Mean 4.53/5 · α=0.91</text>
+          <text x="1060" y="212" text-anchor="middle" fill="#1c1917" font-size="10.5" font-style="italic">→ 5/5 gates PASS</text>
+        </g>
+
+        <!-- Connecting arrows with animated dash -->
+        <path class="flow-arrow" d="M 200 150 L 240 150" stroke="#6ea8ff" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+        <path class="flow-arrow" d="M 440 150 L 480 150" stroke="#a78bfa" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+        <path class="flow-arrow" d="M 680 150 L 720 150" stroke="#34d399" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+        <path class="flow-arrow" d="M 920 150 L 960 150" stroke="#fbbf24" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+        <!-- Animated traveling particles -->
+        <circle r="6" fill="#6ea8ff" class="travel-dot"><animateMotion path="M 200 150 L 240 150" dur="2s" repeatCount="indefinite"/></circle>
+        <circle r="6" fill="#a78bfa" class="travel-dot"><animateMotion path="M 440 150 L 480 150" dur="2s" begin="0.5s" repeatCount="indefinite"/></circle>
+        <circle r="6" fill="#34d399" class="travel-dot"><animateMotion path="M 680 150 L 720 150" dur="2s" begin="1s" repeatCount="indefinite"/></circle>
+        <circle r="6" fill="#fbbf24" class="travel-dot"><animateMotion path="M 920 150 L 960 150" dur="2s" begin="1.5s" repeatCount="indefinite"/></circle>
+
+        <!-- Bottom data lineage labels -->
+        <g font-size="11" fill="#94a3b8">
+          <text x="110" y="270" text-anchor="middle">📂 raw documents</text>
+          <text x="340" y="270" text-anchor="middle">📊 stance tensor</text>
+          <text x="580" y="270" text-anchor="middle">🕸️ coalition graph</text>
+          <text x="820" y="270" text-anchor="middle">📘 briefing + paper</text>
+          <text x="1060" y="270" text-anchor="middle">🎯 quantified validation</text>
+        </g>
+
+        <!-- Theory grounding -->
+        <g class="theory-band">
+          <rect x="20" y="320" width="1140" height="120" rx="10" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+          <text x="40" y="345" fill="#e2e8f0" font-weight="600" font-size="13">📚 Theoretical grounding (이론적 근거)</text>
+          <text x="40" y="370" fill="#94a3b8" font-size="11.5">• <tspan fill="#cbd5e1" font-weight="600">Regime Complex</tspan> (Keohane &amp; Victor 2011) — horizontal cleavage 정량 검증</text>
+          <text x="40" y="390" fill="#94a3b8" font-size="11.5">• <tspan fill="#cbd5e1" font-weight="600">Two-Level Games</tspan> (Putnam 1988) × <tspan fill="#cbd5e1" font-weight="600">Policy Instruments</tspan> (Howlett 2019) — Brazil Translation Gap Δ=0.304</text>
+          <text x="40" y="410" fill="#94a3b8" font-size="11.5">• <tspan fill="#cbd5e1" font-weight="600">Procedural Authority</tspan> (Tallberg 2010) + <tspan fill="#cbd5e1" font-weight="600">Norm Entrepreneur</tspan> (Finnemore-Sikkink 1998) — AILAC NES = 0.86</text>
+          <text x="40" y="430" fill="#94a3b8" font-size="11.5">• <tspan fill="#cbd5e1" font-weight="600">Frame Theory</tspan> (Snow-Benford 1988) + <tspan fill="#cbd5e1" font-weight="600">Issue Linkage</tspan> (Tollison-Willett 1979)</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Mermaid as backup/text view -->
+    <details class="mermaid-fallback">
+      <summary>📐 텍스트 형식으로 보기 (Mermaid)</summary>
+      <pre class="mermaid-code">
+Stage 0  →  Stage 1  →  Stage 2  →  Stage 3  →  Phase 5
+   ↓           ↓           ↓           ↓           ↓
+Collection  LLM 추출    그래프 분석  브리핑 생성   평가
+225 docs   98 stances  Leiden 2C   KO+EN 9§     5/5 PASS</pre>
+    </details>
   </div>
 </section>
 
@@ -174,7 +304,7 @@
         <div class="provider"><b>Groq Llama 3.3 70B</b><span>30 RPM · 280 tok/s · $0</span></div>
         <div class="provider"><b>Ollama qwen2.5:3b</b><span>local · unlimited · $0</span></div>
         <div class="provider"><b>OpenRouter free pool</b><span>multi-model · $0</span></div>
-        <div class="provider"><b>Anthropic Claude</b><span>(paid backup)</span></div>
+        <div class="provider"><b>Anthropic API</b><span>(paid backup)</span></div>
       </div>
     </div>
   </div>
@@ -599,7 +729,7 @@
 <footer class="site-footer">
   <div class="container footer-grid">
     <div>
-      <h4>CINA Framework v2.0</h4>
+      <h4>CINA Framework</h4>
       <p>국민대학교 대학원 글로벌기후리더십 (2026-1) 과제를 학술 연구로 확장.</p>
       <p>Track A: 수업 제출 (2026.05) · Track B: 학술 투고</p>
       <p style="margin-top: 0.8rem; font-size: 0.85em; color: var(--c-fg-mute);">
@@ -613,8 +743,8 @@
       <ul>
         <li><a href="https://github.com/zxsa0716/cina">GitHub Repository</a></li>
         <li><a href="../01_theoretical_foundations.md">학술 방법론 (15 docs)</a></li>
-        <li><a href="../../deliverables/ministerial_briefing_v3_ko.md">장관급 브리핑 v3 (KO)</a></li>
-        <li><a href="../../deliverables/evaluation_report_v2.md">Evaluation Report v2</a></li>
+        <li><a href="../../deliverables/ministerial_briefing_ko.md">장관급 브리핑 (KO)</a></li>
+        <li><a href="../../deliverables/evaluation_report.md">Evaluation Report</a></li>
       </ul>
     </div>
     <div>

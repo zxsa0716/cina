@@ -2,7 +2,7 @@
 
 > **저자(Author)**: **Heedo Choi (최희도)** — Graduate Student, Department of Climate Technology Convergence (기후기술융합학과), Kookmin University
 > **Contact**: zxsa0716@kookmin.ac.kr · [GitHub @zxsa0716](https://github.com/zxsa0716)
-> **Project**: CINA Framework v2.0 (LLM-GNN-LLM pipeline)
+> **Project**: CINA Framework (LLM-GNN-LLM pipeline)
 > **Status**: Phase 5 Complete · Combined Rubric **4.76/5** · 5/5 Quality Gates PASS · 8 publishable findings
 > **Last update**: 2026-05-04
 
@@ -14,7 +14,7 @@
 
 | 카테고리 | 수량 | 위치 |
 |---------|-----|------|
-| 학술 페이퍼 | 1 | [paper_draft_v3_combined.md](deliverables/paper_draft_v3_combined.md) |
+| 학술 페이퍼 | 1 | [paper.md](deliverables/paper.md) |
 | 장관급 브리핑 | 2 (KO + EN) | [deliverables/](deliverables/) |
 | 정량 검증 보고서 | 8 | [deliverables/](deliverables/) |
 | Stage 2 Figures | 7 PNG (300 dpi) | [docs/web/figures/](docs/web/figures/) |
@@ -23,7 +23,7 @@
 | Manifest entries | 225 raw 문서 | [data/manifest/manifest.jsonl](data/manifest/manifest.jsonl) |
 | Stage 1 stances | 98 records | [data/processed/](data/processed/) (private, Zenodo 별도) |
 | 코드 모듈 | 26 collectors + 4 stages + council | [src/](src/) |
-| 평가 메트릭 | 4 tasks + 6 ablations | [evaluation_report_v2.md](deliverables/evaluation_report_v2.md) |
+| 평가 메트릭 | 4 tasks + 6 ablations | [evaluation_report.md](deliverables/evaluation_report.md) |
 
 ---
 
@@ -31,7 +31,7 @@
 
 ### 1.1 Paper (논문 draft)
 
-- **`deliverables/paper_draft_v3_combined.md`**
+- **`deliverables/paper.md`**
   - 3,428 words · 7 sections + Abstract (300w) + Korean summary
   - **23 references**: Bayer-Urpelainen, Castro 2025, Finnemore-Sikkink 1998, Goh 2007, Haas 1992, Hochstetler-Milkoreit 2014, Hood 1983, Howlett 2019, Keohane-Victor 2011, Platt 1999, Putnam 1988, Sebenius 1983, Snow-Benford 1988, Steinberg 2002, Tallberg 2010, Tollison-Willett 1979, Traag-Waltman-van Eck 2019, IISD ENB, UNFCCC L.25E, UNFCCC L.24
   - 6개 figure inline reference (Fig. 1-6)
@@ -53,7 +53,7 @@
 
 ### 2.1 장관급 브리핑
 
-- **`deliverables/ministerial_briefing_v3_ko.md`** (한국어, 9 sections + 4 appendices)
+- **`deliverables/ministerial_briefing_ko.md`** (한국어, 9 sections + 4 appendices)
   - § Executive Summary
   - § COP30 적응 협상 핵심 issue map
   - § 한국 입장 정량 분석 (IRR=0.653)
@@ -68,7 +68,7 @@
   - 부록 C: Uncertainty quantification
   - 부록 D: LLM provider attribution
 
-- **`deliverables/ministerial_briefing_v3_en.md`** (영어, 310 lines)
+- **`deliverables/ministerial_briefing_en.md`** (영어, 310 lines)
   - 위 KO 브리핑 1:1 영어 버전 (국제 회람용)
 
 ### 2.2 사전 분석 (Pre-analytic)
@@ -83,19 +83,19 @@
 
 | # | 파일 | 핵심 메트릭 | 학술 의의 |
 |---|------|-----------|----------|
-| F1 | [`IRR_Korea_2025_v2.md`](deliverables/IRR_Korea_2025_v2.md) | **IRR_Korea = 0.653** (CI 0.55-0.71) | 30/30 cells crosswalk, L&D-OP 0.39 weakness identified |
-| F2 ⭐ | [`IRR_Brazil_2025_v2_negAuth.md`](deliverables/IRR_Brazil_2025_v2_negAuth.md) | **Δ = 0.304 CONFIRMED** | Putnam × Howlett gap 정량 — NeurIPS CCAI signature finding |
+| F1 | [`IRR_Korea.md`](deliverables/IRR_Korea.md) | **IRR_Korea = 0.653** (CI 0.55-0.71) | 30/30 cells crosswalk, L&D-OP 0.39 weakness identified |
+| F2 ⭐ | [`IRR_Brazil.md`](deliverables/IRR_Brazil.md) | **Δ = 0.304 CONFIRMED** | Putnam × Howlett gap 정량 — NeurIPS CCAI signature finding |
 | F3 | [`L25_formula_control_evidence.md`](deliverables/L25_formula_control_evidence.md) | Pre-crystallized formula 가설 | Tallberg 2010 + Steinberg 2002 + Goh 2007 통합 |
 | F4 | [`realist_b0_statistics.md`](deliverables/realist_b0_statistics.md) | F1 = 0.560, p<0.0001 | Constructivist+frame variables 정당성 |
 | F5 ⭐ | [`AILAC_norm_entrepreneur_quantification.md`](deliverables/AILAC_norm_entrepreneur_quantification.md) | **NES = 0.86** (3.5/4 PASS) | Finnemore-Sikkink 1998 4 criteria empirical test |
-| F6 | [`evaluation_report_v2.md`](deliverables/evaluation_report_v2.md) §A | Spearman ρ = 0.658 | CINA vs expert agreement (Task A) |
-| F7 ⭐ | [`evaluation_report_v2.md`](deliverables/evaluation_report_v2.md) §C | **P@3 = R@3 = 1.00** | 3/3 contested issues 100% 정확 예측 |
-| F8 | [`korean_nap_gga_crosswalk_v3.csv`](deliverables/korean_nap_gga_crosswalk_v3.csv) | 30 cells | NAP × GGA 정량 매핑 (Howlett instrument calibration) |
+| F6 | [`evaluation_report.md`](deliverables/evaluation_report.md) §A | Spearman ρ = 0.658 | CINA vs expert agreement (Task A) |
+| F7 ⭐ | [`evaluation_report.md`](deliverables/evaluation_report.md) §C | **P@3 = R@3 = 1.00** | 3/3 contested issues 100% 정확 예측 |
+| F8 | [`korean_nap_gga_crosswalk.csv`](deliverables/korean_nap_gga_crosswalk.csv) | 30 cells | NAP × GGA 정량 매핑 (Howlett instrument calibration) |
 
 ### 3.1 종합 평가 (Phase 5)
 
-- **`deliverables/evaluation_report_v2.md`** — Phase 5 최종 평가 보고서
-- **`deliverables/evaluation_report_v2.json`** — Machine-readable raw data
+- **`deliverables/evaluation_report.md`** — Phase 5 최종 평가 보고서
+- **`deliverables/evaluation_report.json`** — Machine-readable raw data
 - **Quality Gates**: G1 Coverage ✅ · G2 Evidence ✅ · G3 Theory ✅ · G4 Dual Review ✅ · G5 Heedo Alignment ✅ (5/5)
 
 ---
@@ -112,7 +112,7 @@
 | 4 | `docs/web/figures/fig4_centrality.png` | 5 centrality Top-K rankings |
 | 5 | `docs/web/figures/fig5_similarity_network.png` | Leiden 2 communities (Keohane-Victor 'horizontal cleavage') |
 | 6 | `docs/web/figures/hedging_density_2d_plot.png` | Hedging × Red Line 2D (AILAC norm typology) |
-| 7 | `docs/web/figures/hedging_vs_redline_2d.png` | v2 보강 (95% confidence ellipse) |
+| 7 | `docs/web/figures/hedging_vs_redline_2d.png` | Hedging vs Red Line (보강판, 95% confidence ellipse) |
 
 또한 `deliverables/hedging_density_2d_plot.png` 동일 figure가 deliverables 폴더에도 사본 존재.
 
@@ -136,10 +136,10 @@
 | 12 | Data Collection Master Plan | 225 manifest 수집 계획 |
 | 13 | Reference Tables | 20 countries × 12 groups × 6 issues × 16 sessions |
 | 14 | Schema v1.3 Changes | NATO + frame + procedural changelog |
-| 15 | Stage 2 Features v2 | chair_status + drafts_text edge type |
+| 15 | Stage 2 Features (Procedural Authority) | chair_status + drafts_text edge type |
 
 추가:
-- **`CINA_FRAMEWORK.md`** (project root) — 핵심 프레임워크 v2.0 마스터 정의서
+- **`CINA_FRAMEWORK.md`** (project root) — 핵심 프레임워크 마스터 정의서
 - **`README.md`** (project root) — 프로젝트 개요 + Citation + Quickstart
 
 ---
@@ -270,21 +270,16 @@ Ablation A4 (Evidence grounding 제거): −0.15 ρ
 - **Documentation, briefings, deliverables** (`docs/`, `deliverables/`): CC BY 4.0
 - **Third-party data** (`data/raw/`): per-source (UNFCCC Open · IPCC Open · CC BY 4.0 · CC BY-NC-SA 4.0 등 — `manifest.jsonl` 추적)
 
-### Citation (BibTeX)
+### Citation
 
-```bibtex
-@misc{choi2026cina,
-  author       = {Choi, Heedo},
-  title        = {{CINA}: Climate Issue-Network Analysis --- An LLM-GNN Pipeline for Climate Negotiation Intelligence, Retrospectively Validated on COP30 Adaptation Outcomes},
-  year         = {2026},
-  institution  = {Kookmin University, Department of Climate Technology Convergence},
-  howpublished = {\url{https://github.com/zxsa0716/cina}},
-  note         = {Graduate research project, Global Climate Leadership programme (2026 Spring)}
-}
+> **Note**: 본 프로젝트는 대학원 연구 과제로 진행 중이며, 아직 동료심사 학술지 게재 단계가 아닙니다 (No DOI assigned). 인용 시 다음 형식을 사용해 주세요:
+
 ```
-
-### APA
-Choi, H. (2026). *CINA: Climate Issue-Network Analysis — An LLM-GNN pipeline for climate negotiation intelligence, retrospectively validated on COP30 adaptation outcomes* [Computer software]. Kookmin University, Department of Climate Technology Convergence. https://github.com/zxsa0716/cina
+Choi, Heedo (2026). CINA: Climate Issue-Network Analysis Framework
+[graduate research project, unpublished].
+Department of Climate Technology Convergence, Kookmin University.
+https://github.com/zxsa0716/cina
+```
 
 ---
 
