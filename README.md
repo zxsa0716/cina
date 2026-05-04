@@ -3,19 +3,18 @@
 [![License](https://img.shields.io/badge/License-MIT%20%2B%20CC%20BY%204.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-green.svg)](https://python.org)
 [![Phase 5](https://img.shields.io/badge/Phase%205-Complete-brightgreen.svg)](deliverables/evaluation_report.md)
-[![Combined Rubric](https://img.shields.io/badge/Combined%20Rubric-4.76%2F5-success.svg)](deliverables/evaluation_report.md)
+[![Status](https://img.shields.io/badge/Status-Pilot%20study-yellow.svg)](deliverables/evaluation_report.md)
 [![Manifest](https://img.shields.io/badge/Manifest-225%20docs-blue.svg)](data/manifest/coverage_summary.json)
 
 > **국민대학교 대학원 글로벌기후리더십 (2026-1) — Heedo Choi (최희도)**
-> UNFCCC 협상 문서를 외교부 장관급 전략 브리핑으로 자동 변환하는
-> end-to-end **LLM → Graph → LLM** 파이프라인.
-> COP30 Belém Adaptation Indicators (FCCC/PA/CMA/2025/L.25E) 회고적 검증 완료.
+> 단일 사례 회고적 검증을 동반한 UNFCCC 협상 텍스트의 다축 stance 추출 + 그래프 분석 + 그래프-grounded 브리핑 생성 파이프라인.
+> COP30 Belém Adaptation Indicators (FCCC/PA/CMA/2025/L.25E, 2025-11) 사례에 적용.
 
 ---
 
 ## 🎯 한 문단 요약
 
-> 기후 협상은 매년 수백 건의 UNFCCC 결정문, NDC, IPCC 자료를 만들어내지만, 이 텍스트가 **"어느 국가가 어느 이슈에 어떤 입장을 취하는가"** 라는 외교부가 실제로 필요한 형태로 자동 변환되지는 않았다. CINA는 (1) **5-LLM 앙상블**로 국가·이슈별 스탠스를 정량 추출하고, (2) **이종 그래프 + Leiden community detection**으로 연합 지형을 자동 검출하며, (3) **graph-grounded 생성**으로 모든 주장에 인용 + 구조적 근거를 강제한 장관급 브리핑을 출력한다. **COP30 Belém Adaptation Indicators 합의를 회고적으로 입력해** 본 시스템이 contested issue 3/3 (P@3=R@3=1.00)을 정확 예측함을 검증했다.
+> 기후 협상의 수많은 UNFCCC 결정문, NDC, ENB 보고서가 "어느 국가가 어느 이슈에 어떤 입장이고, 어떤 정책수단을 사용하는가"의 다축 정보로 자동 변환되지는 않았다. NegotiateCOP (GIZ 2025)는 individual position 비교를 제공하지만 정책수단 calibration이나 community 자동 검출은 다루지 않으며, Castro et al. (2025) ENB 데이터셋은 협력/갈등 빈도에 집중한다. CINA는 단일 LLM 추출 단계에서 (a) Bayesian-CI를 동반한 stance score, (b) NATO 4축 정책수단 (Hood 1983; Howlett 2019), (c) 5-frame typology, (d) 절차 권한 신호 (Tallberg 2010) 네 축을 동시에 추출하고, 이를 Leiden community detection (Stage 2) + graph-grounded briefing 생성 (Stage 3)으로 연결한다. COP30 결과(L.25E)에 회고적으로 적용한 결과, contested 3/3 이슈를 stance variance 만으로 정확 예측 (Task C, N=3, 작은 표본의 고무적 신호)하였다.
 
 ---
 
@@ -190,16 +189,23 @@ cina/
 
 ---
 
-## 🌟 Key Findings (8)
+## 🌟 Empirical Observations
 
-1. **GGA-IND Authority axis = 6.1** (lowest of 6 issues) — voluntary language as binding-force absence
-2. **IRR_Brazil Δ = 0.304** ⭐ — Putnam × Howlett translation gap 정량화
-3. **L.25 pre-crystallized formula 가설** — Tallberg + Steinberg + Goh 통합 검증
-4. **Realist B0 F1 = 0.560** (p<0.0001) — constructivist+frame variables 정당성
-5. **Leiden 2 communities** ⭐ — Regime Complex 'horizontal cleavage' (Keohane-Victor 2011) 정량 검증
-6. **Task A Spearman 0.658** — CINA vs expert agreement
-7. **Task C P@3 = R@3 = 1.00** ⭐ — 3/3 contested issues 100% 정확 예측
-8. **Korean IRR = 0.653, L&D-OP 0.39 weakness** — actionable COP31 권고
+본고는 단일 사례 회고적 검증 파일럿이며, 아래 항목은 **일반화 결론이 아닌 관찰**입니다 (paper.md §5.6 한계 단락 참조).
+
+**Primary observations (3)**
+1. **Leiden 2 communities** — Stage 2 그래프 분석이 Keohane-Victor (2011) regime complex 'horizontal cleavage' 가설과 부합하는 분할 산출 (modularity 0.31, n=13). 더 큰 노드 셋에서의 재현 필요.
+2. **Stance-variance 만으로 contested 이슈 3/3 정확 예측** (Task C, P@3=R@3=1.00 on N=3). 작은 표본의 고무적 신호이며, COP31 prospective 검증 예정.
+3. **GGA-IND Authority-axis 6.1로 6 이슈 중 최저** — 자발적 어휘의 정량적 상관물 (Howlett 2019 framework).
+
+**Single-case findings (2)** — 일반화 주장 없음
+4. **Brazil Δ = 0.304** — 단일 의장국 사례의 국내(Plano Clima) ↔ 국제(L.25E) 정책수단 사용률 차이. Putnam × Howlett 교차점 후보 메트릭으로 제안.
+5. **L.25 advance↔final 텍스트 차이 zero** — 단일 이슈 케이스. "pre-crystallized formula" 후보 신호.
+
+**기타 정량 결과**
+- Task A Spearman ρ = 0.658 (전문가 reference 대비)
+- Realist baseline F1 = 0.560 (p<0.0001) — frame/instrument 변수의 추가 신호 필요성
+- Korean IRR = 0.653, L&D-OP 0.39 (한국 외교 권고 도출)
 
 ---
 
@@ -313,5 +319,5 @@ Kookmin University, Seoul, Republic of Korea
 
 ---
 
-**Status**: Phase 5 평가 완료 · 5/5 Quality Gates PASS · Combined Rubric **4.76/5**
+**Status**: 단일 사례 회고 검증 파일럿 (preliminary methodology pilot) · 평가 4-task 완료 (Spearman ρ = 0.658) · 외부 전문가 검증 등 확장 작업은 future work로 명시
 **Last update**: 2026-05-04

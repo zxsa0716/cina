@@ -3,7 +3,7 @@
 > **저자(Author)**: **Heedo Choi (최희도)** — Graduate Student, Department of Climate Technology Convergence (기후기술융합학과), Kookmin University
 > **Contact**: zxsa0716@kookmin.ac.kr · [GitHub @zxsa0716](https://github.com/zxsa0716)
 > **Project**: CINA Framework (LLM-GNN-LLM pipeline)
-> **Status**: Phase 5 Complete · Combined Rubric **4.76/5** · 5/5 Quality Gates PASS · 8 publishable findings
+> **Status**: Preliminary methodology pilot · 단일 사례 회고 검증 (COP30 L.25E) · Spearman ρ = 0.658 (Task A) · 3 primary observations + 2 single-case findings · 외부 전문가 검증은 future work로 명시
 > **Last update**: 2026-05-04
 
 이 문서는 CINA 프로젝트가 생성한 **모든** 산출물(보고서, figure, 데이터, 코드)을 카테고리별로 정리한 단일 진입 인덱스입니다. 웹에서 둘러보려면 [docs/web/outputs.html](docs/web/outputs.html) 또는 배포된 GitHub Pages를 사용하세요.
@@ -250,16 +250,27 @@ Ablation A4 (Evidence grounding 제거): −0.15 ρ
 
 ---
 
-## 10. 학술 발견 8개 (Publishable Findings)
+## 10. 경험적 관찰 (Observations)
 
-1. **GGA-IND Authority axis = 6.1** (lowest) — voluntary language as binding-force absence (Howlett 2019)
-2. **IRR_Brazil Δ = 0.304 CONFIRMED** — Putnam × Howlett gap 정량 ⭐
-3. **L.25 pre-crystallized formula 가설** — Tallberg + Steinberg + Goh 통합 (NeurIPS CCAI signature)
-4. **Realist B0 F1 = 0.560** (p<0.0001) — constructivist+frame 정당성
-5. **Leiden 2 communities** — Regime Complex 'horizontal cleavage' (Keohane-Victor 2011) ⭐
-6. **Task A Spearman 0.658** (CINA vs expert)
-7. **Task C P@3=R@3=1.00** (3/3 contested 정확 예측)
-8. **Korean IRR = 0.653, L&D-OP = 0.39 weakness** — actionable COP31 권고
+> **Note**: 본 프로젝트는 단일 사례 회고 검증 파일럿이며, 아래 항목은 일반화 결론이 아닌 관찰입니다. 본 paper.md §5.6 한계 단락 참조. 자세한 비판적 자기 평가는 [`CRITICAL_REVIEW.md`](CRITICAL_REVIEW.md) 참조.
+
+### Primary observations (3)
+
+1. **Leiden 2 communities** — Stage 2 그래프 분석이 Keohane-Victor (2011) regime complex 'horizontal cleavage' 가설과 부합하는 분할 산출 (modularity 0.31, n=13). 더 큰 노드 셋에서의 재현 필요.
+2. **Stance variance만으로 contested 3/3 정확 예측** (Task C, P@3=R@3=1.00 on N=3). 작은 표본의 고무적 신호. COP31 prospective 검증 예정.
+3. **GGA-IND Authority-axis 6.1 (최저)** — Howlett (2019) framework 내에서 자발적 어휘의 정량적 상관물.
+
+### Single-case findings (2) — 일반화 주장 없음
+
+4. **Brazil 단일 사례 Δ = 0.304** — 의장국 1개의 국내(Plano Clima) ↔ 국제(L.25E) 정책수단 차이. Putnam × Howlett 교차점 후보 메트릭으로 제안. COP25-30 chair 국가들에 대한 replication 필요.
+5. **L.25 advance↔final 텍스트 차이 zero** — 단일 이슈의 "pre-crystallized formula" 후보 신호. 최소 3개 chair-led 결정문에서 replication 필요.
+
+### 부가 정량 결과
+
+- Task A Spearman ρ = 0.658 (전문가 reference 대비)
+- Realist baseline F1 = 0.560 (p<0.0001) — frame/instrument 변수의 추가 신호 필요성
+- Korean IRR = 0.653, L&D-OP = 0.39 (한국 외교 권고 근거)
+- Task D simulated 패널 평균 4.53/5 (**simulated panel — 실제 외부 전문가 검증 아님; LLM persona prompting의 self-evaluation 편향 가능성**)
 
 ---
 
