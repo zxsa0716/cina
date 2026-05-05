@@ -193,3 +193,6 @@ src/stage2_graph/rgat_training.py
 # ALL_OUTPUTS_INDEX is public, but BUILD_AUDIT and process logs remain private
 ALL_OUTPUTS_INDEX_DRAFT*.md
 FOR_SUBMISSION/
+
+# Workflow files require PAT 'workflow' scope to push - install manually via UI
+.github/workflows/
