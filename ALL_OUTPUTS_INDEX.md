@@ -1,10 +1,11 @@
-# 📦 CINA — All Outputs Index (전 산출물 인덱스)
+# 📦 CINA — All Outputs Index (전 산출물 인덱스 · v3.0)
 
 > **저자(Author)**: **Heedo Choi (최희도)** — Graduate Student, Department of Climate Technology Convergence (기후기술융합학과), Kookmin University
 > **Contact**: zxsa0716@kookmin.ac.kr · [GitHub @zxsa0716](https://github.com/zxsa0716)
-> **Project**: CINA Framework (LLM-GNN-LLM pipeline)
-> **Status**: Preliminary methodology pilot · 단일 사례 회고 검증 (COP30 L.25E) · Spearman ρ = 0.658 (Task A) · 3 primary observations + 2 single-case findings · 외부 전문가 검증은 future work로 명시
-> **Last update**: 2026-05-04
+> **Project**: CINA Framework v3.0 (LLM → R-GAT → graph-grounded briefing pipeline)
+> **Status**: Preliminary methodology pilot + 4 implemented advancements (R-GAT · Cross-LLM α · Bayesian decomposition · Pre-registration)
+> **Master pipeline**: `python -m src.run_all` (8-step end-to-end orchestrator)
+> **Last update**: 2026-05-05
 
 이 문서는 CINA 프로젝트가 생성한 **모든** 산출물(보고서, figure, 데이터, 코드)을 카테고리별로 정리한 단일 진입 인덱스입니다. 웹에서 둘러보려면 [docs/web/outputs.html](docs/web/outputs.html) 또는 배포된 GitHub Pages를 사용하세요.
 
@@ -14,16 +15,17 @@
 
 | 카테고리 | 수량 | 위치 |
 |---------|-----|------|
-| 학술 페이퍼 | 1 | [paper.md](deliverables/paper.md) |
-| 장관급 브리핑 | 2 (KO + EN) | [deliverables/](deliverables/) |
+| 학술 페이퍼 | 1 (3,500+ words, 28 refs) | [paper.md](deliverables/paper.md) |
+| 장관급 브리핑 | 2 (KO + EN) + 1 narrative .docx | [deliverables/](deliverables/) + FOR_SUBMISSION |
 | 정량 검증 보고서 | 8 | [deliverables/](deliverables/) |
-| Stage 2 Figures | 7 PNG (300 dpi) | [docs/web/figures/](docs/web/figures/) |
+| **Publication-grade figures** | **10 PNG (300 dpi, 통일 visual identity)** | [docs/web/figures/](docs/web/figures/) |
 | 방법론 문서 | 15 | [docs/](docs/) |
-| 웹사이트 | 2 페이지 | [docs/web/](docs/web/) |
+| 인터랙티브 웹 | 4 페이지 (index, methodology, viz, outputs) | [docs/web/](docs/web/) |
 | Manifest entries | 225 raw 문서 | [data/manifest/manifest.jsonl](data/manifest/manifest.jsonl) |
-| Stage 1 stances | 98 records | [data/processed/](data/processed/) (private, Zenodo 별도) |
-| 코드 모듈 | 26 collectors + 4 stages + council | [src/](src/) |
-| 평가 메트릭 | 4 tasks + 6 ablations | [evaluation_report.md](deliverables/evaluation_report.md) |
+| Stage 1 stances | n = 78 canonical (확장 가능) | [data/processed/stances_canonical_v3.jsonl](data/processed/) |
+| 코드 모듈 | 26 collectors + 5 stage modules + analysis + viz | [src/](src/) |
+| 평가 메트릭 | 4 tasks + 6 ablations + Cross-LLM α + Bayesian | [evaluation_report.md](deliverables/evaluation_report.md) |
+| **🆕 학술 고도화 문서** | **5** (CRITICAL_REVIEW, ROADMAP, PREREG, CAUSAL, GITHUB_GUIDE) | repo root |
 
 ---
 
