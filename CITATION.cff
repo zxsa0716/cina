@@ -1,0 +1,66 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software, please cite it using the metadata below. CINA is a
+  graduate research project (preliminary methodology pilot). No DOI is assigned;
+  use the GitHub URL.
+title: "CINA: Climate Issue-Network Analysis Framework"
+abstract: >-
+  CINA is an end-to-end LLM → graph → LLM pipeline for climate negotiation
+  intelligence. A single LLM extraction step produces stance scores with
+  Bayesian credible intervals, NATO 4-axis policy instruments (Hood 1983;
+  Howlett 2019; Capano et al. 2025), 5-frame typology (Snow & Benford 1988),
+  and procedural-authority signals (Tallberg 2010). Downstream, a heterogeneous
+  Country × Issue × Group graph is analysed with Leiden community detection
+  (Traag et al. 2019) and a multi-task heterogeneous R-GAT (PyTorch). Briefing
+  generation operates under a graph-grounded discipline that requires every
+  output claim to cite both a verbatim evidence quote and a structural fact.
+  The framework is piloted retrospectively on the COP30 Belém Adaptation
+  Indicators outcome (FCCC/PA/CMA/2025/L.25E, November 2025).
+authors:
+  - family-names: Choi
+    given-names: Heedo
+    name-suffix: ""
+    name-particle: ""
+    affiliation: "Department of Climate Technology Convergence (기후기술융합학과), Kookmin University"
+    email: zxsa0716@kookmin.ac.kr
+    alias: zxsa0716
+keywords:
+  - climate-negotiations
+  - cop30
+  - cop31
+  - unfccc
+  - adaptation
+  - large-language-models
+  - graph-neural-networks
+  - graph-attention-network
+  - leiden-algorithm
+  - regime-complex
+  - two-level-games
+  - norm-entrepreneur
+  - policy-instruments
+  - korea
+  - brazil
+license: MIT
+license-url: https://github.com/zxsa0716/cina/blob/main/LICENSE
+repository-code: https://github.com/zxsa0716/cina
+url: https://zxsa0716.github.io/cina/
+type: software
+version: 3.0.0
+date-released: "2026-05-05"
+identifiers:
+  - description: "GitHub release tag"
+    type: other
+    value: "v3.0.0"
+preferred-citation:
+  type: software
+  title: "CINA: Climate Issue-Network Analysis Framework [graduate research project, unpublished]"
+  authors:
+    - family-names: Choi
+      given-names: Heedo
+      affiliation: "Department of Climate Technology Convergence, Kookmin University"
+      email: zxsa0716@kookmin.ac.kr
+  year: 2026
+  url: https://github.com/zxsa0716/cina
+  notes: >-
+    Graduate research project, Global Climate Leadership programme (2026 Spring).
+    No DOI assigned (not yet peer-reviewed).

@@ -1,0 +1,43 @@
+name: Release on tag
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    name: Create GitHub Release with auto-generated notes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract release notes from V3_RELEASE_NOTES.md
+        id: notes
+        run: |
+          if [ -f V3_RELEASE_NOTES.md ]; then
+            cp V3_RELEASE_NOTES.md /tmp/release_body.md
+          else
+            echo "## ${GITHUB_REF_NAME}" > /tmp/release_body.md
+            echo "" >> /tmp/release_body.md
+            echo "Auto-generated release for tag ${GITHUB_REF_NAME}." >> /tmp/release_body.md
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: /tmp/release_body.md
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+          name: ${{ github.ref_name }} — CINA Methodology Release
+          fail_on_unmatched_files: false
+          files: |
+            docs/web/figures/fig*.png
+            CITATION.cff
+            V3_RELEASE_NOTES.md

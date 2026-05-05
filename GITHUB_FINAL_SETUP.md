@@ -1,0 +1,215 @@
+# 🎯 GitHub 최종 설정 — 사용자가 직접 클릭해야 하는 4가지 항목
+
+> 작성: 2026-05-05
+> repo: https://github.com/zxsa0716/cina
+> tag: `v3.0.0` (이미 push됨)
+
+이 문서는 **GitHub 인증이 필요해 자동화할 수 없는** 4가지 최소 항목만 정리한 1-click 가이드입니다. **각 항목 1분 미만 소요**입니다. 이 4가지를 끝내면 repo가 학술 표준에 완전히 부합하는 상태가 됩니다.
+
+---
+
+## ✅ 자동으로 적용된 것들 (사용자 작업 불필요)
+
+다음 항목들은 **commit으로 자동 반영**되어 있습니다 — push만 하면 GitHub UI에서 즉시 보입니다:
+
+- `CITATION.cff` → repo 우측 "Cite this repository" 버튼 자동 활성화
+- `CHANGELOG.md` → 버전 히스토리
+- `CONTRIBUTING.md` + `CODE_OF_CONDUCT.md` + `SECURITY.md` → repo "Community Standards" 100%
+- `.github/ISSUE_TEMPLATE/` → New issue 클릭 시 템플릿 자동 표시 (Bug / Academic 분리)
+- `.github/PULL_REQUEST_TEMPLATE.md` → PR 작성 시 자동 채워짐
+- `.github/FUNDING.yml` → "Sponsor" 버튼 (선택 사항)
+- `.github/workflows/ci.yml` → 모든 push마다 자동 CI (smoke test + figures + R-GAT)
+- `.github/workflows/release.yml` → `v*.*.*` 태그 push되면 자동 GitHub Release 생성
+- `Makefile` → `make help`, `make run`, `make smoke`, `make figs` 즉시 사용 가능
+- `Dockerfile` + `.dockerignore` → 컨테이너 재현 환경
+- `.zenodo.json` + `codemeta.json` → Zenodo 연동 시 메타데이터 자동 사용
+- `docs/social_preview.png` → 1280×640 social preview 이미지 (아래 4번에서 업로드)
+
+---
+
+## 📋 사용자가 직접 해야 하는 4가지 (총 ~3분)
+
+### 1️⃣ Repo About 섹션 입력 (1분) — 가장 중요
+
+**왜 필요**: GitHub repo 메인 페이지 우측 상단 "About" 영역에 description, website, topics가 표시됨. 검색 가능성 + 첫인상 결정.
+
+**경로**:
+1. https://github.com/zxsa0716/cina 접속
+2. 우측 상단 "About" 옆 ⚙️ (톱니바퀴) 아이콘 클릭
+
+**입력**:
+
+| 필드 | 값 (정확히 복사) |
+|------|---------------|
+| Description | `Multi-axis LLM stance extraction + heterogeneous R-GAT + graph-grounded briefing for climate negotiation intelligence (COP30 retrospective)` |
+| Website | `https://zxsa0716.github.io/cina/` |
+| Topics | (아래 15개 한 번에 붙여넣기) |
+
+**Topics 15개** (공백 또는 쉼표로 구분):
+```
+climate-negotiations cop30 cop31 unfccc adaptation large-language-models graph-neural-networks graph-attention-network leiden-algorithm regime-complex two-level-games norm-entrepreneur policy-instruments korea brazil
+```
+
+**체크박스**:
+- ☑️ Releases
+- ☑️ Packages (필요 없으면 unchecked OK)
+
+**Save changes** 클릭.
+
+---
+
+### 2️⃣ GitHub Pages 활성화 확인 (30초)
+
+**왜 필요**: `https://zxsa0716.github.io/cina/`가 라이브로 떠야 함.
+
+**경로**:
+1. Settings → Pages
+2. **Source**: `Deploy from a branch`
+3. **Branch**: `main` / **Folder**: `/docs`
+4. **Save**
+
+이미 설정돼 있다면 그대로 두면 됩니다. 설정 후 1-2분 대기하면 사이트가 라이브됩니다.
+
+---
+
+### 3️⃣ Social preview 이미지 업로드 (30초)
+
+**왜 필요**: repo URL을 슬랙·카카오·트위터·링크드인에 붙였을 때 보이는 카드 이미지. CINA 로고 + 핵심 메트릭 + heatmap 미리보기를 담은 1280×640 이미지가 이미 만들어져 있습니다.
+
+**경로**:
+1. Settings → General (가장 위)
+2. 아래로 스크롤 → "Social preview" 섹션
+3. **Upload an image** 클릭
+4. `docs/social_preview.png` 선택 → Open
+5. 자동 저장됨
+
+(파일 경로: `C:\Users\admin\Desktop\대학원수업\1학기\리더쉽\docs\social_preview.png`)
+
+---
+
+### 4️⃣ GitHub Release 생성 (1분)
+
+**왜 필요**: `v3.0.0` 태그는 이미 push되어 있지만, "Release"는 별도로 생성해야 사용자에게 노출됩니다. **GitHub Actions의 release workflow가 자동으로 만들지만**, 만일 액션이 작동하지 않으면 수동:
+
+**경로**:
+1. https://github.com/zxsa0716/cina/releases
+2. "Draft a new release" 클릭
+3. **Choose a tag**: `v3.0.0` 선택 (이미 존재)
+4. **Release title**: `v3.0.0 — Methodology Advancement Release`
+5. **Describe this release**: 아래 텍스트 통째로 붙여넣기 ↓
+
+````markdown
+# v3.0.0 — Methodology Advancement Release
+
+End-to-end re-execution + production-grade upgrade. Single command runs the
+full pipeline (`python -m src.run_all`); LLM provider stack is
+production-ready (`python -m src.stage1_extract.llm_smoke_test`); all 10
+figures regenerated under unified visual identity.
+
+## ✨ Highlights
+
+- **Real Heterogeneous R-GAT** (PyTorch, 200 ep) — val Spearman ρ = 0.708,
+  emergent chair-edge attention 1.00 (vs similarity 0.28),
+  supervision-free recovery of Tallberg (2010) procedural authority
+- **Cross-LLM Krippendorff α** — 0.876 raw / 0.933 bias-corrected over 5
+  providers, decoupled from shared-model bias
+- **Bayesian 3-level variance decomposition** — σ_country 54%,
+  σ_group 37%, σ_regime 1.4% (transparent tension reporting)
+- **OSF-style pre-registration** for COP31 — 4 falsifiable hypotheses,
+  Bonferroni α = 0.0125, code freeze 2026-09-01
+- **Causal identification strategy** — DiD + synthetic control + IV
+  for generalising the Brazil Δ = 0.304 single-case finding
+- **Master orchestrator** `src/run_all.py` — 8 steps, generates
+  `RUN_REPORT.md`
+- **Production figure suite** — 10 figures, 300 dpi, CINA palette
+- **Honest reframing** — single-case findings labelled, simulated panel
+  (Task D Krippendorff α = 0.905) flagged as upper bound under shared-
+  model bias, real-expert validation queued
+
+## 📚 Citation
+
+```
+Choi, Heedo (2026). CINA: Climate Issue-Network Analysis Framework
+[graduate research project, unpublished].
+Department of Climate Technology Convergence, Kookmin University.
+https://github.com/zxsa0716/cina
+```
+
+## 📂 Key files
+
+- `paper.md` — academic paper draft (3,500+ words, 28 references)
+- `ministerial_briefing_ko.md` / `_en.md` — ministerial briefing
+- `RUN_REPORT.md` — auto-generated by master pipeline
+- `CRITICAL_REVIEW.md` — self-critical literature review
+- `METHODOLOGY_ADVANCEMENT_ROADMAP.md` — 8 extension paths
+- `PREREGISTRATION_COP31.md` — prospective hypotheses
+
+## 🔗 Web demo
+
+https://zxsa0716.github.io/cina/
+
+## 🙋 Author
+
+**Heedo Choi (최희도)** · Kookmin University, Department of Climate Technology Convergence (기후기술융합학과) · zxsa0716@kookmin.ac.kr
+````
+
+6. **Set as the latest release** ☑️
+7. **Publish release** 클릭
+
+---
+
+## 📊 완료 후 repo 상태
+
+위 4가지가 끝나면 https://github.com/zxsa0716/cina 메인 페이지가 다음과 같이 보입니다:
+
+- 우측 About: description + 15 topics + website badge
+- 왼쪽 사이드바: "Cite this repository" 버튼 (CITATION.cff 자동 인식)
+- 왼쪽 사이드바: "Releases" 섹션에 v3.0.0 릴리스
+- 왼쪽 사이드바: "Languages" 자동 통계
+- README 상단 badges 정상 표시
+- "Insights → Community Standards"에서 모든 항목 100%
+- 트위터/슬랙에 URL 붙이면 social preview 카드 표시
+
+---
+
+## 🤖 자동화된 GitHub Actions
+
+push할 때마다 다음이 자동 실행됩니다 (`.github/workflows/`):
+
+1. **CI workflow** (`ci.yml`)
+   - Job 1: smoke test (Python 3.11, no-network)
+   - Job 2: 모든 publication figures 재생성 → artifact 업로드
+   - Job 3: R-GAT training (50 epochs sanity check)
+
+2. **Release workflow** (`release.yml`)
+   - `v*.*.*` 태그 push되면 자동으로 GitHub Release 생성
+   - V3_RELEASE_NOTES.md 본문 + 모든 figures 첨부
+
+---
+
+## 📦 (선택) Zenodo 연동 — 영구 DOI 받기
+
+학술 인용 가능한 영구 DOI가 필요하면:
+
+1. https://zenodo.org/account/settings/github/ 접속 (GitHub 계정 연동)
+2. cina repo 옆 토글을 ON으로 전환
+3. 다음 Release를 만들면 (예: v3.0.1) 자동으로 Zenodo에 업로드됨
+4. DOI 자동 발급 → README에 추가 가능
+
+`.zenodo.json` 파일이 이미 메타데이터를 제공하므로 추가 작업 없이 바로 동작.
+
+---
+
+## 🔧 (선택) ORCID 등록
+
+논문 인용에 필요한 영구 저자 ID:
+
+1. https://orcid.org/register 접속
+2. 가입 후 16자리 ORCID iD 발급
+3. `CITATION.cff`의 `orcid:` 필드에 추가 → commit
+4. 학술 인용 표준에 100% 부합
+
+---
+
+**작성**: 2026-05-05 · Heedo Choi (최희도)
+**모든 자동화는 commit으로 적용됨. 위 4가지만 GitHub UI 클릭이 필요합니다.**

@@ -1,0 +1,69 @@
+name: 🐞 Bug report
+description: Report something that is broken or behaves unexpectedly in the CINA pipeline
+title: "[Bug] "
+labels: ["bug", "needs-triage"]
+assignees:
+  - zxsa0716
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report. Please be as specific as possible — a reproducible example is the fastest path to a fix.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear and concise description of what the bug is.
+      placeholder: When I run `python -m src.run_all`, step S2 fails with...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: false
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: Exact commands and environment.
+      placeholder: |
+        1. `git clone https://github.com/zxsa0716/cina`
+        2. `pip install -r requirements.txt`
+        3. `python -m src.run_all`
+        4. Error appears at step ...
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: stage
+    attributes:
+      label: Affected stage
+      description: Which CINA stage / module is involved?
+      placeholder: e.g., Stage 1 extraction, R-GAT training, Phase 5 evaluation
+    validations:
+      required: false
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Run `python -m src.stage1_extract.llm_smoke_test --offline` and `python --version` and paste the output.
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    id: traceback
+    attributes:
+      label: Full traceback
+      description: Full Python traceback if applicable.
+      render: python
+    validations:
+      required: false
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: I have searched existing issues
+      options:
+        - label: I have read the README and CRITICAL_REVIEW.md, and searched existing issues.
+          required: true

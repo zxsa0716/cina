@@ -1,0 +1,79 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "identifier": "cina",
+  "name": "CINA: Climate Issue-Network Analysis Framework",
+  "description": "An end-to-end LLM → graph → LLM pipeline for climate-negotiation intelligence. Multi-axis Stage 1 stance extraction (stance + NATO 4-axis policy instruments + 5-frame typology + procedural-authority signals), Stage 2 heterogeneous graph + Leiden + heterogeneous R-GAT, Stage 3 graph-grounded briefing generation. Retrospectively validated on COP30 Belém Adaptation Indicators (FCCC/PA/CMA/2025/L.25E).",
+  "codeRepository": "https://github.com/zxsa0716/cina",
+  "url": "https://zxsa0716.github.io/cina/",
+  "downloadUrl": "https://github.com/zxsa0716/cina/archive/refs/tags/v3.0.0.zip",
+  "issueTracker": "https://github.com/zxsa0716/cina/issues",
+  "license": "https://spdx.org/licenses/MIT.html",
+  "version": "3.0.0",
+  "datePublished": "2026-05-05",
+  "dateModified": "2026-05-05",
+  "softwareVersion": "3.0.0",
+  "programmingLanguage": [
+    {
+      "@type": "ComputerLanguage",
+      "name": "Python",
+      "version": ">=3.11"
+    }
+  ],
+  "operatingSystem": ["Linux", "macOS", "Windows"],
+  "softwareRequirements": [
+    "torch>=2.2",
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "matplotlib>=3.8",
+    "networkx>=3.2",
+    "python-igraph>=0.11.3",
+    "leidenalg>=0.10.1",
+    "rapidfuzz>=3.6",
+    "pydantic>=2.6"
+  ],
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Heedo",
+      "familyName": "Choi",
+      "alternateName": "최희도",
+      "email": "zxsa0716@kookmin.ac.kr",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Department of Climate Technology Convergence (기후기술융합학과), Kookmin University"
+      }
+    }
+  ],
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Heedo",
+      "familyName": "Choi",
+      "email": "zxsa0716@kookmin.ac.kr"
+    }
+  ],
+  "keywords": [
+    "climate-negotiations",
+    "cop30",
+    "cop31",
+    "unfccc",
+    "adaptation",
+    "large-language-models",
+    "graph-neural-networks",
+    "graph-attention-network",
+    "leiden-algorithm",
+    "regime-complex",
+    "two-level-games",
+    "norm-entrepreneur",
+    "policy-instruments",
+    "korea",
+    "brazil"
+  ],
+  "applicationCategory": "Climate / International Relations / Computational Social Science",
+  "developmentStatus": "active",
+  "funding": "Self-funded graduate research project",
+  "isPartOf": "Kookmin University Graduate Global Climate Leadership programme (2026 Spring)",
+  "readme": "https://github.com/zxsa0716/cina#readme",
+  "citation": "Choi, Heedo (2026). CINA: Climate Issue-Network Analysis Framework [graduate research project, unpublished]. Kookmin University. https://github.com/zxsa0716/cina"
+}

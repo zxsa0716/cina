@@ -1,0 +1,56 @@
+{
+  "title": "CINA: Climate Issue-Network Analysis Framework",
+  "description": "An end-to-end LLM → graph → LLM pipeline for climate-negotiation intelligence, retrospectively validated on the COP30 Belém Adaptation Indicators outcome (FCCC/PA/CMA/2025/L.25E). Multi-axis Stage 1 stance extraction (stance + NATO 4-axis policy instruments + 5-frame typology + procedural-authority signals), Stage 2 heterogeneous graph + Leiden + R-GAT analysis with emergent chair-edge attention, Stage 3 graph-grounded briefing generation. Released as a graduate-research preliminary methodology pilot with cross-LLM Krippendorff α = 0.876 / 0.933, validation Spearman ρ = 0.658, contested-issue P@3 = 1.00 (N = 3), and 4 pre-registered COP31 prospective hypotheses.",
+  "creators": [
+    {
+      "name": "Choi, Heedo",
+      "affiliation": "Department of Climate Technology Convergence (기후기술융합학과), Kookmin University",
+      "orcid": ""
+    }
+  ],
+  "keywords": [
+    "climate-negotiations",
+    "cop30",
+    "cop31",
+    "unfccc",
+    "adaptation",
+    "large-language-models",
+    "graph-neural-networks",
+    "graph-attention-network",
+    "leiden-algorithm",
+    "regime-complex",
+    "two-level-games",
+    "norm-entrepreneur",
+    "policy-instruments",
+    "korea",
+    "brazil"
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "version": "3.0.0",
+  "language": "eng",
+  "communities": [],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/zxsa0716/cina",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "https://zxsa0716.github.io/cina/",
+      "relation": "isDocumentedBy",
+      "resource_type": "publication-other"
+    }
+  ],
+  "references": [
+    "Keohane, R. O., & Victor, D. G. (2011). The regime complex for climate change. Perspectives on Politics, 9(1), 7–23.",
+    "Putnam, R. D. (1988). Diplomacy and domestic politics: the logic of two-level games. International Organization, 42(3), 427–460.",
+    "Hood, C. (1983). The Tools of Government. London: Macmillan.",
+    "Howlett, M. (2019). Designing Public Policies (2nd ed.). Routledge.",
+    "Tallberg, J. (2010). The power of the chair. International Studies Quarterly, 54(1), 241–265.",
+    "Finnemore, M., & Sikkink, K. (1998). International norm dynamics. International Organization, 52(4), 887–917.",
+    "Snow, D. A., & Benford, R. D. (1988). Ideology, frame resonance, and participant mobilization. International Social Movement Research, 1, 197–217.",
+    "Traag, V. A., Waltman, L., & van Eck, N. J. (2019). From Louvain to Leiden. Scientific Reports, 9, 5233.",
+    "Castro, P., Kristof, V., Kammerer, M., & Cogne, T. (2025). Participation, cooperation and conflict in UN climate negotiations. Scientific Data. DOI: 10.1038/s41597-025-06262-4."
+  ]
+}

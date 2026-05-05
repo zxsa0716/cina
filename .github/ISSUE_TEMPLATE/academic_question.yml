@@ -1,0 +1,46 @@
+name: 🎓 Academic question or critique
+description: Question or critique about the methodology, theoretical framing, or empirical claims
+title: "[Academic] "
+labels: ["academic", "discussion"]
+assignees:
+  - zxsa0716
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for engaging with CINA at the academic level. We welcome critique and methodological challenges. Please cite relevant literature where possible — see `CRITICAL_REVIEW.md` for our self-critique baseline.
+  - type: dropdown
+    id: type
+    attributes:
+      label: Question type
+      options:
+        - Methodology critique
+        - Theoretical framing
+        - Empirical claim challenge
+        - Reproducibility issue
+        - Comparison to existing tool/paper
+        - Suggested extension
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: section
+    attributes:
+      label: Affected section / claim
+      description: Which paper section or `deliverables/` document does this concern?
+      placeholder: e.g., paper.md §4.2, deliverables/IRR_Brazil.md
+    validations:
+      required: false
+  - type: textarea
+    id: question
+    attributes:
+      label: Question or critique
+    validations:
+      required: true
+  - type: textarea
+    id: literature
+    attributes:
+      label: Relevant literature (if applicable)
+      description: Citations or links that support your point.
+    validations:
+      required: false

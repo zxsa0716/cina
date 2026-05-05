@@ -1,0 +1,116 @@
+name: CINA CI — smoke test + figures
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    name: Offline smoke test (no-network)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install minimal deps for smoke test
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy matplotlib networkx scipy pydantic
+
+      - name: LLM smoke test (offline / mock only)
+        run: python -m src.stage1_extract.llm_smoke_test --offline
+
+      - name: Cross-LLM consistency (synthetic)
+        run: python -m src.stage1_extract.cross_llm_consistency --output /tmp/cross_llm.json
+
+      - name: Bayesian decomposition (synthetic)
+        run: python -m src.analysis.bayesian_hierarchical --output /tmp/bayesian.json
+
+      - name: Verify outputs
+        run: |
+          test -s /tmp/cross_llm.json
+          test -s /tmp/bayesian.json
+          test -s data/processed/llm_smoke_test_report.json
+
+  figures:
+    name: Publication figures regeneration
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install figure deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy matplotlib networkx scipy
+
+      - name: Generate cross-LLM and Bayesian artifacts
+        run: |
+          python -m src.stage1_extract.cross_llm_consistency \
+              --output data/processed/cross_llm_agreement.json
+          python -m src.analysis.bayesian_hierarchical \
+              --output data/processed/bayesian_decomposition.json
+
+      - name: Regenerate publication figures
+        run: python -m src.viz.publication_figures
+
+      - name: Upload figures as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cina-publication-figures
+          path: docs/web/figures/fig*.png
+          if-no-files-found: error
+
+  rgat:
+    name: R-GAT training (PyTorch CPU, short)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install PyTorch CPU + scipy
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install numpy scipy
+
+      - name: Train R-GAT (50 epochs sanity check)
+        run: |
+          python -m src.stage2_graph.rgat --epochs 50 \
+              --output data/processed
+
+      - name: Verify R-GAT output
+        run: |
+          test -s data/processed/rgat_training_results.json
+          python -c "
+          import json
+          d = json.load(open('data/processed/rgat_training_results.json'))
+          fm = d['final_metrics']
+          print(f'val Spearman ρ = {fm[\"val_spearman\"]:.3f}')
+          assert abs(fm['val_spearman']) < 1.0, 'sanity check'
+          print('OK')
+          "

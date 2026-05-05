@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Read the methodology first
+    url: https://github.com/zxsa0716/cina/blob/main/deliverables/paper.md
+    about: The full methodology paper draft (3,500+ words, 28 references)
+  - name: 🔍 Self-critical review
+    url: https://github.com/zxsa0716/cina/blob/main/CRITICAL_REVIEW.md
+    about: Our own honest assessment of CINA's limitations vs. competing 2024-2025 papers
+  - name: 🚀 Methodology advancement roadmap
+    url: https://github.com/zxsa0716/cina/blob/main/METHODOLOGY_ADVANCEMENT_ROADMAP.md
+    about: 8 specific extension paths for taking CINA from pilot to journal-grade
+  - name: 📋 COP31 pre-registration
+    url: https://github.com/zxsa0716/cina/blob/main/PREREGISTRATION_COP31.md
+    about: 4 falsifiable hypotheses with code freeze 2026-09-01
+  - name: ✉️ Contact the author
+    url: mailto:zxsa0716@kookmin.ac.kr
+    about: Direct email for sensitive topics, expert validation offers, or collaborations
