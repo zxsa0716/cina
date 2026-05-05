@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CINA — Sitemap & Document Portal</title>
+<meta name="description" content="CINA — 모든 페이지·문서·산출물 한눈에 보는 사이트맵 포털.">
+<meta name="author" content="Heedo Choi (최희도) — Kookmin University, Department of Climate Technology Convergence">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .sitemap-hero { padding: 5rem 0 2rem; text-align: center;
+    background: radial-gradient(ellipse at top, rgba(110, 168, 255, 0.18) 0%, transparent 60%),
+    linear-gradient(180deg, #0b0d12 0%, #131722 100%); }
+  .sitemap-hero h1 { font-size: clamp(2rem, 5vw, 3.4rem); margin: 0 0 0.6rem; }
+  .sitemap-hero p { color: var(--c-fg-mute); max-width: 780px; margin: 0 auto; font-size: 1.05em; }
+
+  .portal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 1.4rem; margin: 2rem 0; }
+  .portal-card { background: var(--c-card); border: 1px solid var(--c-border); border-radius: 14px;
+    padding: 1.6rem 1.7rem; transition: all 0.2s; position: relative; overflow: hidden; }
+  .portal-card:hover { border-color: var(--c-accent); transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.35); }
+  .portal-card .ico { font-size: 2.4rem; margin-bottom: 0.6rem; display: block; }
+  .portal-card h3 { margin: 0 0 0.3rem; font-size: 1.15rem; color: var(--c-fg); }
+  .portal-card .badge { display: inline-block; font-size: 0.72em; padding: 0.18rem 0.6rem;
+    border-radius: 999px; background: rgba(110, 168, 255, 0.14); color: var(--c-accent);
+    font-weight: 600; margin-bottom: 0.6rem; letter-spacing: 0.02em; }
+  .portal-card p { color: var(--c-fg-mute); font-size: 0.93em; margin: 0 0 1rem;
+    line-height: 1.55; }
+  .portal-card .links { display: flex; flex-direction: column; gap: 0.35rem; }
+  .portal-card .links a { color: var(--c-accent); text-decoration: none; font-size: 0.92em;
+    font-weight: 500; }
+  .portal-card .links a:hover { text-decoration: underline; }
+
+  .section-title { font-size: 1.4rem; font-weight: 700; margin: 2.5rem 0 0.5rem;
+    color: var(--c-fg); display: flex; align-items: center; gap: 0.6rem; }
+  .section-title .num { background: var(--c-accent); color: #0b0d12; width: 1.8rem;
+    height: 1.8rem; border-radius: 50%; display: inline-flex; align-items: center;
+    justify-content: center; font-size: 0.95em; }
+  .section-lede { color: var(--c-fg-mute); margin: 0 0 0.6rem; font-size: 0.95em; }
+
+  .stats-bar { display: flex; gap: 2rem; flex-wrap: wrap; padding: 1.5rem 1.8rem;
+    background: var(--c-card); border: 1px solid var(--c-border); border-radius: 14px;
+    margin: 1.5rem 0; }
+  .stats-bar .item { flex: 1; min-width: 130px; text-align: center; }
+  .stats-bar .item .v { font-size: 2rem; font-weight: 800; color: var(--c-accent); }
+  .stats-bar .item .l { font-size: 0.82em; color: var(--c-fg-mute); margin-top: 0.2rem; }
+
+  .start-here { padding: 1.4rem 1.6rem; background: rgba(245, 158, 11, 0.07);
+    border-left: 3px solid #f59e0b; border-radius: 8px; margin: 1.5rem 0; }
+  .start-here strong { color: #f59e0b; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">CINA</span>
+      <span class="logo-tag">Sitemap</span>
+    </a>
+    <nav class="nav-main">
+      <a href="index.html">메인</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="visualizations.html">Visualizations</a>
+      <a href="outputs.html">Outputs</a>
+      <a href="sitemap.html" class="nav-active">Sitemap</a>
+      <a href="https://github.com/zxsa0716/cina" target="_blank" rel="noopener" class="nav-github">GitHub →</a>
+    </nav>
+  </div>
+</header>
+
+<section class="sitemap-hero">
+  <div class="container">
+    <h1>🧭 CINA Sitemap</h1>
+    <p>모든 웹 페이지 · 학술 문서 · 산출물 · 코드 모듈을 한 화면에서 탐색하세요.
+       클릭 한 번이면 GitHub의 해당 파일 또는 인터랙티브 페이지로 바로 이동합니다.</p>
+  </div>
+</section>
+
+<div class="container" style="margin-top: 2rem;">
+
+  <div class="start-here">
+    <strong>처음 방문이세요?</strong> 다음 순서를 권장합니다:
+    <ol style="margin: 0.5rem 0 0 1.4rem; line-height: 1.7;">
+      <li><a href="index.html">🏠 메인 페이지</a> — 핵심 발견 한눈에</li>
+      <li><a href="methodology.html">🔬 Methodology</a> — 인터랙티브 8-노드 파이프라인</li>
+      <li><a href="visualizations.html">📊 Visualizations</a> — D3 인터랙티브 4종</li>
+      <li><a href="outputs.html">📦 Outputs</a> — 모든 산출물 카탈로그</li>
+    </ol>
+  </div>
+
+  <div class="stats-bar">
+    <div class="item"><div class="v">5</div><div class="l">Web pages</div></div>
+    <div class="item"><div class="v">10</div><div class="l">Publication figures</div></div>
+    <div class="item"><div class="v">11</div><div class="l">Deliverables</div></div>
+    <div class="item"><div class="v">15</div><div class="l">Methodology docs</div></div>
+    <div class="item"><div class="v">7</div><div class="l">Research/setup docs</div></div>
+    <div class="item"><div class="v">191</div><div class="l">Tracked files</div></div>
+  </div>
+
+  <!-- Section 1: Web Pages -->
+  <div class="section-title"><span class="num">1</span> 인터랙티브 웹 페이지 (5)</div>
+  <p class="section-lede">정적 markdown이 아닌, 클릭·드래그·hover 가능한 인터랙티브 페이지들.</p>
+  <div class="portal-grid">
+    <div class="portal-card">
+      <span class="ico">🏠</span>
+      <span class="badge">Entry point</span>
+      <h3>Main page</h3>
+      <p>11 섹션 — Hero · Overview · Methodology · Korea/Brazil cases · Coalition map · Findings · Evaluation · Council process · Data.</p>
+      <div class="links"><a href="index.html">/index.html</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">🔬</span>
+      <span class="badge">Pipeline · Interactive</span>
+      <h3>Methodology</h3>
+      <p>8-노드 SVG 파이프라인 (클릭 가능) + 8 이론 카드 + 데이터 흐름 표.</p>
+      <div class="links"><a href="methodology.html">/methodology.html</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">📊</span>
+      <span class="badge">D3 Interactive</span>
+      <h3>Visualizations</h3>
+      <p>Force-directed coalition network · Animated stance heatmap · IRR radar · Translation Gap bar chart.</p>
+      <div class="links"><a href="visualizations.html">/visualizations.html</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">📦</span>
+      <span class="badge">Catalogue</span>
+      <h3>Outputs</h3>
+      <p>3 deliverables · 8 quantitative reports · 10 figures · 15 methodology docs · 데이터 sample · 코드 모듈.</p>
+      <div class="links"><a href="outputs.html">/outputs.html</a></div>
+    </div>
+    <div class="portal-card" style="border-color: var(--c-accent);">
+      <span class="ico">🧭</span>
+      <span class="badge" style="background: rgba(245,158,11,0.15); color: #f59e0b;">You are here</span>
+      <h3>Sitemap (this page)</h3>
+      <p>모든 페이지·문서를 한눈에 — 처음 방문자를 위한 통합 진입점.</p>
+      <div class="links"><a href="sitemap.html">/sitemap.html</a></div>
+    </div>
+  </div>
+
+  <!-- Section 2: Academic deliverables -->
+  <div class="section-title"><span class="num">2</span> 학술·정책 산출물</div>
+  <p class="section-lede">단일 사례 회고 검증 파일럿의 학술 페이퍼, 장관급 브리핑, 정량 검증 보고서 모음.</p>
+  <div class="portal-grid">
+    <div class="portal-card">
+      <span class="ico">📘</span>
+      <span class="badge">Track B · Paper</span>
+      <h3>Paper draft</h3>
+      <p>3,500+ words · 28 references. Methodology paper draft with abstract, introduction, methodology, findings, evaluation, limitations, conclusion, references, Korean summary.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/deliverables/paper.md" target="_blank">deliverables/paper.md →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">🇰🇷</span>
+      <span class="badge">Track A · Brief</span>
+      <h3>Ministerial briefing (KO)</h3>
+      <p>외교부 기후환경과학외교국 형식 — 9 섹션 + 4 부록 (증거 추적성 / 데이터 lineage / 불확실성 / LLM provider attribution).</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/deliverables/ministerial_briefing_ko.md" target="_blank">ministerial_briefing_ko.md →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">🇬🇧</span>
+      <span class="badge">Track A · Brief (EN)</span>
+      <h3>Ministerial briefing (EN)</h3>
+      <p>같은 9 섹션의 영문 mirror. 국제 회람용.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/deliverables/ministerial_briefing_en.md" target="_blank">ministerial_briefing_en.md →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">📈</span>
+      <span class="badge">Phase 5</span>
+      <h3>Evaluation report</h3>
+      <p>4-task quantitative validation: Spearman ρ = 0.658 · ARI = 0.42 · P@3 = R@3 = 1.00 · simulated panel mean 4.53/5 · ablation A4 = -15%.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/deliverables/evaluation_report.md" target="_blank">evaluation_report.md →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">🇰🇷</span>
+      <span class="badge">Quantitative</span>
+      <h3>IRR_Korea</h3>
+      <p>한국 적응정책 글로벌 정합도. 30-cell crosswalk: IRR = 0.653 (CI [0.55, 0.71]). L&D-OP = 0.39 (lowest, weakness).</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/deliverables/IRR_Korea.md" target="_blank">IRR_Korea.md →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">🇧🇷</span>
+      <span class="badge">Single-case finding</span>
+      <h3>IRR_Brazil — Translation Gap</h3>
+      <p>Brazil COP30 chair: 국내(Plano Clima) 67% NATO usage → 국제(L.25E) 23%. Δ = 0.304 (Putnam × Howlett intersection).</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/deliverables/IRR_Brazil.md" target="_blank">IRR_Brazil.md →</a></div>
+    </div>
+  </div>
+
+  <!-- Section 3: Research / methodology docs -->
+  <div class="section-title"><span class="num">3</span> 학술 고도화 문서 (research)</div>
+  <p class="section-lede">자체 비판 평가 + 8-경로 확장 로드맵 + COP31 사전 등록 + 인과 식별 전략.</p>
+  <div class="portal-grid">
+    <div class="portal-card">
+      <span class="ico">🔍</span>
+      <span class="badge">Self-critique</span>
+      <h3>Critical Review</h3>
+      <p>실제 경쟁 논문(Castro 2025, NegotiateCOP, RICE-N, Capano 2025) 매핑 + 정직한 약점 인정 + 현실적 투고 매체 평가.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/docs/research/CRITICAL_REVIEW.md" target="_blank">docs/research/CRITICAL_REVIEW.md →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">🚀</span>
+      <span class="badge">Roadmap</span>
+      <h3>Methodology Advancement</h3>
+      <p>8 가지 확장 경로 (E1-E8): R-GAT · Cross-LLM · Bayesian · Pre-registration · Longitudinal · Causal · Expert panel · Multi-lingual. 우선순위 + 6-12개월 타임라인.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/docs/research/METHODOLOGY_ADVANCEMENT_ROADMAP.md" target="_blank">METHODOLOGY_ADVANCEMENT_ROADMAP.md →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">📋</span>
+      <span class="badge">OSF-style</span>
+      <h3>Pre-registration COP31</h3>
+      <p>4 falsifiable hypotheses · Bonferroni α = 0.0125 · 코드 freeze 2026-09-01 · 검증 데이터 2026-12-01 IISD ENB.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/docs/research/PREREGISTRATION_COP31.md" target="_blank">PREREGISTRATION_COP31.md →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">🎯</span>
+      <span class="badge">Causal</span>
+      <h3>Causal Identification</h3>
+      <p>DiD (parallel trends) + Synthetic Control (placebo permutation) + IV (regional rotation) — 3-method robustness for generalising Δ = 0.304 single-case finding.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/docs/research/CAUSAL_IDENTIFICATION_STRATEGY.md" target="_blank">CAUSAL_IDENTIFICATION_STRATEGY.md →</a></div>
+    </div>
+  </div>
+
+  <!-- Section 4: Methodology docs (15) -->
+  <div class="section-title"><span class="num">4</span> 방법론 문서 (15)</div>
+  <p class="section-lede">CINA의 이론적·기술적 사양. 페이퍼 §2-3의 직접 구성 요소.</p>
+  <div class="portal-grid">
+    <div class="portal-card">
+      <span class="ico">🏛️</span>
+      <span class="badge">Theory</span>
+      <h3>01 Theoretical Foundations</h3>
+      <p>Regime Complex · Two-Level Games · Issue Linkage · Epistemic Communities · Procedural Authority · NATO 4-axis · Norm Entrepreneur · Frame Theory.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/docs/01_theoretical_foundations.md" target="_blank">01_theoretical_foundations.md →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">🛠️</span>
+      <span class="badge">Method</span>
+      <h3>02 Methodology</h3>
+      <p>3-stage pipeline 공식 사양. Stage 1 LLM extraction · Stage 2 graph analysis · Stage 3 graph-grounded generation.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/docs/02_methodology.md" target="_blank">02_methodology.md →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">📐</span>
+      <span class="badge">Schema</span>
+      <h3>03 Data Architecture</h3>
+      <p>StanceRecord schema v1.3 — 모든 필드 정의 + JSONL 포맷 사양.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/docs/03_data_architecture.md" target="_blank">03_data_architecture.md →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">📚</span>
+      <span class="badge">All 15</span>
+      <h3>전체 방법론 문서</h3>
+      <p>04 Stage 1 · 05 Stage 2 · 06 Stage 3 · 07 Evaluation · 08 Novelty · 09 Briefing template · 10 Council · 11 Sources · 12 Plan · 13 Reference tables · 14 Schema v1.3 · 15 Stage 2 features.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/tree/main/docs" target="_blank">docs/ folder →</a></div>
+    </div>
+  </div>
+
+  <!-- Section 5: Code -->
+  <div class="section-title"><span class="num">5</span> 코드 모듈</div>
+  <p class="section-lede">end-to-end 파이프라인 · LLM smoke test · R-GAT · 모든 figure 생성기.</p>
+  <div class="portal-grid">
+    <div class="portal-card">
+      <span class="ico">🚀</span>
+      <span class="badge">Master</span>
+      <h3>run_all.py</h3>
+      <p>한 명령어로 전체 파이프라인 실행: <code>python -m src.run_all</code>. 8 단계 + RUN_REPORT.md 자동 생성.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/src/run_all.py" target="_blank">src/run_all.py →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">🤖</span>
+      <span class="badge">Stage 1</span>
+      <h3>LLM smoke test</h3>
+      <p>5 provider 검증 (Gemini · Groq · Anthropic · Ollama · OpenRouter) + offline mock. <code>--offline</code> 플래그로 네트워크 없이 실행.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/src/stage1_extract/llm_smoke_test.py" target="_blank">llm_smoke_test.py →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">🕸️</span>
+      <span class="badge">Stage 2 · GNN</span>
+      <h3>Heterogeneous R-GAT</h3>
+      <p>PyTorch 구현. 200 epochs → val Spearman ρ = 0.708, emergent chair attention 1.00. 4 relation types.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/src/stage2_graph/rgat.py" target="_blank">src/stage2_graph/rgat.py →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">🎨</span>
+      <span class="badge">Figures</span>
+      <h3>Publication figures</h3>
+      <p>10 figures, 통일 visual identity (CINA palette · 300 dpi · DejaVu Sans). 한 번에 재생성: <code>make figs</code>.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/src/viz/publication_figures.py" target="_blank">src/viz/publication_figures.py →</a></div>
+    </div>
+  </div>
+
+  <!-- Section 6: Setup & community -->
+  <div class="section-title"><span class="num">6</span> Setup & community</div>
+  <p class="section-lede">기여 가이드 · GitHub 설정 · Docker · Makefile.</p>
+  <div class="portal-grid">
+    <div class="portal-card">
+      <span class="ico">🤝</span>
+      <span class="badge">Contributing</span>
+      <h3>CONTRIBUTING</h3>
+      <p>기여 가이드 + reproducibility checklist + 정직성 원칙 (CRITICAL_REVIEW.md 정렬).</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/CONTRIBUTING.md" target="_blank">CONTRIBUTING.md →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">📜</span>
+      <span class="badge">Citation</span>
+      <h3>CITATION.cff</h3>
+      <p>GitHub repo 사이드바 "Cite this repository" 버튼이 자동 인식. CFF 1.2.0 + 한국어 affiliation.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/CITATION.cff" target="_blank">CITATION.cff →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">📋</span>
+      <span class="badge">Changelog</span>
+      <h3>CHANGELOG</h3>
+      <p>Keep a Changelog 형식. v1.0.0 → v3.0.0 전 히스토리.</p>
+      <div class="links"><a href="https://github.com/zxsa0716/cina/blob/main/CHANGELOG.md" target="_blank">CHANGELOG.md →</a></div>
+    </div>
+    <div class="portal-card">
+      <span class="ico">⚙️</span>
+      <span class="badge">Build</span>
+      <h3>Makefile + Dockerfile</h3>
+      <p><code>make help</code> 14 targets · Dockerfile (Python 3.11-slim + PyTorch CPU) · OCI labels.</p>
+      <div class="links">
+        <a href="https://github.com/zxsa0716/cina/blob/main/Makefile" target="_blank">Makefile →</a>
+        <a href="https://github.com/zxsa0716/cina/blob/main/Dockerfile" target="_blank">Dockerfile →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h4>CINA Sitemap</h4>
+      <p>모든 페이지 · 문서 · 산출물 한눈에 보기.</p>
+      <p style="margin-top: 0.8rem; font-size: 0.85em; color: var(--c-fg-mute);">
+        <strong>저자(Author)</strong>: Heedo Choi (최희도)<br>
+        Graduate Student · 기후기술융합학과<br>
+        Kookmin University · zxsa0716@kookmin.ac.kr
+      </p>
+    </div>
+    <div>
+      <h4>Other web pages</h4>
+      <ul>
+        <li><a href="index.html">🏠 Main page</a></li>
+        <li><a href="methodology.html">🔬 Methodology</a></li>
+        <li><a href="visualizations.html">📊 Visualizations</a></li>
+        <li><a href="outputs.html">📦 Outputs catalogue</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Top documents</h4>
+      <ul>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/README.md">README</a></li>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/deliverables/paper.md">📘 Paper</a></li>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/CHANGELOG.md">CHANGELOG</a></li>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/docs/research/CRITICAL_REVIEW.md">Critical Review</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 <strong>Heedo Choi (최희도)</strong> · Kookmin University, Department of Climate Technology Convergence (기후기술융합학과) · Code MIT · Docs CC BY 4.0
+  </div>
+</footer>
+
+<script>
+  // Highlight active nav link
+  document.querySelectorAll('.nav-active').forEach(a => {
+    a.style.color = 'var(--c-accent)';
+    a.style.borderBottom = '2px solid var(--c-accent)';
+    a.style.paddingBottom = '2px';
+  });
+  console.log('CINA Sitemap loaded');
+</script>
+</body>
+</html>

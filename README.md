@@ -42,6 +42,22 @@
 
 ---
 
+## 🌐 5-page interactive demo (live)
+
+<table>
+<tr>
+<td width="20%" align="center">🏠<br><a href="https://zxsa0716.github.io/cina/web/index.html"><strong>Main</strong></a><br><sub>Hero · 11 sections · cases · findings</sub></td>
+<td width="20%" align="center">🔬<br><a href="https://zxsa0716.github.io/cina/web/methodology.html"><strong>Methodology</strong></a><br><sub>Interactive 8-node SVG pipeline + 8 theory cards</sub></td>
+<td width="20%" align="center">📊<br><a href="https://zxsa0716.github.io/cina/web/visualizations.html"><strong>Visualizations</strong></a><br><sub>D3.js — coalition network · heatmap · IRR radar · Δ bar</sub></td>
+<td width="20%" align="center">📦<br><a href="https://zxsa0716.github.io/cina/web/outputs.html"><strong>Outputs</strong></a><br><sub>3 deliverables · 10 figures · 15 docs · code</sub></td>
+<td width="20%" align="center">🧭<br><a href="https://zxsa0716.github.io/cina/web/sitemap.html"><strong>Sitemap</strong></a><br><sub>모든 페이지·문서 한눈에</sub></td>
+</tr>
+</table>
+
+> **💡 처음 방문이세요?** [🧭 Sitemap](https://zxsa0716.github.io/cina/web/sitemap.html) 페이지에서 권장 탐색 순서를 확인하세요.
+
+---
+
 ## ⚡ 핵심 한 눈에
 
 CINA는 UNFCCC 결정문, NDC, IPCC 보고서, ENB 요약을 외교부 장관급 협상 브리핑으로 **자동 변환하는 재현 가능한 학술 파이프라인**입니다. 단일 LLM 추출 단계에서 stance score · NATO 4축 정책수단 · 5-frame typology · 절차 권한 신호를 동시에 추출하고, 이를 Leiden 커뮤니티 검출 + Heterogeneous R-GAT(PyTorch)로 분석한 뒤, 모든 출력 문장에 (원문 인용 + 구조적 그래프 사실)을 강제하는 graph-grounded 생성으로 브리핑을 산출합니다.
@@ -62,7 +78,7 @@ CINA는 UNFCCC 결정문, NDC, IPCC 보고서, ENB 요약을 외교부 장관급
 
 **🗓️ COP31 prospective pre-registration**
 
-H1 (contested set continuity) · H2 (Türkiye Δ ≥ 0.20) · H3 (Korean NAP pen-holder stability) · H4 (AILAC NES ≥ 0.80). Code freeze planned 2026-09-01. See [`PREREGISTRATION_COP31.md`](PREREGISTRATION_COP31.md).
+H1 (contested set continuity) · H2 (Türkiye Δ ≥ 0.20) · H3 (Korean NAP pen-holder stability) · H4 (AILAC NES ≥ 0.80). Code freeze planned 2026-09-01. See [`docs/research/PREREGISTRATION_COP31.md`](docs/research/PREREGISTRATION_COP31.md).
 
 ---
 
@@ -188,7 +204,7 @@ flowchart LR
 | D — Briefing quality | Panel mean | 4.53 / 5 | ≥ 4.0 | ⚠️ simulated |
 | Ablation A4 — Evidence grounding 제거 | Δρ | **−0.15** (largest) | — | ⭐ load-bearing |
 
-> **Honesty note**: Task D used a 5-persona LLM-simulated panel (not external experts). The α = 0.905 is reported as an *upper bound under shared-model bias*. Real expert validation (KEI / KAIST / MOFA) is queued — see [`CRITICAL_REVIEW.md`](CRITICAL_REVIEW.md) §3.2.
+> **Honesty note**: Task D used a 5-persona LLM-simulated panel (not external experts). The α = 0.905 is reported as an *upper bound under shared-model bias*. Real expert validation (KEI / KAIST / MOFA) is queued — see [`docs/research/CRITICAL_REVIEW.md`](docs/research/CRITICAL_REVIEW.md) §3.2.
 
 ---
 
@@ -200,10 +216,10 @@ flowchart LR
 - 🇰🇷 [`deliverables/ministerial_briefing_ko.md`](deliverables/ministerial_briefing_ko.md) — 장관급 브리핑 (한국어)
 - 🇬🇧 [`deliverables/ministerial_briefing_en.md`](deliverables/ministerial_briefing_en.md) — Ministerial briefing (English)
 - 📊 [`deliverables/evaluation_report.md`](deliverables/evaluation_report.md) — Phase 5 4-task report
-- 📋 [`PREREGISTRATION_COP31.md`](PREREGISTRATION_COP31.md) — OSF-style 사전 등록 (4 가설)
-- 🎯 [`CAUSAL_IDENTIFICATION_STRATEGY.md`](CAUSAL_IDENTIFICATION_STRATEGY.md) — DiD/SC/IV 식별 전략
-- 🔍 [`CRITICAL_REVIEW.md`](CRITICAL_REVIEW.md) — 자체 비판 평가 (실제 경쟁 논문 매핑)
-- 🚀 [`METHODOLOGY_ADVANCEMENT_ROADMAP.md`](METHODOLOGY_ADVANCEMENT_ROADMAP.md) — 8가지 학술 고도화 경로
+- 📋 [`docs/research/PREREGISTRATION_COP31.md`](docs/research/PREREGISTRATION_COP31.md) — OSF-style 사전 등록 (4 가설)
+- 🎯 [`docs/research/CAUSAL_IDENTIFICATION_STRATEGY.md`](docs/research/CAUSAL_IDENTIFICATION_STRATEGY.md) — DiD/SC/IV 식별 전략
+- 🔍 [`docs/research/CRITICAL_REVIEW.md`](docs/research/CRITICAL_REVIEW.md) — 자체 비판 평가 (실제 경쟁 논문 매핑)
+- 🚀 [`docs/research/METHODOLOGY_ADVANCEMENT_ROADMAP.md`](docs/research/METHODOLOGY_ADVANCEMENT_ROADMAP.md) — 8가지 학술 고도화 경로
 - 📦 [`ALL_OUTPUTS_INDEX.md`](ALL_OUTPUTS_INDEX.md) — 전 산출물 단일 인덱스
 
 ### 정량 검증 보고서 (`deliverables/`)
@@ -215,27 +231,48 @@ flowchart LR
 - `AILAC_norm_entrepreneur_quantification.md` (NES=0.86)
 - `korean_nap_gga_crosswalk.csv` (30-cell crosswalk)
 
-### Figures (`docs/web/figures/`, 300 dpi, 통일 visual identity)
+### 🎨 Figures (`docs/web/figures/`, 300 dpi, 통일 visual identity)
+
+<table>
+<tr>
+<td width="33%" align="center"><a href="docs/web/figures/fig1_country_issue_heatmap.png"><img src="docs/web/figures/fig1_country_issue_heatmap.png" width="100%"/></a><br><sub><b>Fig 1.</b> Stance heatmap (chair + Korea L&D annotated)</sub></td>
+<td width="33%" align="center"><a href="docs/web/figures/fig5_similarity_network.png"><img src="docs/web/figures/fig5_similarity_network.png" width="100%"/></a><br><sub><b>Fig 5.</b> Leiden 2 communities network</sub></td>
+<td width="33%" align="center"><a href="docs/web/figures/fig8_rgat_training.png"><img src="docs/web/figures/fig8_rgat_training.png" width="100%"/></a><br><sub><b>Fig 8.</b> R-GAT emergent chair attention</sub></td>
+</tr>
+<tr>
+<td width="33%" align="center"><a href="docs/web/figures/fig7_translation_gap_brazil.png"><img src="docs/web/figures/fig7_translation_gap_brazil.png" width="100%"/></a><br><sub><b>Fig 7.</b> Brazil Translation Gap Δ = 0.304</sub></td>
+<td width="33%" align="center"><a href="docs/web/figures/fig9_cross_llm_alpha.png"><img src="docs/web/figures/fig9_cross_llm_alpha.png" width="100%"/></a><br><sub><b>Fig 9.</b> Cross-LLM α 0.876 → 0.933</sub></td>
+<td width="33%" align="center"><a href="docs/web/figures/fig10_bayesian_decomposition.png"><img src="docs/web/figures/fig10_bayesian_decomposition.png" width="100%"/></a><br><sub><b>Fig 10.</b> Bayesian variance decomposition</sub></td>
+</tr>
+</table>
+
+<details>
+<summary>📋 전체 10개 figure 목록</summary>
 
 | # | File | Description |
 |---|------|-------------|
-| 1 | `fig1_country_issue_heatmap.png` | Stance tensor with chair + Korea-weakness annotations |
+| 1 | `fig1_country_issue_heatmap.png` | Country × issue stance tensor with chair + Korea-weakness annotations |
 | 2 | `fig2_procedural_authority.png` | Tallberg 2010 channel distribution |
 | 3 | `fig3_frame_consistency.png` | 5-frame typology by Leiden community |
-| 4 | `fig4_centrality.png` | 4 centrality measures top-6 |
-| 5 | `fig5_similarity_network.png` | Leiden 2 communities network |
-| 6 | `fig6_hedging_density_2d.png` | Hedging × red line typology |
-| 7 | `fig7_translation_gap_brazil.png` | NATO 4-axis Brazil Δ=0.304 |
-| 8 | `fig8_rgat_training.png` | R-GAT attention + training curve |
-| 9 | `fig9_cross_llm_alpha.png` | Cross-LLM Krippendorff α (raw vs corrected) |
-| 10 | `fig10_bayesian_decomposition.png` | Bayesian variance decomposition |
+| 4 | `fig4_centrality.png` | 4 centrality measures top-6 (PageRank, betweenness, degree, eigenvector) |
+| 5 | `fig5_similarity_network.png` | Leiden 2 communities network with chair badge |
+| 6 | `fig6_hedging_density_2d.png` | Hedging × red line typology (norm entrepreneur framework) |
+| 7 | `fig7_translation_gap_brazil.png` | Brazil NATO 4-axis Δ = 0.304 |
+| 8 | `fig8_rgat_training.png` | R-GAT training curve + emergent chair attention 1.00 |
+| 9 | `fig9_cross_llm_alpha.png` | Cross-LLM Krippendorff α (raw 0.876 vs corrected 0.933) |
+| 10 | `fig10_bayesian_decomposition.png` | Bayesian 3-level variance decomposition |
 
-### 인터랙티브 웹 (`docs/web/`)
+</details>
 
-- 🏠 `index.html` — 메인 (11 섹션, Hero · Cases · Findings · Council)
-- 🔬 `methodology.html` — 인터랙티브 8-노드 SVG 파이프라인 + 8 이론 카드
-- 📊 `visualizations.html` — D3.js 4종 (Force network · Animated heatmap · IRR radar · Translation Gap)
-- 📦 `outputs.html` — 전 산출물 카탈로그
+### 🌐 5개 인터랙티브 웹 페이지 (`docs/web/`)
+
+| Page | URL (after Pages deploy) | What's there |
+|------|--------------------------|--------------|
+| 🏠 Main | [`/web/index.html`](https://zxsa0716.github.io/cina/web/index.html) | Hero · 11 섹션 (Overview · Cases · Findings · Coalition · Evaluation · Council) |
+| 🔬 Methodology | [`/web/methodology.html`](https://zxsa0716.github.io/cina/web/methodology.html) | Interactive 8-node SVG pipeline · 8 theory cards · data flow table |
+| 📊 Visualizations | [`/web/visualizations.html`](https://zxsa0716.github.io/cina/web/visualizations.html) | D3.js 4종 — Force-directed coalition network · Animated stance heatmap · IRR radar · Translation Gap bar |
+| 📦 Outputs | [`/web/outputs.html`](https://zxsa0716.github.io/cina/web/outputs.html) | All deliverables catalogue (3 reports · 10 figures · 15 docs · code · data) |
+| 🧭 Sitemap | [`/web/sitemap.html`](https://zxsa0716.github.io/cina/web/sitemap.html) | **Single entry point** — 모든 페이지·문서·코드를 한 화면에서 탐색 |
 
 ### Code (`src/`)
 

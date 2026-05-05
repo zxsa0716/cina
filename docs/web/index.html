@@ -32,6 +32,7 @@
       <a href="methodology.html">Methodology ↗</a>
       <a href="visualizations.html">Visualizations ↗</a>
       <a href="outputs.html">결과물 ↗</a>
+      <a href="sitemap.html">🧭 Sitemap</a>
       <a href="https://github.com/zxsa0716/cina" target="_blank" rel="noopener" class="nav-github">GitHub →</a>
     </nav>
   </div>
@@ -40,22 +41,22 @@
 <!-- Hero -->
 <section class="hero">
   <div class="container">
-    <div class="hero-meta">국민대학교 대학원 글로벌기후리더십 · 2026</div>
+    <div class="hero-meta">국민대학교 대학원 글로벌기후리더십 · 2026 · v3.0</div>
     <h1 class="hero-title">기후 협상 의사결정을<br>AI가 정량화한다</h1>
     <p class="hero-sub">
-      <strong>CINA Framework</strong>는 UNFCCC 협상 문서에서 외교부 장관급 전략 브리핑까지 연결되는<br>
-      <strong>최초의 end-to-end LLM-GNN-LLM 파이프라인</strong>입니다.
-      COP30 Belém Adaptation Indicators 합의에 회고적으로 검증되었습니다.
+      <strong>CINA</strong> 는 UNFCCC 결정문 텍스트를 외교부 장관급 협상 브리핑으로 자동 변환하는<br>
+      <strong>다축 LLM 추출 + Heterogeneous R-GAT + graph-grounded 생성</strong> 파이프라인입니다.
+      COP30 Belém Adaptation Indicators (FCCC/PA/CMA/2025/L.25E) 사례에 회고적으로 검증.
     </p>
     <div class="hero-cta">
       <a href="#case-korea" class="btn btn-primary">한국 적응정책 분석 보기 →</a>
       <a href="#methodology" class="btn btn-ghost">방법론 살펴보기</a>
     </div>
     <div class="hero-stats">
-      <div class="stat"><div class="stat-num" id="stat-rubric">4.76</div><div class="stat-label">Combined Rubric</div><div class="stat-sub">Accept eligible</div></div>
-      <div class="stat"><div class="stat-num" id="stat-gates">5/5</div><div class="stat-label">Quality Gates PASS</div><div class="stat-sub">G1-G5 all green</div></div>
-      <div class="stat"><div class="stat-num" id="stat-stances">98</div><div class="stat-label">Stage 1 Stances</div><div class="stat-sub">13 countries × 6 issues</div></div>
-      <div class="stat"><div class="stat-num" id="stat-findings">8</div><div class="stat-label">Publishable Findings</div><div class="stat-sub">5 venues 후보</div></div>
+      <div class="stat"><div class="stat-num" id="stat-rubric">0.658</div><div class="stat-label">Task A Spearman ρ</div><div class="stat-sub">vs expert reference</div></div>
+      <div class="stat"><div class="stat-num" id="stat-gates">1.00</div><div class="stat-label">Task C P@3 = R@3</div><div class="stat-sub">3 / 3 contested 정확 (N=3)</div></div>
+      <div class="stat"><div class="stat-num" id="stat-stances">0.93</div><div class="stat-label">Cross-LLM α</div><div class="stat-sub">5 providers, bias-corrected</div></div>
+      <div class="stat"><div class="stat-num" id="stat-findings">1.00</div><div class="stat-label">R-GAT chair attention</div><div class="stat-sub">supervision-free emergent</div></div>
     </div>
   </div>
 </section>

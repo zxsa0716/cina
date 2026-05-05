@@ -7,6 +7,10 @@
 > **Master pipeline**: `python -m src.run_all` (8-step end-to-end orchestrator)
 > **Last update**: 2026-05-05
 
+## 🌐 Live web (5 pages)
+
+🏠 [Main](https://zxsa0716.github.io/cina/web/index.html) · 🔬 [Methodology](https://zxsa0716.github.io/cina/web/methodology.html) · 📊 [Visualizations](https://zxsa0716.github.io/cina/web/visualizations.html) · 📦 [Outputs](https://zxsa0716.github.io/cina/web/outputs.html) · 🧭 [Sitemap](https://zxsa0716.github.io/cina/web/sitemap.html)
+
 이 문서는 CINA 프로젝트가 생성한 **모든** 산출물(보고서, figure, 데이터, 코드)을 카테고리별로 정리한 단일 진입 인덱스입니다. 웹에서 둘러보려면 [docs/web/outputs.html](docs/web/outputs.html) 또는 배포된 GitHub Pages를 사용하세요.
 
 ---
@@ -25,7 +29,8 @@
 | Stage 1 stances | n = 78 canonical (확장 가능) | [data/processed/stances_canonical_v3.jsonl](data/processed/) |
 | 코드 모듈 | 26 collectors + 5 stage modules + analysis + viz | [src/](src/) |
 | 평가 메트릭 | 4 tasks + 6 ablations + Cross-LLM α + Bayesian | [evaluation_report.md](deliverables/evaluation_report.md) |
-| **🆕 학술 고도화 문서** | **5** (CRITICAL_REVIEW, ROADMAP, PREREG, CAUSAL, GITHUB_GUIDE) | repo root |
+| **🆕 학술 고도화 문서** | **4** | [`docs/research/`](docs/research/) |
+| **🆕 GitHub setup 가이드** | **3** | [`docs/setup/`](docs/setup/) |
 
 ---
 
@@ -254,7 +259,7 @@ Ablation A4 (Evidence grounding 제거): −0.15 ρ
 
 ## 10. 경험적 관찰 (Observations)
 
-> **Note**: 본 프로젝트는 단일 사례 회고 검증 파일럿이며, 아래 항목은 일반화 결론이 아닌 관찰입니다. 본 paper.md §5.6 한계 단락 참조. 자세한 비판적 자기 평가는 [`CRITICAL_REVIEW.md`](CRITICAL_REVIEW.md) 참조.
+> **Note**: 본 프로젝트는 단일 사례 회고 검증 파일럿이며, 아래 항목은 일반화 결론이 아닌 관찰입니다. 본 paper.md §5.6 한계 단락 참조. 자세한 비판적 자기 평가는 [`docs/research/CRITICAL_REVIEW.md`](docs/research/CRITICAL_REVIEW.md) 참조.
 
 ### Primary observations (3)
 
