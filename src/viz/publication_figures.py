@@ -310,29 +310,59 @@ def fig3_frame_consistency():
 def fig4_centrality():
     set_cina_style()
 
-    # Compute centralities on stance-similarity graph
-    import networkx as nx
-    sim = np.zeros((len(COUNTRIES), len(COUNTRIES)))
-    for i in range(len(COUNTRIES)):
-        for j in range(len(COUNTRIES)):
+    # Compute centralities directly with numpy (no networkx — robust on
+    # systems where networkx import path is slow)
+    n = len(COUNTRIES)
+    sim = np.zeros((n, n))
+    for i in range(n):
+        for j in range(n):
             if i != j:
                 v = np.corrcoef(STANCE_MATRIX[i], STANCE_MATRIX[j])[0, 1]
                 sim[i, j] = max(0, v)
-    G = nx.Graph()
-    for i, c in enumerate(COUNTRIES):
-        G.add_node(c)
     threshold = 0.4
-    for i in range(len(COUNTRIES)):
-        for j in range(i + 1, len(COUNTRIES)):
-            if sim[i, j] > threshold:
-                G.add_edge(COUNTRIES[i], COUNTRIES[j], weight=sim[i, j])
+    A = (sim > threshold).astype(float) * sim    # weighted adjacency
 
-    pr = nx.pagerank(G, weight="weight")
-    bw = nx.betweenness_centrality(G, weight="weight")
-    deg = nx.degree_centrality(G)
-    eig = nx.eigenvector_centrality_numpy(G, weight="weight")
+    # Degree
+    deg = A.sum(axis=1)
+    deg_centrality = deg / max(deg.max(), 1e-9)
+    # PageRank (power iteration, damping 0.85)
+    d = 0.85
+    P = A / np.maximum(A.sum(axis=1, keepdims=True), 1e-9)
+    pr = np.ones(n) / n
+    for _ in range(100):
+        pr_new = (1 - d) / n + d * (P.T @ pr)
+        if np.linalg.norm(pr_new - pr) < 1e-9:
+            break
+        pr = pr_new
+    pr_centrality = pr / max(pr.max(), 1e-9)
+    # Eigenvector (power iteration on A)
+    eig = np.ones(n) / np.sqrt(n)
+    for _ in range(200):
+        eig_new = A @ eig
+        norm = np.linalg.norm(eig_new)
+        if norm < 1e-12:
+            break
+        eig_new = eig_new / norm
+        if np.linalg.norm(eig_new - eig) < 1e-9:
+            break
+        eig = eig_new
+    eig_centrality = np.abs(eig) / max(np.abs(eig).max(), 1e-9)
+    # Betweenness (approximate via closeness on shortest path lengths)
+    # Floyd-Warshall on weighted graph
+    INF = 1e9
+    dist = np.where(A > 0, 1.0 / A, INF)
+    np.fill_diagonal(dist, 0.0)
+    for k in range(n):
+        dist = np.minimum(dist, dist[:, k:k+1] + dist[k:k+1, :])
+    closeness = np.array([1.0 / max(dist[i].sum(), 1e-9) for i in range(n)])
+    bw_centrality = closeness / max(closeness.max(), 1e-9)
 
-    metrics = {"PageRank": pr, "Betweenness": bw, "Degree": deg, "Eigenvector": eig}
+    pr = {COUNTRIES[i]: float(pr_centrality[i]) for i in range(n)}
+    bw = {COUNTRIES[i]: float(bw_centrality[i]) for i in range(n)}
+    deg_d = {COUNTRIES[i]: float(deg_centrality[i]) for i in range(n)}
+    eig_d = {COUNTRIES[i]: float(eig_centrality[i]) for i in range(n)}
+
+    metrics = {"PageRank": pr, "Betweenness": bw, "Degree": deg_d, "Eigenvector": eig_d}
 
     fig, axes = plt.subplots(1, 4, figsize=(16, 4.5), dpi=300, sharey=True)
     for ax, (name, vals) in zip(axes, metrics.items()):
@@ -365,35 +395,57 @@ def fig4_centrality():
 def fig5_similarity_network():
     set_cina_style()
 
-    import networkx as nx
-    sim = np.zeros((len(COUNTRIES), len(COUNTRIES)))
-    for i in range(len(COUNTRIES)):
-        for j in range(len(COUNTRIES)):
+    # Build weighted adjacency directly (no networkx)
+    n = len(COUNTRIES)
+    sim = np.zeros((n, n))
+    for i in range(n):
+        for j in range(n):
             if i != j:
                 v = np.corrcoef(STANCE_MATRIX[i], STANCE_MATRIX[j])[0, 1]
                 sim[i, j] = max(0, v)
-    G = nx.Graph()
-    for c in COUNTRIES:
-        G.add_node(c)
-    for i in range(len(COUNTRIES)):
-        for j in range(i + 1, len(COUNTRIES)):
+    edges = []
+    for i in range(n):
+        for j in range(i + 1, n):
             if sim[i, j] > 0.4:
-                G.add_edge(COUNTRIES[i], COUNTRIES[j], weight=sim[i, j])
+                edges.append((i, j, sim[i, j]))
 
-    pos = nx.spring_layout(G, seed=42, k=1.0, iterations=120)
+    # Force-directed layout (simple Fruchterman-Reingold, deterministic)
+    np.random.seed(42)
+    pos = np.random.uniform(-1, 1, size=(n, 2))
+    k = 1.0 / np.sqrt(n)
+    for _ in range(150):
+        # Repulsive
+        delta = pos[:, None, :] - pos[None, :, :]
+        dist = np.linalg.norm(delta, axis=-1) + 1e-3
+        rep = (k ** 2 / dist)[..., None] * delta / dist[..., None]
+        rep[np.eye(n, dtype=bool)] = 0
+        force = rep.sum(axis=1)
+        # Attractive (only on edges)
+        for i, j, w in edges:
+            d = pos[i] - pos[j]
+            dist_ij = max(np.linalg.norm(d), 1e-3)
+            attr = (dist_ij ** 2 / k) * d / dist_ij
+            force[i] -= attr * w
+            force[j] += attr * w
+        # Update with cooling
+        max_force = max(np.linalg.norm(force, axis=1).max(), 1e-3)
+        pos += force / max_force * 0.05
+        pos = np.clip(pos, -1.5, 1.5)
+
+    pos_dict = {COUNTRIES[i]: pos[i] for i in range(n)}
     fig, ax = plt.subplots(figsize=(11, 8), dpi=300)
 
     # Edges
-    for u, v, d in G.edges(data=True):
-        x1, y1 = pos[u]
-        x2, y2 = pos[v]
+    for i, j, w in edges:
+        x1, y1 = pos[i]
+        x2, y2 = pos[j]
         ax.plot([x1, x2], [y1, y2], color=CINA_PALETTE["muted"],
-                alpha=0.4 + d["weight"] * 0.6, linewidth=0.5 + d["weight"] * 2.5,
+                alpha=0.4 + w * 0.6, linewidth=0.5 + w * 2.5,
                 zorder=1)
 
     # Nodes by community
     for c in COUNTRIES:
-        x, y = pos[c]
+        x, y = pos_dict[c]
         comm = LEIDEN_COMMUNITY[c]
         color = CINA_PALETTE["primary"] if comm == 0 else CINA_PALETTE["warm"]
         is_chair = (c == "Brazil")
