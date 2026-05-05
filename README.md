@@ -278,6 +278,17 @@ python -m src.evaluation.run_full_evaluation
 | 코드 | [`src/`](src/) | 81 Python 모듈 |
 
 → 전체 인덱스: [`ALL_OUTPUTS_INDEX.md`](ALL_OUTPUTS_INDEX.md)
+→ 자체 비판 평가: [`CRITICAL_REVIEW.md`](CRITICAL_REVIEW.md) — 실제 경쟁 논문 비교 + 약점 정직 인정
+→ 학술 고도화 로드맵: [`METHODOLOGY_ADVANCEMENT_ROADMAP.md`](METHODOLOGY_ADVANCEMENT_ROADMAP.md) — 8가지 확장 경로 (R-GAT, Bayesian, Cross-LLM, Causal, Longitudinal, Multi-lingual, Pre-registration, Expert panel)
+→ COP31 사전 등록: [`PREREGISTRATION_COP31.md`](PREREGISTRATION_COP31.md) — 4 가설 + 코드 freeze 2026-09-01
+→ 인과 식별 전략: [`CAUSAL_IDENTIFICATION_STRATEGY.md`](CAUSAL_IDENTIFICATION_STRATEGY.md) — DiD/SC/IV로 Δ 일반화
+
+**🆕 2026-05 방법론 고도화 (실제 구현 + 측정)**:
+- Real Heterogeneous R-GAT (PyTorch): val ρ=0.708, **emergent chair attention 1.00** (Tallberg 2010 supervision-free 회복)
+- Cross-LLM Krippendorff α: 0.876 raw / **0.933 bias-corrected** (5 providers, shared-model bias 부분 분리)
+- Bayesian 3-level variance decomposition: σ_country 54%, σ_group 37%, σ_regime 1% (regime cleavage 가설의 정직한 한계 노출)
+- COP31 prospective pre-registration: H1-H4 + Bonferroni-corrected α=0.0125
+
 → 인터랙티브 웹 (3 pages):
   - 🏠 [`docs/web/index.html`](docs/web/index.html) (Hero + 11 sections)
   - 🔬 [`docs/web/methodology.html`](docs/web/methodology.html) (Interactive 8-node pipeline + theory cards)
