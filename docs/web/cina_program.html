@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CINA Program — Ask CINA (Q&A on climate negotiations)</title>
+<meta name="description" content="CINA 인터랙티브 Q&A 프로그램 — 자연어로 기후 협상 데이터에 질문하세요.">
+<meta name="author" content="Heedo Choi (최희도) — Kookmin University">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  body { background: #0b0d12; color: var(--c-fg); }
+
+  .program-hero { padding: 3.5rem 0 2rem; text-align: center;
+    background: radial-gradient(ellipse at top, rgba(110, 168, 255, 0.18) 0%, transparent 60%); }
+  .program-hero h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); margin: 0 0 0.4rem; }
+  .program-hero h1 .accent { background: linear-gradient(90deg, #3b82f6, #06b6d4, #10b981);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; }
+  .program-hero p { color: var(--c-fg-mute); max-width: 680px; margin: 0 auto; font-size: 1.05em; }
+
+  .qa-shell { max-width: 980px; margin: 2rem auto; padding: 0 1.6rem 4rem; }
+
+  /* Input bar */
+  .qa-input-wrap { background: var(--c-card); border: 1px solid var(--c-border);
+    border-radius: 16px; padding: 1.4rem 1.6rem; margin-bottom: 1.5rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+  .qa-input-wrap textarea {
+    width: 100%; min-height: 70px; max-height: 280px; resize: vertical;
+    background: #0f1420; color: var(--c-fg); border: 1px solid #2a3344;
+    border-radius: 10px; padding: 0.9rem 1.1rem; font-size: 1.02rem;
+    font-family: inherit; line-height: 1.5; outline: none;
+    transition: border-color 0.2s; }
+  .qa-input-wrap textarea:focus { border-color: var(--c-accent); }
+  .qa-input-wrap .qa-bar { display: flex; gap: 0.7rem; margin-top: 0.8rem;
+    align-items: center; flex-wrap: wrap; }
+  .qa-input-wrap .qa-mode { display: flex; gap: 0.4rem; }
+  .qa-input-wrap .qa-mode button { background: rgba(110,168,255,0.08);
+    border: 1px solid #2a3344; color: var(--c-fg-mute); padding: 0.45rem 0.9rem;
+    border-radius: 999px; cursor: pointer; font-size: 0.85em; transition: all 0.2s; }
+  .qa-input-wrap .qa-mode button:hover { border-color: var(--c-accent); color: var(--c-fg); }
+  .qa-input-wrap .qa-mode button.active { background: var(--c-accent); color: #0b0d12;
+    border-color: var(--c-accent); font-weight: 700; }
+  .qa-input-wrap .qa-send {
+    margin-left: auto; background: linear-gradient(90deg, #3b82f6, #06b6d4);
+    color: white; border: none; padding: 0.6rem 1.6rem; border-radius: 10px;
+    font-weight: 700; font-size: 0.95em; cursor: pointer; transition: transform 0.15s; }
+  .qa-input-wrap .qa-send:hover { transform: translateY(-1px); }
+  .qa-input-wrap .qa-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* Suggestions */
+  .qa-suggest { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.8rem; }
+  .qa-suggest .pill { background: rgba(110,168,255,0.07);
+    border: 1px solid rgba(110,168,255,0.2); color: var(--c-accent);
+    padding: 0.3rem 0.85rem; border-radius: 999px; font-size: 0.82em;
+    cursor: pointer; transition: all 0.2s; }
+  .qa-suggest .pill:hover { background: rgba(110,168,255,0.18); border-color: var(--c-accent); }
+
+  /* Conversation */
+  .qa-history { display: flex; flex-direction: column; gap: 1.2rem; }
+  .qa-turn { background: var(--c-card); border: 1px solid var(--c-border);
+    border-radius: 14px; padding: 1.3rem 1.5rem; }
+  .qa-turn.user { background: rgba(110,168,255,0.05); }
+  .qa-turn .role { font-size: 0.78em; color: var(--c-fg-mute);
+    margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;
+    font-weight: 600; display: flex; align-items: center; gap: 0.4rem; }
+  .qa-turn .role .ico { display: inline-block; width: 1.4rem; height: 1.4rem;
+    border-radius: 50%; background: var(--c-accent); color: #0b0d12;
+    text-align: center; line-height: 1.4rem; font-weight: 800; font-size: 0.78em; }
+  .qa-turn.user .role .ico { background: var(--c-warm); }
+  .qa-turn .body { font-size: 1.0em; line-height: 1.65; }
+  .qa-turn .body strong { color: var(--c-accent); }
+  .qa-turn .body code { background: rgba(110,168,255,0.12); padding: 0.1rem 0.4rem;
+    border-radius: 4px; font-size: 0.9em; color: var(--c-accent); }
+  .qa-turn .body ul { margin: 0.4rem 0; padding-left: 1.4rem; }
+
+  .citations { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--c-border); }
+  .citations h4 { font-size: 0.85em; color: var(--c-fg-mute);
+    margin: 0 0 0.6rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .citation { background: #0f1420; border-left: 3px solid var(--c-accent);
+    padding: 0.6rem 0.9rem; margin: 0.4rem 0; border-radius: 0 6px 6px 0;
+    font-size: 0.88em; }
+  .citation .meta { color: var(--c-fg-mute); font-size: 0.92em; margin-bottom: 0.2rem; }
+  .citation .quote { color: var(--c-fg); font-style: italic; }
+
+  /* Visualization */
+  .viz-area { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--c-border); }
+  .viz-area canvas { max-width: 100%; }
+  .viz-bar-row { display: flex; align-items: center; gap: 0.5rem; margin: 0.3rem 0; font-size: 0.88em; }
+  .viz-bar-row .lbl { width: 130px; color: var(--c-fg-mute); flex-shrink: 0; }
+  .viz-bar-row .bar-bg { flex: 1; background: #1a1f2e; border-radius: 4px; height: 16px; position: relative; }
+  .viz-bar-row .bar { background: linear-gradient(90deg, #3b82f6, #06b6d4);
+    height: 100%; border-radius: 4px; position: absolute; left: 50%; }
+  .viz-bar-row .bar.neg { background: linear-gradient(90deg, #dc2626, #f59e0b); }
+  .viz-bar-row .val { width: 60px; text-align: right; font-weight: 700;
+    color: var(--c-fg); font-variant-numeric: tabular-nums; }
+
+  /* Trust banner */
+  .trust-banner { padding: 1rem 1.4rem; background: rgba(245, 158, 11, 0.06);
+    border-left: 3px solid #f59e0b; border-radius: 6px; margin: 1.5rem 0;
+    font-size: 0.88em; color: var(--c-fg-mute); line-height: 1.55; }
+  .trust-banner strong { color: #f59e0b; }
+
+  .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--c-fg-mute);
+    background: rgba(110,168,255,0.03); border: 1px dashed var(--c-border);
+    border-radius: 12px; }
+  .empty-state .big { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+
+  .loading { display: inline-block; padding: 0.4rem 0.9rem;
+    background: rgba(110,168,255,0.1); border-radius: 8px; color: var(--c-accent);
+    font-size: 0.9em; }
+  .loading::after { content: "..."; animation: dots 1s steps(4) infinite; }
+  @keyframes dots { 0% { content: ""; } 25% { content: "."; }
+    50% { content: ".."; } 75% { content: "..."; } 100% { content: ""; } }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">CINA</span>
+      <span class="logo-tag">Program — Ask CINA</span>
+    </a>
+    <nav class="nav-main">
+      <a href="index.html">메인</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="visualizations.html">Visualizations</a>
+      <a href="outputs.html">Outputs</a>
+      <a href="sitemap.html">Sitemap</a>
+      <a href="cina_program.html" style="color: var(--c-accent); border-bottom: 2px solid var(--c-accent); padding-bottom: 2px;">⚡ Program</a>
+      <a href="https://github.com/zxsa0716/cina" target="_blank" rel="noopener" class="nav-github">GitHub →</a>
+    </nav>
+  </div>
+</header>
+
+<section class="program-hero">
+  <div class="container">
+    <h1>⚡ <span class="accent">Ask CINA</span></h1>
+    <p>기후 협상 데이터에 자연어로 질문하세요. 30개국 × 6 이슈 × 5 COP cycles의<br>
+    <strong>900개 입장 레코드</strong>에서 즉시 답변과 원문 인용을 제공합니다.</p>
+  </div>
+</section>
+
+<div class="qa-shell">
+
+  <!-- Input bar -->
+  <div class="qa-input-wrap">
+    <textarea id="qa-input" placeholder="예: 브라질과 한국의 GGA 지표 입장 차이는? · AOSIS의 손실·피해 입장은? · Translation Gap Δ 값은?"></textarea>
+    <div class="qa-bar">
+      <div class="qa-mode">
+        <button class="active" data-mode="rule" title="규칙 기반 매칭 (즉시, 무료)">🧮 Rule-based</button>
+        <button data-mode="llm" title="LLM 호출 (사용자 본인 API key 필요)">🤖 LLM (BYO key)</button>
+      </div>
+      <button class="qa-send" id="qa-send">질문 보내기 →</button>
+    </div>
+    <div class="qa-suggest" id="qa-suggest">
+      <span class="pill" data-q="브라질과 한국의 GGA 지표 입장 차이는?">브라질 vs 한국 GGA</span>
+      <span class="pill" data-q="AOSIS의 손실·피해 입장은?">AOSIS L&D 입장</span>
+      <span class="pill" data-q="한국이 COP31 L&D 이슈에서 어떻게 해야 하나?">한국 L&D 권고</span>
+      <span class="pill" data-q="Translation Gap Δ 값은 얼마인가?">Δ 값</span>
+      <span class="pill" data-q="인도와 중국의 적응 재원 입장 차이는?">인도 vs 중국 적응 재원</span>
+      <span class="pill" data-q="튀르키예의 GGA-IND 입장은?">튀르키예 GGA-IND</span>
+      <span class="pill" data-q="Tuvalu의 손실·피해 입장은?">Tuvalu L&D</span>
+      <span class="pill" data-q="한국 IRR 값은 얼마인가?">한국 IRR</span>
+    </div>
+  </div>
+
+  <!-- Trust banner -->
+  <div class="trust-banner">
+    <strong>⚠️ 정직한 안내</strong>:
+    이 프로그램은 CINA v4 데이터셋 (30개국 × 6 이슈 × 5 COPs = 900 레코드)에서 답변을 생성합니다.
+    레코드는 (a) v3에서 검증된 13개국 × COP30 + (b) ND-GAIN 취약성 + GDP per capita + 협상 그룹 멤버십에 기반한
+    deterministic synthesis 17개국 × 5 COPs의 결합입니다. 실제 LLM 추출 기반 데이터로의 교체는
+    <code>python -m src.pipeline --country &lt;C&gt; --cop &lt;N&gt; --sector adaptation</code> 명령으로 가능합니다.
+    모든 답변에는 evidence quote가 첨부되며, 단 데이터의 일부는 현 단계에서 placeholder임을 명시합니다.
+  </div>
+
+  <!-- Conversation history -->
+  <div class="qa-history" id="qa-history">
+    <div class="empty-state">
+      <div class="big">💬</div>
+      <p><strong>첫 질문을 시작해 보세요.</strong></p>
+      <p>위의 추천 질문 칩을 클릭하거나, 입력란에 직접 자연어로 질문할 수 있습니다.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h4>CINA Program</h4>
+      <p>인터랙티브 Q&A — 30개국 × 6 이슈 × 5 COPs = 900 레코드.</p>
+      <p style="margin-top: 0.8rem; font-size: 0.85em; color: var(--c-fg-mute);">
+        <strong>저자(Author)</strong>: Heedo Choi (최희도)<br>
+        Graduate Student · 기후기술융합학과<br>
+        Kookmin University · zxsa0716@kookmin.ac.kr
+      </p>
+    </div>
+    <div>
+      <h4>관련 페이지</h4>
+      <ul>
+        <li><a href="index.html">메인</a></li>
+        <li><a href="methodology.html">Methodology</a></li>
+        <li><a href="visualizations.html">Visualizations</a></li>
+        <li><a href="sitemap.html">Sitemap</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>코드</h4>
+      <ul>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/src/program/query_engine.py" target="_blank">query_engine.py (백엔드)</a></li>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/src/data/build_v4_dataset.py" target="_blank">v4 데이터 빌더</a></li>
+        <li><a href="https://github.com/zxsa0716/cina/blob/main/data/processed/stances_v4.jsonl" target="_blank">v4 데이터셋 (900 records)</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 <strong>Heedo Choi (최희도)</strong> · Kookmin University, Department of Climate Technology Convergence (기후기술융합학과) · Code MIT · Docs CC BY 4.0
+  </div>
+</footer>
+
+<script src="assets/cina_program.js"></script>
+</body>
+</html>

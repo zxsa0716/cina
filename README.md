@@ -42,17 +42,20 @@
 
 ---
 
-## 🌐 5-page interactive demo (live)
+## 🌐 6-page interactive program (live)
 
 <table>
 <tr>
-<td width="20%" align="center">🏠<br><a href="https://zxsa0716.github.io/cina/web/index.html"><strong>Main</strong></a><br><sub>Hero · 11 sections · cases · findings</sub></td>
-<td width="20%" align="center">🔬<br><a href="https://zxsa0716.github.io/cina/web/methodology.html"><strong>Methodology</strong></a><br><sub>Interactive 8-node SVG pipeline + 8 theory cards</sub></td>
-<td width="20%" align="center">📊<br><a href="https://zxsa0716.github.io/cina/web/visualizations.html"><strong>Visualizations</strong></a><br><sub>D3.js — coalition network · heatmap · IRR radar · Δ bar</sub></td>
-<td width="20%" align="center">📦<br><a href="https://zxsa0716.github.io/cina/web/outputs.html"><strong>Outputs</strong></a><br><sub>3 deliverables · 10 figures · 15 docs · code</sub></td>
-<td width="20%" align="center">🧭<br><a href="https://zxsa0716.github.io/cina/web/sitemap.html"><strong>Sitemap</strong></a><br><sub>모든 페이지·문서 한눈에</sub></td>
+<td width="16%" align="center">🏠<br><a href="https://zxsa0716.github.io/cina/web/index.html"><strong>Main</strong></a><br><sub>Hero · 11 sections</sub></td>
+<td width="16%" align="center">🔬<br><a href="https://zxsa0716.github.io/cina/web/methodology.html"><strong>Methodology</strong></a><br><sub>Interactive pipeline</sub></td>
+<td width="16%" align="center">📊<br><a href="https://zxsa0716.github.io/cina/web/visualizations.html"><strong>Visualizations</strong></a><br><sub>D3 coalition · heatmap</sub></td>
+<td width="16%" align="center">📦<br><a href="https://zxsa0716.github.io/cina/web/outputs.html"><strong>Outputs</strong></a><br><sub>3 deliverables · 14 figures</sub></td>
+<td width="16%" align="center"><strong>⚡</strong><br><a href="https://zxsa0716.github.io/cina/web/cina_program.html"><strong>Program</strong></a> 🆕<br><sub>Ask CINA Q&A · 900 records</sub></td>
+<td width="16%" align="center">🧭<br><a href="https://zxsa0716.github.io/cina/web/sitemap.html"><strong>Sitemap</strong></a><br><sub>모든 페이지 한눈에</sub></td>
 </tr>
 </table>
+
+> ⚡ **v4.0 NEW**: [Ask CINA Program](https://zxsa0716.github.io/cina/web/cina_program.html) — 30개국 × 6 이슈 × 5 COPs = **900 stance records**에 자연어로 질문 → 즉시 답변 + 원문 인용 + 시각화. 4가지 query type (비교 · 조회 · 권고 · 사실확인) 지원. CLI: `python -m src.program.query_engine --demo`
 
 > **💡 처음 방문이세요?** [🧭 Sitemap](https://zxsa0716.github.io/cina/web/sitemap.html) 페이지에서 권장 탐색 순서를 확인하세요.
 
