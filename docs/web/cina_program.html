@@ -170,9 +170,12 @@
     <strong>⚠️ 정직한 안내</strong>:
     이 프로그램은 CINA v4 데이터셋 (30개국 × 6 이슈 × 5 COPs = 900 레코드)에서 답변을 생성합니다.
     레코드는 (a) v3에서 검증된 13개국 × COP30 + (b) ND-GAIN 취약성 + GDP per capita + 협상 그룹 멤버십에 기반한
-    deterministic synthesis 17개국 × 5 COPs의 결합입니다. 실제 LLM 추출 기반 데이터로의 교체는
-    <code>python -m src.pipeline --country &lt;C&gt; --cop &lt;N&gt; --sector adaptation</code> 명령으로 가능합니다.
-    모든 답변에는 evidence quote가 첨부되며, 단 데이터의 일부는 현 단계에서 placeholder임을 명시합니다.
+    deterministic synthesis 17개국 × 5 COPs의 결합입니다.
+    <br><br>
+    <strong>🔑 BYO LLM key 모드</strong>: 자연어 답변을 원하시면 입력란 옆 <strong>🔑 API Key</strong> 버튼에서
+    Gemini · Anthropic · Groq 중 하나의 본인 API 키를 입력하세요. 키는 본인 브라우저 localStorage에만 저장되며
+    CINA 서버로 전송되지 않습니다. 자세한 설명은
+    <a href="https://github.com/zxsa0716/cina/blob/main/docs/setup/BYO_LLM_SETUP.md" target="_blank" rel="noopener" style="color:var(--c-warm);">BYO LLM Setup 가이드</a>를 참조하세요.
   </div>
 
   <!-- Conversation history -->
