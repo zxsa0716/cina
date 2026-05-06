@@ -75,7 +75,10 @@ def parse_review(path: Path) -> Optional[dict]:
 
     # Detect completion: a completed review has actual numbers in place of `__/5`
     # We look for "X/5" patterns where X is 0-5 in the rubric table
-    rubric_rows = re.findall(r"\|\s*(D\d+)[^|]*\|\s*(\d(?:\.\d)?)/5\s*\|", text)
+    # Allow optional ** (bold) wrapping around the dim id
+    rubric_rows = re.findall(
+        r"\|\s*\*{0,2}(D\d+)[^|]*\|\s*\*{0,2}(\d(?:\.\d)?)/5\*{0,2}\s*\|",
+        text)
     if len(rubric_rows) < 5:
         # Less than half the rubric filled = incomplete
         return None
@@ -87,14 +90,22 @@ def parse_review(path: Path) -> Optional[dict]:
         except ValueError:
             continue
 
-    # Extract venue recommendation
-    venue_match = re.search(r"###\s*Venue recommendation([\s\S]*?)(?=###|\Z)", text)
+    # Extract venue recommendation - look for any heading containing "Venue"
+    venue_match = re.search(r"##\s*\d*\.?\s*Venue recommendation[^\n]*\n([\s\S]*?)(?=##|\Z)", text)
+    if not venue_match:
+        venue_match = re.search(r"###\s*Venue recommendation[^\n]*\n([\s\S]*?)(?=###|##|\Z)", text)
     venue_lines = venue_match.group(1).strip().split("\n") if venue_match else []
-    chosen_venues = [
-        line.strip().lstrip("☑").lstrip("✓").lstrip("☒").strip()
-        for line in venue_lines
-        if line.strip().startswith(("☑", "✓", "☒"))
-    ]
+    chosen_venues = []
+    for line in venue_lines:
+        s = line.strip()
+        # Strip optional leading "- " markdown bullet
+        s = re.sub(r"^-\s+", "", s)
+        # Match checked checkboxes: ☑️, ☑, ✓, ✅
+        if s.startswith(("☑️", "☑", "✓", "✅", "[x]", "[X]")):
+            # Strip the checkbox marker and any leading whitespace / variation selector
+            cleaned = re.sub(r"^[☑✓✅\[xX\]]+\s*[️]?\s*", "", s).strip()
+            if cleaned:
+                chosen_venues.append(cleaned)
 
     # Extract Top 3 weaknesses (look for numbered list under "Top 3 weaknesses")
     weak_match = re.search(r"Top 3 weaknesses[^\n]*\n([\s\S]*?)(?=###|\Z)", text)
