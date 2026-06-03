@@ -1,0 +1,46 @@
+[mcp_servers.council-memory]
+args = [
+    "-y",
+    "@modelcontextprotocol/server-memory",
+]
+command = "npx"
+
+[mcp_servers.council-memory.env]
+MEMORY_FILE_PATH = 'C:\Users\admin\Desktop\대학원수업\1학기\리더쉽\council_sessions\.council_memory.json'
+
+[mcp_servers.fetch]
+args = ["mcp-server-fetch"]
+command = "uvx"
+
+[mcp_servers.filesystem]
+args = [
+    "-y",
+    "@modelcontextprotocol/server-filesystem",
+    'C:\Users\admin\Desktop\대학원수업\1학기\리더쉽',
+]
+command = "npx"
+
+[mcp_servers.git]
+args = [
+    "mcp-server-git",
+    "--repository",
+    'C:\Users\admin\Desktop\대학원수업\1학기\리더쉽',
+]
+command = "uvx"
+
+[mcp_servers.memory]
+args = [
+    "-y",
+    "@modelcontextprotocol/server-memory",
+]
+command = "npx"
+
+[mcp_servers.memory.env]
+MEMORY_FILE_PATH = 'C:\Users\admin\Desktop\대학원수업\1학기\리더쉽\council_sessions\.memory_graph.json'
+
+[mcp_servers.sequential-thinking]
+args = [
+    "-y",
+    "@modelcontextprotocol/server-sequential-thinking",
+]
+command = "npx"
