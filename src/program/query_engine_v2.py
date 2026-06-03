@@ -35,8 +35,10 @@ from typing import Optional
 ROOT = Path(__file__).resolve().parent.parent.parent
 DATA  = ROOT / "data" / "processed" / "stances_v5.jsonl"
 META  = ROOT / "data" / "processed" / "stances_v5_meta.json"
+CORPUS_MANIFEST = ROOT / "data" / "corpus" / "manifest.jsonl"
+CORPUS_INDEX    = ROOT / "data" / "corpus" / "search_index.json"
 
-ENGINE_VERSION = "2.0.0"
+ENGINE_VERSION = "2.1.0"   # 2.1 = corpus retrieval integration
 DEFAULT_COP = "COP30"
 
 # ===========================================================================
@@ -217,11 +219,87 @@ def load_meta() -> dict:
 
 
 # ===========================================================================
+# v6 Corpus loader + search (TF-IDF inverted index)
+# ===========================================================================
+
+_CORPUS_MANIFEST_CACHE: list[dict] = []
+_CORPUS_INDEX_CACHE: dict = {}
+
+STOP_WORDS = {
+    "the","a","an","and","or","but","is","are","of","in","on","at","to","for","with","by",
+    "as","that","this","it","its","not","no","from","into",
+    "본","해","이","그","저","것","및","또","수","의","에","에서","으로","로","를","을","는","가",
+    "있다","없다","한다","된다","것이다","위해","대한","대해","해서","하는","된","된다고","이는",
+}
+
+def _corpus_tokenize(text: str) -> list[str]:
+    if not text: return []
+    raw = re.findall(r"[가-힣]+|[A-Za-z0-9_\-\.&]+", text.lower())
+    return [t for t in raw if len(t) > 1 and t not in STOP_WORDS]
+
+def load_corpus_manifest() -> list[dict]:
+    global _CORPUS_MANIFEST_CACHE
+    if _CORPUS_MANIFEST_CACHE: return _CORPUS_MANIFEST_CACHE
+    if not CORPUS_MANIFEST.exists(): return []
+    with open(CORPUS_MANIFEST, "r", encoding="utf-8") as f:
+        _CORPUS_MANIFEST_CACHE = [json.loads(line) for line in f if line.strip()]
+    return _CORPUS_MANIFEST_CACHE
+
+def load_corpus_index() -> dict:
+    global _CORPUS_INDEX_CACHE
+    if _CORPUS_INDEX_CACHE: return _CORPUS_INDEX_CACHE
+    if not CORPUS_INDEX.exists(): return {}
+    _CORPUS_INDEX_CACHE = json.loads(CORPUS_INDEX.read_text(encoding="utf-8"))
+    return _CORPUS_INDEX_CACHE
+
+def corpus_search(query: str, top_k: int = 5) -> list[dict]:
+    """TF-IDF search returning [{doc_id, score, manifest_record}, ...]."""
+    idx = load_corpus_index()
+    if not idx: return []
+    manifest = load_corpus_manifest()
+    by_id = {r["doc_id"]: r for r in manifest}
+    toks = _corpus_tokenize(query)
+    scores = defaultdict(float)
+    for t in toks:
+        idf_w = idx.get("idf", {}).get(t, 0)
+        if t not in idx.get("inverted", {}): continue
+        for doc_id, w in idx["inverted"][t]:
+            scores[doc_id] += w * idf_w
+    ranked = sorted(scores.items(), key=lambda x: -x[1])[:top_k]
+    return [{"doc_id": d, "score": round(s, 4),
+             "manifest": by_id.get(d, {"doc_id": d, "path": "?", "title": d, "type": "?"})}
+            for d, s in ranked]
+
+def corpus_filter_by_context(intent) -> list[dict]:
+    """Return manifest records whose country/issue/COP overlap with intent."""
+    manifest = load_corpus_manifest()
+    out = []
+    for r in manifest:
+        if intent.countries:
+            if r.get("country") in intent.countries: out.append(r); continue
+            if r.get("type") == "national_policy" and r.get("country") in intent.countries:
+                out.append(r); continue
+        if intent.issues:
+            if any(i in (r.get("issues_addressed") or []) for i in intent.issues):
+                out.append(r); continue
+        if intent.cop and r.get("cop") == intent.cop:
+            out.append(r); continue
+    # dedupe
+    seen = set(); uniq = []
+    for r in out:
+        k = r["doc_id"]
+        if k not in seen: seen.add(k); uniq.append(r)
+    return uniq
+
+
+# ===========================================================================
 # Intent parsing (v2 - extended)
 # ===========================================================================
 
 # Trigger words by intent
 INTENT_TRIGGERS = {
+    "search":         ["원문", "본문", "결정문", "L-document", "L문서", "조문", "조항", "where does it say",
+                       "document says", "텍스트", "decision text", "policy document", "source"],
     "trend":          ["추이", "시계열", "흐름", "trajectory", "trend", "evolution", "over time", "변화 추이"],
     "coalition":      ["연합", "동맹", "비슷한 국가", "유사한 국가", "비슷", "coalition", "similar countries", "동조"],
     "gap":            ["translation gap", "국내국제", "국내 국제", "domestic international", "delta",
@@ -701,6 +779,36 @@ def _build_factoid(intent: QueryIntent, records: list[dict]) -> Response:
     )
 
 
+def _build_search(intent: QueryIntent, records: list[dict]) -> Response:
+    """Pure corpus-document search intent."""
+    hits = corpus_search(intent.raw_question, top_k=8)
+    if not hits:
+        return Response(
+            text="corpus에서 관련 문서를 찾지 못했습니다. (corpus index 미생성?)",
+            citations=[], viz_payload={"type":"empty"}, intent=intent,
+            matched_records=0, confidence=0.0,
+        )
+    lines = [f"**'{intent.raw_question}' 관련 corpus 문서 top-{len(hits)}**\n"]
+    for i, h in enumerate(hits, 1):
+        m = h["manifest"]
+        lines.append(f"{i}. **{m.get('short_title', m.get('title','?'))}** (score={h['score']:.2f})")
+        lines.append(f"   - type: {m.get('type','?')}{'  cop:' + m.get('cop') if m.get('cop') else ''}{'  country:' + m.get('country') if m.get('country') else ''}")
+        if m.get("official_url"):
+            lines.append(f"   - source: {m['official_url']}")
+        lines.append(f"   - path: `{m.get('path','?')}`")
+        if m.get("issues_addressed"):
+            lines.append(f"   - issues: {', '.join(m['issues_addressed'])}")
+    payload = {"type": "search_results", "items": [
+        {"title": h["manifest"].get("short_title"), "score": h["score"],
+         "path": h["manifest"].get("path"), "type": h["manifest"].get("type")}
+        for h in hits
+    ]}
+    return Response(
+        text="\n".join(lines), citations=[], viz_payload=payload,
+        intent=intent, matched_records=len(hits), confidence=0.80,
+    )
+
+
 def _build_empty(intent: QueryIntent) -> Response:
     txt = "데이터베이스에서 매칭되는 record를 찾지 못했습니다.\n"
     txt += "- 지원: 50개국 × 8이슈 (GGA-IND, GGA-MOI, NAPs, JT-ADAPT, L&D-OP, FINANCE-ADAPT, TRANS-FIN, TECH-TRANS) × 6 COP (COP25-COP30)\n"
@@ -747,6 +855,7 @@ _INTENT_DISPATCH = {
     "gap":            _build_gap,
     "recommendation": _build_recommendation,
     "factoid":        _build_factoid,
+    "search":         _build_search,
 }
 
 
@@ -754,13 +863,42 @@ def answer_question(question: str, k: int = 24, seed: int = 42) -> Response:
     intent = parse_intent(question)
     # Choose retrieval k by intent
     retrieval_k = {
-        "trend":      120,    # need many COPs
-        "coalition":  400,    # need all countries at this COP
+        "trend":      120,
+        "coalition":  400,
         "gap":        80,
     }.get(intent.type, k)
     records = retrieve(intent, k=retrieval_k)
     builder = _INTENT_DISPATCH.get(intent.type, _build_lookup)
     response = builder(intent, records)
+
+    # v2.1: auto-attach corpus references to ALL response types except 'search'
+    # (which already shows corpus). Attach top-3 corpus docs by combined
+    # (TF-IDF score) + (context overlap) ranking.
+    if intent.type != "search":
+        corpus_hits = corpus_search(question, top_k=10)
+        context_hits = corpus_filter_by_context(intent)
+        # Merge with simple union, preserving search score order
+        seen = set()
+        merged = []
+        for h in corpus_hits:
+            if h["doc_id"] not in seen:
+                seen.add(h["doc_id"]); merged.append(h["manifest"])
+        for r in context_hits:
+            if r["doc_id"] not in seen:
+                seen.add(r["doc_id"]); merged.append(r)
+        # Attach max 3 corpus references to viz_payload (UI uses this)
+        if merged:
+            response.viz_payload["corpus_references"] = [
+                {"doc_id": r["doc_id"], "title": r.get("short_title", r.get("title", "?")),
+                 "path": r.get("path"), "type": r.get("type"),
+                 "official_url": r.get("official_url")}
+                for r in merged[:3]
+            ]
+            # Append summary line to text
+            response.text += "\n\n📚 **관련 corpus 문서**:\n"
+            for r in merged[:3]:
+                response.text += f"  - {r.get('short_title', r.get('title','?'))}  (`{r.get('path','?')}`)\n"
+
     response.methodology = _make_methodology(intent, n_retrieved=len(records), seed=seed)
     return response
 
@@ -783,6 +921,8 @@ def _demo():
         "브라질의 translation gap 분석",
         "COP30 한국 외교 권고",
         "사우디 L&D-OP 정확한 점수는?",
+        "L.25E 결정문 본문 어디서 voluntary 어구 사용?",   # new: search intent
+        "FRLD 펀드 신설 결정문 원문",                      # new: search intent
     ]
     for q in demo_questions:
         print(f"\n{'='*72}\nQ: {q}\n{'='*72}")
@@ -798,6 +938,9 @@ def _demo():
 
 if __name__ == "__main__":
     import sys
+    if hasattr(sys.stdout, "reconfigure"):
+        try: sys.stdout.reconfigure(encoding="utf-8")
+        except Exception: pass
     if len(sys.argv) > 1 and sys.argv[1] == "--demo":
         _demo()
     elif len(sys.argv) > 1:

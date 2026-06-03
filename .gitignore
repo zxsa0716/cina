@@ -83,6 +83,8 @@ council_sessions/.council_memory.json
 *.zip
 !docs/**/*.pdf
 !deliverables/*.csv
+!data/corpus/**/*.csv         # v6 corpus quantitative — allow in repo
+!docs/web/data/corpus/**/*.csv
 
 # Large baseline data
 data/raw/round*/

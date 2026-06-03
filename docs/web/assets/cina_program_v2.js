@@ -94,8 +94,9 @@
     "COP30": "COP30", "cop30": "COP30", "벨렘": "COP30", "belem": "COP30",
   };
 
-  const ENGINE_VERSION = "v2.0.0";
+  const ENGINE_VERSION = "v2.1.0";
   const DATASET_VERSION_TARGET = "5.0.0";
+  const CORPUS_VERSION_TARGET = "6.0.0";
 
   // ================================================================
   // localStorage keys (BYO LLM)
@@ -167,10 +168,93 @@
   ];
 
   // ================================================================
-  // Intent parsing (7 types)
+  // Corpus loader (v6 — TF-IDF inverted index)
+  // ================================================================
+
+  let CORPUS_MANIFEST = null;
+  let CORPUS_INDEX = null;
+
+  async function loadCorpus() {
+    if (CORPUS_MANIFEST && CORPUS_INDEX) return { CORPUS_MANIFEST, CORPUS_INDEX };
+    const manifestCandidates = [
+      "data/corpus/manifest.jsonl", "./data/corpus/manifest.jsonl",
+      "../../data/corpus/manifest.jsonl",
+    ];
+    const indexCandidates = [
+      "data/corpus/search_index.json", "./data/corpus/search_index.json",
+      "../../data/corpus/search_index.json",
+    ];
+    for (const url of manifestCandidates) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) continue;
+        const text = await res.text();
+        CORPUS_MANIFEST = text.trim().split("\n").filter(l => l.trim()).map(l => JSON.parse(l));
+        console.log(`[CINA v2.1] Loaded ${CORPUS_MANIFEST.length} corpus docs from ${url}`);
+        break;
+      } catch (e) { /* try next */ }
+    }
+    for (const url of indexCandidates) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) continue;
+        CORPUS_INDEX = await res.json();
+        console.log(`[CINA v2.1] Loaded corpus index (${CORPUS_INDEX.n_terms} terms) from ${url}`);
+        break;
+      } catch (e) { /* try next */ }
+    }
+    if (!CORPUS_MANIFEST) { CORPUS_MANIFEST = []; console.warn("[CINA v2.1] corpus manifest unavailable"); }
+    if (!CORPUS_INDEX) { CORPUS_INDEX = { idf: {}, inverted: {} }; }
+    return { CORPUS_MANIFEST, CORPUS_INDEX };
+  }
+
+  const STOP_TOKENS = new Set([
+    "the","a","an","and","or","but","is","are","of","in","on","at","to","for","with","by",
+    "as","that","this","it","its","not","no","from","into",
+    "본","해","이","그","저","것","및","또","수","의","에","에서","으로","로","를","을","는","가",
+    "있다","없다","한다","된다","것이다","위해","대한","대해","해서","하는","된","된다고","이는",
+  ]);
+
+  function corpusTokenize(text) {
+    if (!text) return [];
+    const raw = text.toLowerCase().match(/[가-힣]+|[A-Za-z0-9_\-\.&]+/g) || [];
+    return raw.filter(t => t.length > 1 && !STOP_TOKENS.has(t));
+  }
+
+  function corpusSearch(query, topK = 8) {
+    if (!CORPUS_INDEX || !CORPUS_MANIFEST) return [];
+    const byId = {}; CORPUS_MANIFEST.forEach(r => byId[r.doc_id] = r);
+    const toks = corpusTokenize(query);
+    const scores = {};
+    toks.forEach(t => {
+      const idf = (CORPUS_INDEX.idf || {})[t] || 0;
+      const entries = (CORPUS_INDEX.inverted || {})[t] || [];
+      entries.forEach(([docId, w]) => { scores[docId] = (scores[docId] || 0) + w * idf; });
+    });
+    return Object.entries(scores).sort((a,b) => b[1]-a[1]).slice(0, topK)
+      .map(([d, s]) => ({ doc_id: d, score: +s.toFixed(4),
+                          manifest: byId[d] || { doc_id: d, title: d, path: "?", type: "?" } }));
+  }
+
+  function corpusFilterByContext(intent) {
+    if (!CORPUS_MANIFEST) return [];
+    const out = [], seen = new Set();
+    CORPUS_MANIFEST.forEach(r => {
+      let matched = false;
+      if (intent.countries.length && intent.countries.includes(r.country)) matched = true;
+      if (intent.issues.length && (r.issues_addressed || []).some(i => intent.issues.includes(i))) matched = true;
+      if (intent.cop && r.cop === intent.cop) matched = true;
+      if (matched && !seen.has(r.doc_id)) { seen.add(r.doc_id); out.push(r); }
+    });
+    return out;
+  }
+
+  // ================================================================
+  // Intent parsing (8 types — added 'search')
   // ================================================================
 
   const INTENT_TRIGGERS = {
+    "search":         [/원문|본문|결정문|L-document|L문서|조문|조항|where does it say|document says|텍스트|decision text|policy document|source/i],
     "trend":          [/추이|시계열|흐름|trajectory|trend|evolution|over time|변화 추이/i],
     "coalition":      [/연합|동맹|비슷한 국가|유사한 국가|비슷|coalition|similar countries|동조/i],
     "gap":            [/translation gap|국내국제|국내 국제|domestic international|delta|이중정체성|이중 정체성|괴리|이행격차|이행 격차|Δ/i],
@@ -605,6 +689,28 @@
     return { html, citations: [recordToCitation(r)], confidence: r.confidence || 0.85, n: records.length };
   }
 
+  function buildSearch(intent, records) {
+    const hits = corpusSearch(intent.raw, 8);
+    if (!hits.length) {
+      return { html: `<div class="cina-card"><div class="cina-card-h">corpus 검색 결과 없음</div>
+        <div>corpus index가 로드되지 않았거나 매칭되는 문서가 없습니다.</div></div>`,
+        citations: [], confidence: 0, n: 0 };
+    }
+    let html = `<div class="cina-card"><div class="cina-card-h">'${escapeHtml(intent.raw)}' — corpus 문서 top-${hits.length}</div>
+      <table class="cina-table"><thead><tr><th>#</th><th>제목</th><th>type</th><th>score</th><th>source</th></tr></thead><tbody>`;
+    hits.forEach((h, i) => {
+      const m = h.manifest;
+      const link = m.official_url ? `<a href="${escapeHtml(m.official_url)}" target="_blank">원문 ↗</a>` : "-";
+      html += `<tr><td>${i+1}</td><td><b>${escapeHtml(m.short_title || m.title || "?")}</b><br><code style="font-size:11px">${escapeHtml(m.path || '?')}</code></td>
+        <td>${escapeHtml(m.type || '?')}${m.cop ? '<br><small>'+escapeHtml(m.cop)+'</small>' : ''}</td>
+        <td>${h.score.toFixed(3)}</td>
+        <td>${link}</td></tr>`;
+    });
+    html += `</tbody></table></div>`;
+    return { html, citations: [], confidence: 0.80, n: hits.length,
+             corpus_hits: hits };
+  }
+
   function buildEmpty(intent) {
     return {
       html: `<div class="cina-card"><div class="cina-card-h">매칭 record 없음</div>
@@ -742,10 +848,13 @@ ${histStr}
               intent.type === "gap" ? 80 : 24;
     const retrieved = retrieve(records, intent, k);
 
+    // ensure corpus is loaded for auto-attach + search intent
+    await loadCorpus();
+
     const builders = {
       lookup: buildLookup, compare: buildCompare, trend: buildTrend,
       coalition: buildCoalition, gap: buildGap, recommendation: buildRecommendation,
-      factoid: buildFactoid, unknown: buildLookup,
+      factoid: buildFactoid, search: buildSearch, unknown: buildLookup,
     };
     const builder = builders[intent.type] || buildLookup;
     const built = await Promise.resolve(builder(intent, retrieved));
@@ -766,6 +875,19 @@ ${histStr}
     }
 
     answerHTML += `<div class="cina-citations" data-count="${built.citations.length}">${renderCitations(built.citations)}</div>`;
+
+    // v2.1: Auto-attach corpus references to all non-'search' intents
+    if (intent.type !== "search") {
+      const ctxHits = corpusFilterByContext(intent);
+      const queryHits = corpusSearch(question, 10).map(h => h.manifest);
+      const seen = new Set(), merged = [];
+      queryHits.forEach(r => { if (!seen.has(r.doc_id)) { seen.add(r.doc_id); merged.push(r); } });
+      ctxHits.forEach(r => { if (!seen.has(r.doc_id)) { seen.add(r.doc_id); merged.push(r); } });
+      if (merged.length) {
+        answerHTML += renderCorpusRefs(merged.slice(0, 3));
+      }
+    }
+
     answerHTML += methodologyFooter(intent, built.n, llmText ? "llm" : "rule", provider);
 
     pushHistory({
@@ -780,6 +902,25 @@ ${histStr}
       source: llmText ? `LLM (${provider})` : "rule-based",
       raw_llm_text: llmText,
     };
+  }
+
+  function renderCorpusRefs(refs) {
+    if (!refs || !refs.length) return "";
+    let html = `<div class="cina-corpus-refs"><div class="cina-corpus-h">📚 관련 corpus 문서 ${refs.length}건</div>`;
+    refs.forEach(r => {
+      const link = r.official_url
+        ? `<a href="${escapeHtml(r.official_url)}" target="_blank">원문 ↗</a>`
+        : (r.path ? `<a href="${escapeHtml(r.path)}" target="_blank">로컬 ↗</a>` : "");
+      html += `<div class="cina-corpus-row">
+        <span class="cina-corpus-type">${escapeHtml(r.type || '?')}</span>
+        <span class="cina-corpus-title"><b>${escapeHtml(r.short_title || r.title || r.doc_id)}</b>
+        ${r.cop ? '<span class="cina-corpus-tag">'+escapeHtml(r.cop)+'</span>' : ''}
+        ${r.country ? '<span class="cina-corpus-tag">'+escapeHtml(r.country)+'</span>' : ''}</span>
+        <span class="cina-corpus-link">${link}</span>
+      </div>`;
+    });
+    html += `</div>`;
+    return html;
   }
 
   function renderCitations(citations) {

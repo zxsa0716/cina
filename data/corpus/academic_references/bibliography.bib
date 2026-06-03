@@ -1,0 +1,294 @@
+% ===========================================================================
+% CINA Academic Bibliography — v6 corpus
+% Compiled by: Heedo Choi (Kookmin University, 2026)
+% ===========================================================================
+% This is the unified bibliography for all CINA papers, briefings, and
+% the corpus reference base. Each entry is referenced by at least one
+% v5 stance record, paper, or methodology document.
+% ===========================================================================
+
+% --------------------- IR theory & Climate diplomacy ----------------------
+
+@article{keohane2011,
+  author = {Keohane, Robert O. and Victor, David G.},
+  title = {The regime complex for climate change},
+  journal = {Perspectives on Politics},
+  volume = {9}, number = {1}, pages = {7--23}, year = {2011},
+  doi = {10.1017/S1537592710004068},
+  abstract = {Argues that climate governance is not a single regime but a loosely
+  coupled regime complex. Foundational for CINA's per-(country, issue) stance
+  modelling and the horizontal-cleavage hypothesis tested in Choi 2026 §4.2.}
+}
+
+@article{putnam1988,
+  author = {Putnam, Robert D.},
+  title = {Diplomacy and domestic politics: the logic of two-level games},
+  journal = {International Organization},
+  volume = {42}, number = {3}, pages = {427--460}, year = {1988},
+  doi = {10.1017/S0020818300027697},
+  abstract = {Negotiators bargain simultaneously at the international table
+  (Level I) and the domestic ratification arena (Level II). CINA uses this to
+  motivate the Translation Gap Δ metric (Choi 2026 §4.4).}
+}
+
+@article{tallberg2010,
+  author = {Tallberg, Jonas},
+  title = {The power of the chair: formal leadership in international cooperation},
+  journal = {International Studies Quarterly},
+  volume = {54}, number = {1}, pages = {241--265}, year = {2010},
+  doi = {10.1111/j.1468-2478.2009.00583.x},
+  abstract = {Four chairmanship channels: formula control, agenda-shaping,
+  brokerage, information. CINA operationalises these as procedural-authority
+  Boolean fields (is_chair_role, is_pen_holder, drafts_text_for_issue) and the
+  R-GAT emergent attention discovery (Choi 2026 §4.2) corroborates the
+  chair-channel hypothesis.}
+}
+
+@article{haas1992,
+  author = {Haas, Peter M.},
+  title = {Introduction: epistemic communities and international policy coordination},
+  journal = {International Organization},
+  volume = {46}, number = {1}, pages = {1--35}, year = {1992},
+  doi = {10.1017/S0020818300001442},
+  abstract = {Technically complex regimes admit networks of credentialed experts
+  whose causal beliefs guide policy. CINA uses this for the epistemic_divergence
+  framework analysing the COP30 Belém "Rube Goldberg" gap.}
+}
+
+@article{finnemore1998,
+  author = {Finnemore, Martha and Sikkink, Kathryn},
+  title = {International norm dynamics and political change},
+  journal = {International Organization},
+  volume = {52}, number = {4}, pages = {887--917}, year = {1998},
+  doi = {10.1162/002081898550789},
+  abstract = {Norm cascade theory: norm entrepreneur → tipping point →
+  internalization. Used in CINA to position AOSIS's 30-year L&D campaign
+  (1991 Vanuatu insurance pool → 2022 COP27 Fund decision).}
+}
+
+@article{steinberg2002,
+  author = {Steinberg, Richard H.},
+  title = {In the shadow of law or power? Consensus-based bargaining and outcomes in the {GATT/WTO}},
+  journal = {International Organization},
+  volume = {56}, number = {2}, pages = {339--374}, year = {2002},
+  doi = {10.1162/002081802320005512},
+  abstract = {Consensus-shaping bargaining model. CINA uses this in §4.5 to
+  diagnose the pre-crystallised L.25 advance vs L.25E final identity.}
+}
+
+% --------------------- Policy instrument calibration ----------------------
+
+@book{hood1983,
+  author = {Hood, Christopher},
+  title = {The Tools of Government},
+  publisher = {Macmillan}, address = {London}, year = {1983},
+  abstract = {NATO 4-axis: Nodality (information), Authority (legal/regulatory),
+  Treasure (financial), Organization (institutional). CINA operationalises each
+  axis as a per-record continuous score nato_4axis.{n,a,t,o} ∈ [0,1].}
+}
+
+@book{howlett2019,
+  author = {Howlett, Michael},
+  title = {Designing Public Policies: Principles and Instruments},
+  edition = {2nd},
+  publisher = {Routledge}, year = {2019},
+  abstract = {Instrument-calibration theory extending Hood's NATO framework
+  with multi-bundle policy mixes. CINA's translation_gap_delta metric is
+  positioned at the intersection of Howlett's calibration and Putnam's two-level games.}
+}
+
+@misc{capano2025,
+  author = {Capano, Giliberto and Howlett, Michael and others},
+  title = {Applying {Hood}'s NATO framework to quantitative text analysis in policy studies:
+           Theory, methods, and empirical applications},
+  year = {2025},
+  note = {Working paper / preprint, ResearchGate 400309939},
+  abstract = {Recent methodological synthesis showing how NATO 4-axis can be
+  applied to quantitative text analysis. CINA inherits this conceptual frame
+  while extending it to LLM-based extraction.}
+}
+
+% --------------------- Framing theory ----------------------
+
+@article{snow1988,
+  author = {Snow, David A. and Benford, Robert D.},
+  title = {Ideology, frame resonance, and participant mobilization},
+  journal = {International Social Movement Research},
+  volume = {1}, pages = {197--217}, year = {1988},
+  abstract = {Frame typology theory. CINA implements 5-class frame distribution
+  per record: scientific, justice, sovereignty, security, development.}
+}
+
+% --------------------- Climate diplomacy specific ----------------------
+
+@article{castro2025nature,
+  author = {Castro, P. and Kristof, V. and Kammerer, M. and Cogne, T.},
+  title = {Participation, cooperation and conflict in {UN} climate negotiations},
+  journal = {Scientific Data}, year = {2025},
+  doi = {10.1038/s41597-025-06262-4},
+  abstract = {COP1-COP29 ENB-coded cooperation/conflict counts dataset. Cited
+  by CINA as primary baseline; CINA complements with policy-instrument and
+  framing signals not available in this aggregation.}
+}
+
+@article{castro2025envsoc,
+  author = {Castro, P. and others},
+  title = {Dynamic networks of negotiation for international climate change cooperation},
+  journal = {Environmental Sociology}, year = {2025},
+  doi = {10.1080/23251042.2025.2507287},
+  abstract = {Applies dynamic network analysis to the Castro et al. dataset.
+  Companion piece to castro2025nature.}
+}
+
+@article{hochstetler2014,
+  author = {Hochstetler, Kathryn and Milkoreit, Manjana},
+  title = {Emerging powers in the climate negotiations: shifting identity conceptions},
+  journal = {Politics \& Policy}, year = {2014},
+  abstract = {Identity conceptions of BASIC, IBSA, BRICS countries in climate
+  negotiations. CINA uses this in Korea EIG dual identity diagnosis (§5).}
+}
+
+@misc{giz2025,
+  author = {{GIZ Data Lab}},
+  title = {{NegotiateCOP}: an {AI} prototype for equal climate negotiations},
+  year = {2025},
+  howpublished = {\url{https://negotiatecop.org/about}},
+  note = {German government RAG interface for UNFCCC documents},
+  abstract = {Retrieval-augmented document interface. CINA's main contemporary
+  comparator; complements (does not duplicate) NegotiateCOP by adding policy-
+  instrument, frame, and procedural-authority signals.}
+}
+
+@inproceedings{zhang2025,
+  author = {Zhang, T. and others},
+  title = {{AI} for Global Climate Cooperation: Modeling Global Climate Negotiations,
+           Agreements, and Long-Term Cooperation in {RICE-N}},
+  booktitle = {Proceedings of Machine Learning Research (PMLR)},
+  volume = {267}, year = {2025},
+  abstract = {Multi-agent RL simulation of climate negotiations. Game-theoretic
+  approach without document grounding. CINA complements by providing the
+  textual grounding RICE-N lacks.}
+}
+
+% --------------------- Graph Neural Networks (CINA Stage 2) ----------------------
+
+@inproceedings{velickovic2018,
+  author = {Veli\v{c}kovi\'{c}, Petar and Cucurull, Guillem and Casanova, Arantxa and
+            Romero, Adriana and Li\`{o}, Pietro and Bengio, Yoshua},
+  title = {Graph attention networks},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year = {2018},
+  abstract = {Attention mechanism for graphs. CINA Stage 2 R-GAT extends GAT
+  with per-relation attention heads (Schlichtkrull 2018 style).}
+}
+
+@inproceedings{schlichtkrull2018,
+  author = {Schlichtkrull, Michael and Kipf, Thomas N. and Bloem, Peter and
+            van den Berg, Rianne and Titov, Ivan and Welling, Max},
+  title = {Modeling relational data with graph convolutional networks},
+  booktitle = {Extended Semantic Web Conference (ESWC)}, year = {2018},
+  abstract = {Relational GCN for heterogeneous graphs. CINA uses this for the
+  4-relation heterogeneous graph (has_stance, member_of, similar_to, co_chairs).}
+}
+
+@article{traag2019,
+  author = {Traag, V. A. and Waltman, L. and van Eck, N. J.},
+  title = {From {Louvain} to {Leiden}: guaranteeing well-connected communities},
+  journal = {Scientific Reports},
+  volume = {9}, pages = {5233}, year = {2019},
+  doi = {10.1038/s41598-019-41695-z},
+  abstract = {Improved community detection algorithm. CINA Stage 2 uses Leiden
+  for the C0/C1 horizontal cleavage detection (§4.2).}
+}
+
+% --------------------- Statistical methods ----------------------
+
+@incollection{platt1999,
+  author = {Platt, John},
+  title = {Probabilistic outputs for support vector machines and comparisons to
+           regularized likelihood methods},
+  booktitle = {Advances in Large Margin Classifiers}, year = {1999},
+  abstract = {Platt scaling for probabilistic calibration. CINA uses this in
+  Stage 1 to calibrate raw LLM stance scores against a hand-coded reference set.}
+}
+
+@article{abadie2010,
+  author = {Abadie, Alberto and Diamond, Alexis and Hainmueller, Jens},
+  title = {Synthetic control methods for comparative case studies},
+  journal = {Journal of the American Statistical Association},
+  volume = {105}, number = {490}, pages = {493--505}, year = {2010},
+  abstract = {Synthetic control identification strategy. CINA pre-registered
+  for COP25-COP31 longitudinal Δ generalisation (Choi 2026 §7).}
+}
+
+@article{vanderweele2017,
+  author = {VanderWeele, Tyler J. and Ding, Peng},
+  title = {Sensitivity analysis in observational research: introducing the {E-value}},
+  journal = {Annals of Internal Medicine},
+  volume = {167}, number = {4}, pages = {268--274}, year = {2017},
+  abstract = {E-value sensitivity analysis for unmeasured confounding.
+  Recommended for longitudinal Δ analysis.}
+}
+
+% --------------------- Additional supporting works ----------------------
+
+@article{tollison1979,
+  author = {Tollison, Robert D. and Willett, Thomas D.},
+  title = {An economic theory of mutually advantageous issue linkages},
+  journal = {International Organization},
+  volume = {33}, number = {4}, pages = {425--449}, year = {1979},
+  abstract = {Issue-linkage theory. CINA uses this for cross-issue Apriori
+  motif mining in Stage 2.}
+}
+
+@article{sebenius1983,
+  author = {Sebenius, James K.},
+  title = {Negotiation arithmetic: adding and subtracting issues and parties},
+  journal = {International Organization},
+  volume = {37}, number = {2}, pages = {281--316}, year = {1983},
+  abstract = {Negotiation arithmetic for issue bundling. Complement to Tollison
+  & Willett.}
+}
+
+@techreport{goh2007,
+  author = {Goh, Evelyn},
+  title = {Great powers and {Southeast} {Asian} regional security strategies:
+           omni-enmeshment, balancing, and hierarchical order},
+  institution = {RSIS Working Paper}, year = {2007},
+  abstract = {Informal pre-cooking patterns in multilateral diplomacy. CINA
+  uses this for the L.25 advance vs final analysis (§4.5).}
+}
+
+@misc{iisd2025enb,
+  author = {{IISD Earth Negotiations Bulletin}},
+  title = {{Belém} Climate Change Conference Summary},
+  year = {2025},
+  howpublished = {Vol.\ 12, No.\ 888},
+  abstract = {Primary source for COP30 daily negotiation reports. CINA uses
+  ENB final summary as ground truth for the contested-issue identification
+  task (Choi 2026 §4.3, §5.3).}
+}
+
+@misc{unfccc2025_l25e,
+  author = {{UNFCCC}},
+  title = {{FCCC/PA/CMA/2025/L.25E} --- {Belém} Adaptation Indicators decision},
+  year = {2025},
+  note = {Adopted at COP30 plenary, 21 November 2025}
+}
+
+@misc{unfccc2025_l24,
+  author = {{UNFCCC}},
+  title = {{FCCC/PA/CMA/2025/L.24} --- Tripling adaptation finance decision},
+  year = {2025},
+  note = {Adopted at COP30 plenary, 21 November 2025}
+}
+
+@article{vaccari2025,
+  author = {Vaccari, S. and others},
+  title = {Tracing inclusivity at {UNFCCC} conferences through side events and
+           interest group dynamics},
+  journal = {Nature Climate Change}, year = {2025},
+  doi = {10.1038/s41558-025-02254-9},
+  abstract = {Side-event-based inclusivity analysis of UNFCCC. Complementary
+  to CINA's plenary-text-based stance extraction.}
+}

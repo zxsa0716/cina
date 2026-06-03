@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CINA Corpus Browser v6 — 21개 문서 탐색</title>
+  <meta name="description" content="UNFCCC L-documents, 국가 정책, 협상 그룹 statements, 학술 reference, 정량 데이터 21개 문서를 카테고리별 + 검색 가능한 corpus browser.">
+  <style>
+    :root {
+      --bg: #f8fafc; --fg: #0f172a; --muted: #64748b;
+      --primary: #0ea5e9; --primary-dark: #0369a1;
+      --accent: #8b5cf6; --warm: #f59e0b;
+      --border: #e2e8f0; --card: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Noto Sans KR", sans-serif;
+           background: var(--bg); color: var(--fg); line-height: 1.5; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
+    header { background: linear-gradient(135deg, var(--warm), var(--primary));
+             color: white; padding: 28px 16px; border-radius: 0 0 24px 24px; }
+    header h1 { margin: 0 0 6px 0; font-size: 30px; }
+    header .tagline { font-size: 14px; opacity: 0.95; }
+    header .badges { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+    header .badge { background: rgba(255,255,255,0.18); padding: 4px 10px; border-radius: 12px; font-size: 12px; }
+
+    .toolbar { background: var(--card); padding: 12px; border-radius: 12px; margin: 16px 0;
+               display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+               box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .toolbar input { flex: 1; min-width: 280px; padding: 10px; border: 1px solid var(--border);
+                     border-radius: 8px; font-size: 14px; }
+    .toolbar select { padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; }
+    .btn { background: var(--primary); color: white; border: 0; border-radius: 8px;
+           padding: 8px 16px; font-size: 14px; cursor: pointer; }
+    .btn:hover { background: var(--primary-dark); }
+    .btn.secondary { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+
+    .stats { font-size: 13px; color: var(--muted); margin: 8px 0; }
+    .stats b { color: var(--fg); }
+
+    .doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                gap: 12px; margin-top: 16px; }
+    .doc-card { background: var(--card); border-radius: 10px; padding: 14px;
+                border-left: 4px solid var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                transition: transform .15s; }
+    .doc-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .doc-card.type-UNFCCC { border-left-color: #0ea5e9; }
+    .doc-card.type-national { border-left-color: #10b981; }
+    .doc-card.type-coalition { border-left-color: #f59e0b; }
+    .doc-card.type-academic { border-left-color: #a78bfa; }
+    .doc-card.type-quantitative { border-left-color: #ef4444; }
+
+    .doc-card .type-pill { display: inline-block; padding: 2px 8px; border-radius: 12px;
+                           font-size: 10px; font-weight: 600; background: #e0f2fe; color: #075985;
+                           margin-bottom: 6px; text-transform: uppercase; }
+    .doc-card h3 { margin: 4px 0 6px 0; font-size: 16px; line-height: 1.3; }
+    .doc-card .meta { font-size: 11px; color: var(--muted); margin-bottom: 6px; display: flex;
+                      flex-wrap: wrap; gap: 6px; }
+    .doc-card .meta .tag { background: #f1f5f9; padding: 1px 7px; border-radius: 10px; color: var(--fg); }
+    .doc-card .links a { font-size: 12px; color: var(--primary-dark); text-decoration: none; margin-right: 8px; }
+    .doc-card .links a:hover { text-decoration: underline; }
+    .doc-card .issues { font-size: 11px; color: var(--muted); margin-top: 6px; }
+    .doc-card .sha { font-size: 10px; color: #94a3b8; font-family: monospace; margin-top: 4px; }
+    .doc-card .score { font-size: 11px; color: var(--warm); font-weight: 600; }
+
+    .section-divider { border-bottom: 2px solid var(--border); margin: 24px 0 12px 0;
+                       padding-bottom: 6px; font-size: 16px; font-weight: 600; color: var(--primary-dark); }
+
+    .empty { text-align: center; color: var(--muted); padding: 40px; }
+
+    nav.top { display: flex; gap: 12px; padding: 8px 16px; background: rgba(255,255,255,0.18); }
+    nav.top a { color: white; text-decoration: none; font-size: 13px; }
+    nav.top a:hover { text-decoration: underline; }
+
+    footer { margin-top: 32px; padding: 16px; text-align: center; color: var(--muted); font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <nav class="top">
+    <a href="index.html">← 메인</a>
+    <a href="cina_program_v2.html">⚡ Ask CINA Program v2</a>
+    <a href="sitemap.html">🧭 Sitemap</a>
+    <a href="https://github.com/zxsa0716/cina" target="_blank">GitHub →</a>
+  </nav>
+  <div class="container">
+    <h1>📚 CINA Corpus Browser <span style="opacity:0.75;font-size:0.7em">v6</span></h1>
+    <div class="tagline">UNFCCC 결정문 · 국가 정책 · 협상 그룹 statements · 학술 reference · 정량 데이터 통합 corpus</div>
+    <div class="badges">
+      <span class="badge">21 documents</span>
+      <span class="badge">5 categories</span>
+      <span class="badge">TF-IDF index (3,417 terms)</span>
+      <span class="badge">SHA-256 verified</span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="🔍 검색 (예: voluntary indicators, L&D fund, Brazil chair, AOSIS)">
+    <select id="filter-type">
+      <option value="">모든 type</option>
+      <option value="COP_decision_text">UNFCCC L-document</option>
+      <option value="treaty_text">조약 본문</option>
+      <option value="national_policy">국가 정책</option>
+      <option value="regional_policy">지역 정책</option>
+      <option value="country_brief_collection">국가 brief</option>
+      <option value="coalition_statement_collection">협상 그룹 statement</option>
+      <option value="bibtex">학술 BibTeX</option>
+      <option value="quantitative_csv">정량 CSV</option>
+    </select>
+    <select id="filter-cop">
+      <option value="">모든 COP</option>
+      <option value="COP25">COP25</option>
+      <option value="COP26">COP26</option>
+      <option value="COP27">COP27</option>
+      <option value="COP28">COP28</option>
+      <option value="COP29">COP29</option>
+      <option value="COP30">COP30</option>
+    </select>
+    <button class="btn" id="clear">🗑 Clear</button>
+  </div>
+
+  <div class="stats" id="stats">로딩 중...</div>
+
+  <div id="results"></div>
+
+</div>
+
+<footer>
+  <p>📦 <a href="https://github.com/zxsa0716/cina">GitHub</a> · 📜 <a href="https://github.com/zxsa0716/cina/blob/main/data/corpus/README.md">corpus README</a></p>
+  <p>© 2026 Heedo Choi · Kookmin University Department of Climate Technology Convergence</p>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const results = $("#results");
+  const stats = $("#stats");
+  let MANIFEST = [];
+  let INDEX = null;
+
+  const STOP = new Set(["the","a","an","and","or","but","is","are","of","in","on","at","to","for","with","by",
+    "as","that","this","it","its","not","no","from","into","본","해","이","그","저","것","및","또","수","의","에",
+    "에서","으로","로","를","을","는","가","있다","없다","한다","된다","것이다","위해","대한","대해","해서","하는","된"]);
+
+  function tokenize(s) {
+    if (!s) return [];
+    return (s.toLowerCase().match(/[가-힣]+|[A-Za-z0-9_\-\.&]+/g) || [])
+      .filter(t => t.length > 1 && !STOP.has(t));
+  }
+
+  function search(query, top = 50) {
+    if (!INDEX) return MANIFEST.map(r => ({ doc: r, score: 0 }));
+    if (!query.trim()) return MANIFEST.map(r => ({ doc: r, score: 0 }));
+    const toks = tokenize(query);
+    const scores = {};
+    toks.forEach(t => {
+      const idf = (INDEX.idf || {})[t] || 0;
+      const entries = (INDEX.inverted || {})[t] || [];
+      entries.forEach(([id, w]) => { scores[id] = (scores[id] || 0) + w * idf; });
+    });
+    const byId = {}; MANIFEST.forEach(r => byId[r.doc_id] = r);
+    return Object.entries(scores).sort((a,b) => b[1]-a[1])
+      .slice(0, top)
+      .map(([id, s]) => ({ doc: byId[id], score: +s.toFixed(3) }))
+      .filter(x => x.doc);
+  }
+
+  function classifyType(t) {
+    if (!t) return "other";
+    if (t.includes("UNFCCC") || t.includes("decision") || t.includes("treaty")) return "UNFCCC";
+    if (t.includes("national") || t.includes("regional") || t.includes("country")) return "national";
+    if (t.includes("coalition")) return "coalition";
+    if (t.includes("bibtex") || t === "academic") return "academic";
+    if (t.includes("csv") || t === "quantitative_csv") return "quantitative";
+    return "other";
+  }
+
+  function renderCards(items) {
+    if (!items.length) { results.innerHTML = `<div class="empty">매칭 문서 없음</div>`; return; }
+    const groups = {};
+    items.forEach(({doc, score}) => {
+      const c = doc.category_dir || "other";
+      groups[c] = groups[c] || [];
+      groups[c].push({doc, score});
+    });
+    let html = "";
+    const groupOrder = ["unfccc_decisions","national_policies","coalition_statements","academic_references","quantitative","other"];
+    const groupLabels = {
+      "unfccc_decisions": "📘 UNFCCC 결정문 + 조약",
+      "national_policies": "🏛 국가 정책 문서",
+      "coalition_statements": "🤝 협상 그룹 statements",
+      "academic_references": "📚 학술 reference",
+      "quantitative": "📊 정량 CSV",
+      "other": "❔ 기타",
+    };
+    groupOrder.forEach(g => {
+      if (!groups[g]) return;
+      html += `<div class="section-divider">${groupLabels[g]} <span style="font-weight:400;color:#64748b">(${groups[g].length}건)</span></div>`;
+      html += `<div class="doc-grid">`;
+      groups[g].forEach(({doc, score}) => {
+        const cls = "type-" + classifyType(doc.type);
+        const issues = (doc.issues_addressed || []).slice(0, 4).map(i => `<span class="tag">${i}</span>`).join(" ");
+        const cop = doc.cop ? `<span class="tag">${doc.cop}</span>` : "";
+        const country = doc.country ? `<span class="tag">${doc.country}</span>` : "";
+        const lang = `<span class="tag">${doc.language || 'en'}</span>`;
+        const link = doc.official_url
+          ? `<a href="${doc.official_url}" target="_blank">원문 ↗</a>`
+          : "";
+        const localLink = `<a href="${doc.path}" target="_blank">로컬 ↗</a>`;
+        html += `<div class="doc-card ${cls}">
+          <span class="type-pill">${doc.type || '?'}</span>
+          ${score > 0 ? `<span class="score" style="float:right">score ${score}</span>` : ''}
+          <h3>${doc.short_title || doc.title || doc.doc_id}</h3>
+          <div class="meta">${cop}${country}${lang}<span class="tag">${(doc.size_bytes/1024).toFixed(1)} KB</span></div>
+          ${issues ? `<div class="issues"><b>이슈</b>: ${issues}</div>` : ''}
+          <div class="links" style="margin-top:6px">${link}${localLink}</div>
+          <div class="sha">sha256: ${(doc.sha256 || '').slice(0,16)}...</div>
+        </div>`;
+      });
+      html += `</div>`;
+    });
+    results.innerHTML = html;
+  }
+
+  function apply() {
+    const q = $("#search").value;
+    const typeF = $("#filter-type").value;
+    const copF = $("#filter-cop").value;
+    let items = search(q, 200);
+    if (typeF) items = items.filter(x => x.doc.type === typeF);
+    if (copF) items = items.filter(x => x.doc.cop === copF);
+    stats.innerHTML = `📊 ${items.length} / ${MANIFEST.length} 문서 · 총 ${MANIFEST.reduce((a,r)=>a+(r.size_bytes||0),0)/1024 | 0} KB`;
+    renderCards(items);
+  }
+
+  $("#search").addEventListener("input", apply);
+  $("#filter-type").addEventListener("change", apply);
+  $("#filter-cop").addEventListener("change", apply);
+  $("#clear").addEventListener("click", () => {
+    $("#search").value = ""; $("#filter-type").value = ""; $("#filter-cop").value = ""; apply();
+  });
+
+  // init
+  Promise.all([
+    fetch("data/corpus/manifest.jsonl").then(r => r.text()).then(t =>
+      t.trim().split("\n").filter(l => l.trim()).map(l => JSON.parse(l))),
+    fetch("data/corpus/search_index.json").then(r => r.json()),
+  ]).then(([m, idx]) => {
+    MANIFEST = m; INDEX = idx;
+    console.log(`[corpus_browser] ${m.length} docs, ${idx.n_terms} index terms`);
+    apply();
+  }).catch(e => {
+    console.error(e);
+    results.innerHTML = `<div class="empty">⚠️ corpus 데이터 로딩 실패: ${e.message}</div>`;
+  });
+})();
+</script>
+
+</body>
+</html>
