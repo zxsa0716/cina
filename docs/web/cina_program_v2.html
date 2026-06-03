@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask CINA v2 — 학술 등급 기후 협상 Q&A 프로그램</title>
+  <meta name="description" content="CINA v5 dataset (50국 × 8이슈 × 6 COP = 2,400 records) 기반 학술 등급 Q&A. 7개 intent, top-k retrieval, 95% CI, NATO 4축 visual, multi-turn LLM memory, 인용 export.">
+  <link rel="icon" href="favicon.png" type="image/png">
+
+  <style>
+    :root {
+      --bg: #f8fafc; --fg: #0f172a; --muted: #64748b;
+      --primary: #0ea5e9; --primary-dark: #0369a1;
+      --accent: #8b5cf6; --success: #10b981; --warn: #f59e0b; --danger: #ef4444;
+      --border: #e2e8f0; --card: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Noto Sans KR", sans-serif;
+           background: var(--bg); color: var(--fg); line-height: 1.5; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
+
+    header { background: linear-gradient(135deg, var(--primary), var(--accent));
+             color: white; padding: 24px 16px; border-radius: 0 0 24px 24px; }
+    header h1 { margin: 0 0 4px 0; font-size: 28px; }
+    header .tagline { opacity: 0.95; font-size: 14px; }
+    header .badges { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+    header .badge { background: rgba(255,255,255,0.18); padding: 4px 10px; border-radius: 12px; font-size: 12px; }
+
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+                background: var(--card); padding: 12px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                margin-bottom: 12px; }
+    .controls label { font-size: 13px; color: var(--muted); }
+    .btn { background: var(--primary); color: white; border: 0; border-radius: 8px;
+           padding: 8px 14px; font-size: 14px; cursor: pointer; transition: background .15s; }
+    .btn:hover { background: var(--primary-dark); }
+    .btn.secondary { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+    .btn.danger { background: var(--danger); }
+
+    .mode-toggle { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .mode-toggle button { background: white; border: 0; padding: 6px 14px; cursor: pointer; font-size: 13px; }
+    .mode-toggle button.active { background: var(--primary); color: white; }
+
+    .status-pill { font-size: 12px; padding: 4px 10px; border-radius: 12px; background: #e0e7ff; color: #3730a3; }
+    .status-pill.ok { background: #d1fae5; color: #065f46; }
+    .status-pill.warn { background: #fef3c7; color: #92400e; }
+
+    .input-area { display: flex; gap: 6px; background: var(--card); padding: 10px; border-radius: 12px;
+                  margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .input-area textarea {
+      flex: 1; border: 1px solid var(--border); border-radius: 8px; padding: 10px;
+      font-size: 14px; font-family: inherit; resize: vertical; min-height: 60px;
+    }
+    .input-area textarea:focus { outline: 2px solid var(--primary); border-color: transparent; }
+
+    .suggestions { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+    .suggestion { background: white; border: 1px solid var(--border); border-radius: 16px;
+                  padding: 5px 12px; font-size: 12px; cursor: pointer; transition: all .15s; }
+    .suggestion:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+    .conversation { display: flex; flex-direction: column; gap: 12px; }
+    .turn { background: var(--card); border-radius: 12px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .turn .q { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+    .turn .q b { color: var(--fg); }
+
+    /* CINA card components (rendered by JS) */
+    .cina-card { border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: #fff; margin: 6px 0; }
+    .cina-card-h { font-weight: 600; font-size: 15px; margin-bottom: 8px; color: var(--primary-dark); }
+    .cina-row { display: flex; gap: 8px; padding: 4px 0; align-items: flex-start; flex-wrap: wrap; }
+    .cina-k { color: var(--muted); font-size: 12px; min-width: 80px; }
+    .cina-v { flex: 1; font-size: 13px; }
+    .cina-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 6px 0; }
+    .cina-table th { text-align: left; background: #f1f5f9; padding: 6px 8px; font-weight: 600; font-size: 12px; }
+    .cina-table td { padding: 6px 8px; border-top: 1px solid var(--border); }
+    .cina-callout { background: #f0f9ff; padding: 8px 10px; border-radius: 6px; font-size: 13px; margin: 6px 0; color: #075985; }
+    .cina-meta { margin-top: 10px; font-size: 11px; color: var(--muted); border-top: 1px dashed var(--border); padding-top: 8px; }
+    .cina-meta code { background: #f1f5f9; padding: 1px 6px; border-radius: 4px; font-family: monospace; }
+
+    .cina-citations { margin-top: 8px; }
+    .cina-cite-panel { background: #fafbfc; border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; }
+    .cina-cite-panel summary { cursor: pointer; font-size: 13px; color: var(--primary-dark); padding: 4px 0; }
+    .cina-cite-item { padding: 6px 0; border-top: 1px solid var(--border); font-size: 12px; }
+    .cina-cite-item:first-child { border-top: 0; }
+    .cina-cite-quote { color: var(--muted); font-style: italic; margin-top: 2px; }
+
+    .cina-llm-answer { background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%);
+                       border: 1px solid #bae6fd; border-radius: 8px; padding: 14px;
+                       margin-bottom: 8px; line-height: 1.65; font-size: 14px; }
+
+    .loading { color: var(--muted); font-style: italic; font-size: 13px; padding: 8px; }
+
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 50;
+             align-items: center; justify-content: center; padding: 16px; }
+    .modal.open { display: flex; }
+    .modal-content { background: white; border-radius: 12px; padding: 20px; max-width: 480px; width: 100%;
+                     max-height: 90vh; overflow: auto; }
+    .modal-content h2 { margin-top: 0; }
+    .modal-content .provider-row { display: flex; gap: 8px; align-items: center; padding: 10px 0;
+                                    border-bottom: 1px solid var(--border); }
+    .modal-content .provider-row b { min-width: 90px; }
+    .modal-content input { flex: 1; padding: 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+
+    footer { margin-top: 32px; padding: 16px; text-align: center; color: var(--muted); font-size: 12px; }
+    footer a { color: var(--primary); }
+
+    @media (max-width: 640px) {
+      header h1 { font-size: 22px; }
+      .controls { flex-direction: column; align-items: stretch; }
+      .mode-toggle { width: 100%; }
+      .mode-toggle button { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>🌍 Ask CINA <span style="opacity:0.75;font-size:0.7em">v2</span></h1>
+    <div class="tagline">학술 등급 기후 협상 Q&amp;A · 2,400 record · 50국 · 8이슈 · 6 COP (COP25-COP30) · 7 intents</div>
+    <div class="badges">
+      <span class="badge">engine v2.0.0</span>
+      <span class="badge">dataset v5.0.0</span>
+      <span class="badge">BYO LLM (Gemini · Anthropic · Groq)</span>
+      <span class="badge">CC BY 4.0 / MIT</span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="controls">
+    <span class="status-pill" id="status-pill">📡 데이터 로드 중...</span>
+    <label>모드</label>
+    <div class="mode-toggle" id="mode-toggle">
+      <button data-mode="rule" class="active">🧮 Rule</button>
+      <button data-mode="llm">🤖 LLM</button>
+    </div>
+    <button class="btn secondary" id="btn-keys">🔑 API Key 관리</button>
+    <button class="btn secondary" id="btn-export-md">📄 .md</button>
+    <button class="btn secondary" id="btn-export-json">📦 .json</button>
+    <button class="btn secondary" id="btn-export-bib">📚 .bib</button>
+    <button class="btn danger" id="btn-clear" style="margin-left:auto">🗑️ 대화 초기화</button>
+  </div>
+
+  <div class="input-area">
+    <textarea id="q-input" placeholder="예: 브라질이 COP30에서 GGA 지표를 어떻게 통제했는가?
+    한국과 비슷한 국가는?
+    AOSIS GGA-IND 시계열 추이?
+    브라질의 translation gap 분석"></textarea>
+    <button class="btn" id="btn-ask" style="align-self:flex-end">질문</button>
+  </div>
+
+  <div class="suggestions" id="suggestions">
+    <span class="suggestion">브라질 GGA-IND COP30 입장은?</span>
+    <span class="suggestion">브라질과 한국의 GGA 지표 입장 차이</span>
+    <span class="suggestion">AOSIS GGA-IND 시계열 추이</span>
+    <span class="suggestion">한국과 비슷한 국가 분석</span>
+    <span class="suggestion">브라질의 translation gap 분석</span>
+    <span class="suggestion">COP30 한국 외교 전략 권고</span>
+    <span class="suggestion">사우디 L&amp;D-OP 점수</span>
+    <span class="suggestion">COP30 평균 translation gap 상위 10국</span>
+    <span class="suggestion">Costa Rica와 AILAC 협력 어떻게?</span>
+    <span class="suggestion">Pakistan L&amp;D-OP 추이</span>
+  </div>
+
+  <div class="conversation" id="conversation"></div>
+
+</div>
+
+<!-- API Key Modal -->
+<div class="modal" id="key-modal">
+  <div class="modal-content">
+    <h2>🔑 BYO LLM API Key</h2>
+    <p style="font-size:13px;color:var(--muted)">키는 본인 브라우저 localStorage에만 저장됩니다. CINA 서버로 전송되지 않습니다.</p>
+    <div class="provider-row">
+      <b>Gemini</b>
+      <input type="password" id="key-gemini" placeholder="AIzaSy...">
+      <button class="btn secondary" data-action="save" data-provider="gemini">저장</button>
+      <button class="btn danger" data-action="clear" data-provider="gemini">제거</button>
+    </div>
+    <div class="provider-row">
+      <b>Anthropic</b>
+      <input type="password" id="key-anthropic" placeholder="sk-ant-...">
+      <button class="btn secondary" data-action="save" data-provider="anthropic">저장</button>
+      <button class="btn danger" data-action="clear" data-provider="anthropic">제거</button>
+    </div>
+    <div class="provider-row">
+      <b>Groq</b>
+      <input type="password" id="key-groq" placeholder="gsk_...">
+      <button class="btn secondary" data-action="save" data-provider="groq">저장</button>
+      <button class="btn danger" data-action="clear" data-provider="groq">제거</button>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:12px">
+      Gemini 무료 발급: <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a><br>
+      자세한 가이드: <a href="../setup/BYO_LLM_SETUP.md" target="_blank">BYO_LLM_SETUP.md</a>
+    </p>
+    <div style="text-align:right;margin-top:14px">
+      <button class="btn" id="modal-close">닫기</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>
+    🌐 <a href="../../">CINA 메인</a> ·
+    📦 <a href="https://github.com/zxsa0716/cina">GitHub</a> ·
+    📄 <a href="../research/PUBLICATION_STRATEGY.md">논문 전략</a> ·
+    🛠 <a href="../setup/BYO_LLM_SETUP.md">BYO LLM 설정</a>
+  </p>
+  <p>© 2026 Heedo Choi · Kookmin University Department of Climate Technology Convergence · zxsa0716@kookmin.ac.kr</p>
+</footer>
+
+<script src="assets/cina_program_v2.js"></script>
+<script>
+(function() {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const conv = $("#conversation");
+  const input = $("#q-input");
+  const statusPill = $("#status-pill");
+  let currentMode = localStorage.getItem("cina_v2_mode") || "rule";
+
+  function updateMode(m) {
+    currentMode = m;
+    localStorage.setItem("cina_v2_mode", m);
+    document.querySelectorAll("#mode-toggle button").forEach(b =>
+      b.classList.toggle("active", b.dataset.mode === m));
+    refreshStatus();
+  }
+  function refreshStatus() {
+    if (currentMode === "rule") {
+      statusPill.textContent = "🧮 Rule-based (즉시, 무료)";
+      statusPill.className = "status-pill ok";
+    } else {
+      const prov = window.CINA_v2.pickFirstAvailableProvider();
+      if (prov) {
+        statusPill.textContent = `🤖 LLM 사용 가능: ${prov}`;
+        statusPill.className = "status-pill ok";
+      } else {
+        statusPill.textContent = "🟡 LLM 모드 - API Key 미설정";
+        statusPill.className = "status-pill warn";
+      }
+    }
+  }
+
+  async function ask() {
+    const q = input.value.trim(); if (!q) return;
+    const turn = document.createElement("div"); turn.className = "turn";
+    const ts = new Date().toLocaleTimeString();
+    turn.innerHTML = `<div class="q"><b>Q (${ts}):</b> ${q}</div><div class="a"><div class="loading">⏳ 답변 생성 중...</div></div>`;
+    conv.prepend(turn);
+    input.value = "";
+
+    try {
+      const provider = window.CINA_v2.pickFirstAvailableProvider();
+      const result = await window.CINA_v2.answerQuestion(q, { mode: currentMode, provider });
+      turn.querySelector(".a").innerHTML = result.html;
+    } catch (e) {
+      turn.querySelector(".a").innerHTML = `<div class="cina-callout" style="background:#fef2f2;color:#991b1b">⚠️ 오류: ${e.message}</div>`;
+    }
+  }
+
+  $("#btn-ask").addEventListener("click", ask);
+  input.addEventListener("keydown", (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") ask(); });
+
+  document.querySelectorAll("#mode-toggle button").forEach(b =>
+    b.addEventListener("click", () => updateMode(b.dataset.mode)));
+  document.querySelectorAll(".suggestion").forEach(s =>
+    s.addEventListener("click", () => { input.value = s.textContent; ask(); }));
+
+  $("#btn-keys").addEventListener("click", () => {
+    ["gemini","anthropic","groq"].forEach(p => { $("#key-"+p).value = window.CINA_v2.getKey(p); });
+    $("#key-modal").classList.add("open");
+  });
+  $("#modal-close").addEventListener("click", () => $("#key-modal").classList.remove("open"));
+  document.querySelectorAll("[data-action]").forEach(b =>
+    b.addEventListener("click", () => {
+      const p = b.dataset.provider, action = b.dataset.action;
+      if (action === "save") {
+        const v = $("#key-"+p).value.trim();
+        if (v) { window.CINA_v2.setKey(p, v); alert(`${p} 키 저장됨`); }
+      } else if (action === "clear") {
+        window.CINA_v2.clearKey(p); $("#key-"+p).value = ""; alert(`${p} 키 제거됨`);
+      }
+      refreshStatus();
+    }));
+
+  $("#btn-export-md").addEventListener("click", () => window.CINA_v2.exportMarkdown());
+  $("#btn-export-json").addEventListener("click", () => window.CINA_v2.exportJSON());
+  $("#btn-export-bib").addEventListener("click", () => window.CINA_v2.exportBibTeX());
+  $("#btn-clear").addEventListener("click", () => {
+    if (confirm("대화 기록을 모두 삭제하시겠습니까?")) { window.CINA_v2.clearHistory(); conv.innerHTML = ""; }
+  });
+
+  // init
+  updateMode(currentMode);
+  window.CINA_v2.loadData().then(d => {
+    statusPill.textContent = `📊 ${d.length} records 로드 완료`;
+    statusPill.className = "status-pill ok";
+    setTimeout(refreshStatus, 1200);
+  }).catch(() => {
+    statusPill.textContent = "⚠️ 데이터 로드 실패 (fallback)";
+    statusPill.className = "status-pill warn";
+  });
+})();
+</script>
+
+</body>
+</html>
