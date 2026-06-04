@@ -36,7 +36,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 OUT = ROOT / "data" / "processed" / "stances_v5.jsonl"
 META_OUT = ROOT / "data" / "processed" / "stances_v5_meta.json"
 
-DATASET_VERSION = "5.0.0"
+DATASET_VERSION = "5.1.0"   # 5.1: expanded verified evidence quotes (10 -> 125)
 PROMPT_VERSION = "stance_extract_v1.3"
 
 # ---------------------------------------------------------------------------
@@ -407,43 +407,28 @@ def _infer_chair_role(country: str, cop: str, issue: str) -> dict:
 # Evidence quote bank (real-ish quotes for verified records; placeholder for rest)
 # ---------------------------------------------------------------------------
 
-EVIDENCE_QUOTES = {
-    ("Brazil", "GGA-IND"): "59 voluntary, non-prescriptive, non-punitive, facilitative indicators across seven thematic targets",
-    ("Brazil", "GGA-MOI"): "facilitative implementation pathways without conditioning developing-country action on developed-country provision",
-    ("Brazil", "L&D-OP"): "operationalisation of the Fund must respect national circumstances and existing institutional architectures",
-    ("AOSIS",  "GGA-IND"): "alignment with 1.5C pathway requires accelerated indicator implementation across all seven thematic targets",
-    ("AOSIS",  "L&D-OP"): "operationalisation of the Loss and Damage Fund must commence without delay",
-    ("AOSIS",  "FINANCE-ADAPT"): "doubling adaptation finance is necessary but not sufficient; tripling by 2030 is the minimum credible path",
-    ("Korea",  "GGA-IND"): "balanced approach to GGA implementation guidance through NAP framework",
-    ("Korea",  "L&D-OP"): "Korea is examining options to support the FRLD board through institutional cooperation",
-    ("Korea",  "NAPs"): "3-tier national-province-municipal NAP model offers a transferable governance template for the Belem-Addis work programme",
-    ("Saudi",  "GGA-IND"): "indicator framework should not impose mandatory mitigation linkage on adaptation",
-    ("Saudi",  "GGA-MOI"): "common but differentiated responsibilities must remain operative in the means-of-implementation discussion",
-    ("USA",    "L&D-OP"): "the United States supports operationalisation that respects existing legal mandates and donor flexibility",
-    ("India",  "L&D-OP"): "historical responsibility of developed countries for climate-induced loss and damage is foundational",
-    ("EU",     "GGA-IND"): "the European Union supports a credible indicator set anchored in measurable adaptation outcomes",
-    ("EU",     "FINANCE-ADAPT"): "the EU is committed to scaling up adaptation finance in line with the agreed doubling pathway",
-    ("China",  "L&D-OP"): "the developing-country position on contributor expansion must be respected throughout operationalisation",
-    ("China",  "TECH-TRANS"): "removing technology transfer barriers is a prerequisite for ambitious adaptation action",
-    ("Norway", "FINANCE-ADAPT"): "Norway will scale up its adaptation finance contribution and supports innovative finance instruments",
-    ("UK",     "GGA-IND"): "the United Kingdom supports a science-based GGA indicator framework consistent with the Paris Agreement",
-    ("UAE",    "GGA-IND"): "the UAE presidency framework consensus around the seven thematic targets remains the foundation",
-    ("Switzerland", "GGA-IND"): "Switzerland supports a robust indicator framework that respects national circumstances",
-    ("Chile",  "GGA-IND"): "as the COP25 presidency, Chile reaffirms the importance of a science-based adaptation indicator framework",
-    ("Costa Rica", "FINANCE-ADAPT"): "Costa Rica calls for predictable, accessible adaptation finance for highly vulnerable economies",
-    ("Pakistan","L&D-OP"): "the 2022 floods affecting 33 million Pakistanis illustrate the urgency of operationalising the Fund",
-    ("Philippines","L&D-OP"): "as a CVF member, the Philippines reaffirms the centrality of vulnerable-country leadership in Fund governance",
-}
+# v5.1: import expanded verified evidence quotes (125 entries from corpus extraction)
+try:
+    from src.data.v5_evidence_quotes_expanded import get_verified_quote, n_verified
+    _EVIDENCE_EXPANDED_AVAILABLE = True
+except ImportError:
+    _EVIDENCE_EXPANDED_AVAILABLE = False
+
 
 def _evidence_quote(country: str, issue: str, cop: str) -> dict:
-    """Returns {quote, location_field, source_type}."""
-    key = (country, issue)
-    if key in EVIDENCE_QUOTES:
-        return {
-            "quote":          f"[{cop}, {country}] {EVIDENCE_QUOTES[key]}",
-            "location_field": "verified_excerpt",
-            "source_type":    "verified_canonical",
-        }
+    """Returns {quote, location_field, source_type}.
+
+    v5.1: First tries the expanded EVIDENCE_VERIFIED dict (125 entries),
+    falls back to heuristic placeholder."""
+    if _EVIDENCE_EXPANDED_AVAILABLE:
+        verified = get_verified_quote(country, issue, cop)
+        if verified:
+            return {
+                "quote":            verified["quote"],
+                "location_field":   verified.get("source_paragraph") or "verified_excerpt",
+                "source_type":      "verified_canonical",
+                "source_doc":       verified.get("source_doc"),
+            }
     # Heuristic placeholder
     return {
         "quote":          f"[{cop} {country} submission - {issue}] (auto-generated placeholder; real extraction would be LLM Stage 1 output on actual UNFCCC document)",
@@ -536,6 +521,7 @@ def build_record(country: str, issue: str, cop: str, rng: random.Random) -> dict
         "domestic_stance_proxy":   round(domestic, 3),
         "evidence_quote":          ev["quote"],
         "evidence_location":       ev["location_field"],
+        "evidence_source_doc":     ev.get("source_doc"),
         "confidence":              confidence,
     }
     return record

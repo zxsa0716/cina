@@ -1,5 +1,5 @@
 {
-  "dataset_version": "5.0.0",
+  "dataset_version": "5.1.0",
   "prompt_version": "stance_extract_v1.3",
   "seed": 42,
   "n_records": 2400,
@@ -110,6 +110,6 @@
     "ASEAN",
     "LDC"
   ],
-  "generated_at": "2026-06-03T19:41:49.875428+00:00",
-  "schema_hash": "7c3434c77d0865ad"
+  "generated_at": "2026-06-04T02:24:01.484749+00:00",
+  "schema_hash": "5c24c683bcf0a5c2"
 }

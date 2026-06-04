@@ -94,9 +94,10 @@
     "COP30": "COP30", "cop30": "COP30", "벨렘": "COP30", "belem": "COP30",
   };
 
-  const ENGINE_VERSION = "v2.1.0";
-  const DATASET_VERSION_TARGET = "5.0.0";
+  const ENGINE_VERSION = "v2.2.0";
+  const DATASET_VERSION_TARGET = "5.1.0";
   const CORPUS_VERSION_TARGET = "6.0.0";
+  const EMBED_VERSION_TARGET   = "7.0.0";
 
   // ================================================================
   // localStorage keys (BYO LLM)
@@ -234,6 +235,135 @@
     return Object.entries(scores).sort((a,b) => b[1]-a[1]).slice(0, topK)
       .map(([d, s]) => ({ doc_id: d, score: +s.toFixed(4),
                           manifest: byId[d] || { doc_id: d, title: d, path: "?", type: "?" } }));
+  }
+
+  // ================================================================
+  // v7 Semantic embedding (Gemini embedding API + browser cosine)
+  // ================================================================
+
+  let EMBED_DATA = null;     // { ids, embeddings (Int16Array nested), n, dim }
+  let EMBED_QUERY_CACHE = {};   // query string -> Float32Array
+  let EMBED_DOC_F32 = null;     // dequantized Float32 matrix [n, dim]
+
+  async function loadEmbeddings() {
+    if (EMBED_DATA) return EMBED_DATA;
+    const candidates = [
+      "data/corpus/embeddings.json", "./data/corpus/embeddings.json",
+      "../../docs/web/data/corpus/embeddings.json",
+    ];
+    for (const url of candidates) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) continue;
+        EMBED_DATA = await res.json();
+        // dequantize int16 -> float32 (divide by 32767)
+        const n = EMBED_DATA.n, d = EMBED_DATA.dim;
+        const flat = new Float32Array(n * d);
+        for (let i = 0; i < n; i++) {
+          const row = EMBED_DATA.embeddings[i];
+          for (let j = 0; j < d; j++) flat[i * d + j] = row[j] / 32767;
+        }
+        EMBED_DOC_F32 = flat;
+        console.log(`[CINA v2.2] Loaded ${n} embeddings × ${d} dim from ${url}`);
+        return EMBED_DATA;
+      } catch (e) { /* try next */ }
+    }
+    console.warn("[CINA v2.2] embeddings unavailable; semantic search disabled");
+    return null;
+  }
+
+  async function geminiEmbed(query, key) {
+    // Gemini text-embedding-004 produces 768-dim by default but we ask for 384
+    // to match the corpus embeddings (paraphrase-multilingual-MiniLM-L12-v2 dim).
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${key}`;
+    const body = {
+      content: { parts: [{ text: query }] },
+      outputDimensionality: 384,
+      taskType: "SEMANTIC_SIMILARITY",
+    };
+    const res = await fetch(url, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error(`Gemini embed HTTP ${res.status}: ${await res.text()}`);
+    const j = await res.json();
+    const vec = j.embedding?.values || [];
+    if (!vec.length) throw new Error("Gemini embedding returned empty vector");
+    // L2 normalise to match doc embeddings
+    let norm = 0;
+    for (const v of vec) norm += v * v;
+    norm = Math.sqrt(norm) || 1;
+    return new Float32Array(vec.map(v => v / norm));
+  }
+
+  async function embedQuery(query) {
+    if (EMBED_QUERY_CACHE[query]) return EMBED_QUERY_CACHE[query];
+    const geminiKey = getKey("gemini");
+    if (geminiKey) {
+      try {
+        const v = await geminiEmbed(query, geminiKey);
+        EMBED_QUERY_CACHE[query] = v;
+        return v;
+      } catch (e) {
+        console.warn("[CINA v2.2] gemini embed failed; semantic disabled:", e.message);
+      }
+    }
+    return null;
+  }
+
+  async function semanticSearch(query, topK = 8) {
+    if (!EMBED_DOC_F32) await loadEmbeddings();
+    if (!EMBED_DOC_F32) return [];
+    const q = await embedQuery(query);
+    if (!q) return [];
+    const n = EMBED_DATA.n, d = EMBED_DATA.dim;
+    const scores = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      let dot = 0;
+      const base = i * d;
+      for (let j = 0; j < d; j++) dot += EMBED_DOC_F32[base + j] * q[j];
+      scores[i] = dot;
+    }
+    // Top-k
+    const idx = Array.from({length: n}, (_, i) => i);
+    idx.sort((a, b) => scores[b] - scores[a]);
+    return idx.slice(0, topK).map(i => ({
+      doc_id: EMBED_DATA.ids[i].split("::")[0],
+      kind: EMBED_DATA.ids[i].includes("::") ? "corpus_chunk" : "stance_evidence",
+      score: +scores[i].toFixed(4),
+      embedding_idx: i,
+    }));
+  }
+
+  async function hybridSearch(query, topK = 8, alpha = 0.6) {
+    // alpha = semantic weight; (1-alpha) = keyword weight
+    const semHits = await semanticSearch(query, topK * 3);
+    const kwHits = corpusSearch(query, topK * 3);
+    if (!semHits.length) {
+      return kwHits.slice(0, topK).map(h => ({...h, method: "keyword"}));
+    }
+    const maxSem = Math.max(...semHits.map(h => h.score), 0.001);
+    const maxKw = Math.max(...kwHits.map(h => h.score), 0.001);
+    const byDoc = {};
+    semHits.forEach(h => {
+      byDoc[h.doc_id] = byDoc[h.doc_id] || {semantic: 0, keyword: 0};
+      byDoc[h.doc_id].semantic = Math.max(byDoc[h.doc_id].semantic, h.score / maxSem);
+      byDoc[h.doc_id].manifest = byDoc[h.doc_id].manifest || (CORPUS_MANIFEST||[]).find(r => r.doc_id === h.doc_id);
+    });
+    kwHits.forEach(h => {
+      byDoc[h.doc_id] = byDoc[h.doc_id] || {semantic: 0, keyword: 0};
+      byDoc[h.doc_id].keyword = h.score / maxKw;
+      byDoc[h.doc_id].manifest = byDoc[h.doc_id].manifest || h.manifest;
+    });
+    return Object.entries(byDoc)
+      .map(([d, info]) => ({
+        doc_id: d, manifest: info.manifest,
+        score: +(alpha * info.semantic + (1 - alpha) * info.keyword).toFixed(4),
+        score_semantic: +info.semantic.toFixed(3),
+        score_keyword: +info.keyword.toFixed(3),
+        method: "hybrid",
+      }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, topK);
   }
 
   function corpusFilterByContext(intent) {
@@ -689,25 +819,31 @@
     return { html, citations: [recordToCitation(r)], confidence: r.confidence || 0.85, n: records.length };
   }
 
-  function buildSearch(intent, records) {
-    const hits = corpusSearch(intent.raw, 8);
+  async function buildSearch(intent, records) {
+    const hits = await hybridSearch(intent.raw, 8, 0.6);
     if (!hits.length) {
       return { html: `<div class="cina-card"><div class="cina-card-h">corpus 검색 결과 없음</div>
         <div>corpus index가 로드되지 않았거나 매칭되는 문서가 없습니다.</div></div>`,
         citations: [], confidence: 0, n: 0 };
     }
-    let html = `<div class="cina-card"><div class="cina-card-h">'${escapeHtml(intent.raw)}' — corpus 문서 top-${hits.length}</div>
+    const method = hits[0].method || "keyword";
+    const methodLabel = method === "hybrid" ? "semantic+keyword 하이브리드" : "keyword (TF-IDF)";
+    let html = `<div class="cina-card"><div class="cina-card-h">'${escapeHtml(intent.raw)}' — corpus 문서 top-${hits.length}<span style="font-size:11px;color:#64748b;margin-left:8px">${methodLabel}</span></div>
       <table class="cina-table"><thead><tr><th>#</th><th>제목</th><th>type</th><th>score</th><th>source</th></tr></thead><tbody>`;
     hits.forEach((h, i) => {
-      const m = h.manifest;
-      const link = m.official_url ? `<a href="${escapeHtml(m.official_url)}" target="_blank">원문 ↗</a>` : "-";
-      html += `<tr><td>${i+1}</td><td><b>${escapeHtml(m.short_title || m.title || "?")}</b><br><code style="font-size:11px">${escapeHtml(m.path || '?')}</code></td>
+      const m = h.manifest || {};
+      const link = m.official_url ? `<a href="${escapeHtml(m.official_url)}" target="_blank">원문 ↗</a>`
+        : (m.path ? `<a href="${escapeHtml(m.path)}" target="_blank">로컬 ↗</a>` : "-");
+      const scoreCell = method === "hybrid"
+        ? `<b>${h.score.toFixed(3)}</b><br><small style="color:#64748b">sem ${(h.score_semantic||0).toFixed(2)} · kw ${(h.score_keyword||0).toFixed(2)}</small>`
+        : h.score.toFixed(3);
+      html += `<tr><td>${i+1}</td><td><b>${escapeHtml(m.short_title || m.title || h.doc_id || "?")}</b><br><code style="font-size:11px">${escapeHtml(m.path || '?')}</code></td>
         <td>${escapeHtml(m.type || '?')}${m.cop ? '<br><small>'+escapeHtml(m.cop)+'</small>' : ''}</td>
-        <td>${h.score.toFixed(3)}</td>
+        <td>${scoreCell}</td>
         <td>${link}</td></tr>`;
     });
     html += `</tbody></table></div>`;
-    return { html, citations: [], confidence: 0.80, n: hits.length,
+    return { html, citations: [], confidence: 0.85, n: hits.length,
              corpus_hits: hits };
   }
 
@@ -848,8 +984,9 @@ ${histStr}
               intent.type === "gap" ? 80 : 24;
     const retrieved = retrieve(records, intent, k);
 
-    // ensure corpus is loaded for auto-attach + search intent
+    // ensure corpus + embeddings are loaded
     await loadCorpus();
+    await loadEmbeddings();
 
     const builders = {
       lookup: buildLookup, compare: buildCompare, trend: buildTrend,
@@ -876,12 +1013,19 @@ ${histStr}
 
     answerHTML += `<div class="cina-citations" data-count="${built.citations.length}">${renderCitations(built.citations)}</div>`;
 
-    // v2.1: Auto-attach corpus references to all non-'search' intents
+    // v2.2: Auto-attach corpus refs using hybrid search (semantic + keyword)
     if (intent.type !== "search") {
+      const hybHits = await hybridSearch(question, 5, 0.6);
       const ctxHits = corpusFilterByContext(intent);
-      const queryHits = corpusSearch(question, 10).map(h => h.manifest);
       const seen = new Set(), merged = [];
-      queryHits.forEach(r => { if (!seen.has(r.doc_id)) { seen.add(r.doc_id); merged.push(r); } });
+      hybHits.forEach(h => {
+        const m = h.manifest;
+        if (m && !seen.has(m.doc_id)) {
+          seen.add(m.doc_id);
+          merged.push({...m, method: h.method, score: h.score,
+                       score_semantic: h.score_semantic, score_keyword: h.score_keyword});
+        }
+      });
       ctxHits.forEach(r => { if (!seen.has(r.doc_id)) { seen.add(r.doc_id); merged.push(r); } });
       if (merged.length) {
         answerHTML += renderCorpusRefs(merged.slice(0, 3));
@@ -906,16 +1050,22 @@ ${histStr}
 
   function renderCorpusRefs(refs) {
     if (!refs || !refs.length) return "";
-    let html = `<div class="cina-corpus-refs"><div class="cina-corpus-h">📚 관련 corpus 문서 ${refs.length}건</div>`;
+    const anyHybrid = refs.some(r => r.method === "hybrid");
+    const headLabel = anyHybrid ? "📚 관련 corpus 문서 (hybrid 검색)" : "📚 관련 corpus 문서";
+    let html = `<div class="cina-corpus-refs"><div class="cina-corpus-h">${headLabel} ${refs.length}건</div>`;
     refs.forEach(r => {
       const link = r.official_url
         ? `<a href="${escapeHtml(r.official_url)}" target="_blank">원문 ↗</a>`
         : (r.path ? `<a href="${escapeHtml(r.path)}" target="_blank">로컬 ↗</a>` : "");
+      const methodBadge = r.method === "hybrid"
+        ? `<span class="cina-corpus-method" title="semantic ${(r.score_semantic||0).toFixed(2)} · kw ${(r.score_keyword||0).toFixed(2)}">🧠 ${r.score?.toFixed(2) || '?'}</span>`
+        : "";
       html += `<div class="cina-corpus-row">
         <span class="cina-corpus-type">${escapeHtml(r.type || '?')}</span>
         <span class="cina-corpus-title"><b>${escapeHtml(r.short_title || r.title || r.doc_id)}</b>
         ${r.cop ? '<span class="cina-corpus-tag">'+escapeHtml(r.cop)+'</span>' : ''}
-        ${r.country ? '<span class="cina-corpus-tag">'+escapeHtml(r.country)+'</span>' : ''}</span>
+        ${r.country ? '<span class="cina-corpus-tag">'+escapeHtml(r.country)+'</span>' : ''}
+        ${methodBadge}</span>
         <span class="cina-corpus-link">${link}</span>
       </div>`;
     });

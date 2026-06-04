@@ -37,8 +37,10 @@ DATA  = ROOT / "data" / "processed" / "stances_v5.jsonl"
 META  = ROOT / "data" / "processed" / "stances_v5_meta.json"
 CORPUS_MANIFEST = ROOT / "data" / "corpus" / "manifest.jsonl"
 CORPUS_INDEX    = ROOT / "data" / "corpus" / "search_index.json"
+EMBED_NPZ       = ROOT / "data" / "corpus" / "embeddings.npz"
+EMBED_INDEX     = ROOT / "data" / "corpus" / "embeddings_index.json"
 
-ENGINE_VERSION = "2.1.0"   # 2.1 = corpus retrieval integration
+ENGINE_VERSION = "2.2.0"   # 2.2 = semantic embedding + hybrid retrieval
 DEFAULT_COP = "COP30"
 
 # ===========================================================================
@@ -269,6 +271,134 @@ def corpus_search(query: str, top_k: int = 5) -> list[dict]:
     return [{"doc_id": d, "score": round(s, 4),
              "manifest": by_id.get(d, {"doc_id": d, "path": "?", "title": d, "type": "?"})}
             for d, s in ranked]
+
+# ===========================================================================
+# v7 Semantic embedding search (sentence-transformers)
+# ===========================================================================
+
+_EMBED_MATRIX = None       # np.ndarray (N, 384)
+_EMBED_INDEX_META = None   # dict with items list
+_EMBED_MODEL = None        # SentenceTransformer (lazy)
+
+def _load_embeddings():
+    """Lazy load NPZ + index. Returns (matrix, index_meta) or (None, None)."""
+    global _EMBED_MATRIX, _EMBED_INDEX_META
+    if _EMBED_MATRIX is not None: return _EMBED_MATRIX, _EMBED_INDEX_META
+    if not EMBED_NPZ.exists() or not EMBED_INDEX.exists():
+        return None, None
+    try:
+        import numpy as np
+        arr = np.load(EMBED_NPZ)
+        _EMBED_MATRIX = arr["embeddings"].astype(np.float32)
+        _EMBED_INDEX_META = json.loads(EMBED_INDEX.read_text(encoding="utf-8"))
+        return _EMBED_MATRIX, _EMBED_INDEX_META
+    except Exception as e:
+        print(f"[v2.2] embedding load failed: {e}")
+        return None, None
+
+def _get_embed_model():
+    """Lazy-load sentence-transformers model."""
+    global _EMBED_MODEL
+    if _EMBED_MODEL is not None: return _EMBED_MODEL
+    try:
+        from sentence_transformers import SentenceTransformer
+        meta = _EMBED_INDEX_META or {}
+        model_name = meta.get("model_name", "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+        _EMBED_MODEL = SentenceTransformer(model_name)
+        return _EMBED_MODEL
+    except Exception as e:
+        print(f"[v2.2] sentence-transformers unavailable: {e}")
+        return None
+
+def semantic_search(query: str, top_k: int = 8, kinds: list[str] | None = None) -> list[dict]:
+    """Cosine similarity search using v7 embeddings.
+
+    Returns: [{doc_id, kind, title, score, text_preview, path, cop, country}, ...]
+    Returns [] gracefully if embeddings or model unavailable."""
+    matrix, meta = _load_embeddings()
+    if matrix is None: return []
+    model = _get_embed_model()
+    if model is None: return []
+    import numpy as np
+    q_emb = model.encode([query], normalize_embeddings=True, convert_to_numpy=True)[0].astype(np.float32)
+    sims = matrix @ q_emb        # since both L2-normalised, dot == cosine
+    items = meta["items"]
+    # Optional kind filter
+    if kinds:
+        idx_filter = [i for i, it in enumerate(items) if it["kind"] in kinds]
+        sub_sims = sims[idx_filter]
+        ranked = sorted(zip(idx_filter, sub_sims), key=lambda x: -x[1])[:top_k]
+    else:
+        ranked = sorted(enumerate(sims), key=lambda x: -x[1])[:top_k]
+    out = []
+    for i, s in ranked:
+        it = items[i]
+        out.append({
+            "doc_id":       it.get("doc_id"),
+            "kind":         it.get("kind"),
+            "title":        it.get("title"),
+            "type":         it.get("type"),
+            "country":      it.get("country"),
+            "cop":          it.get("cop"),
+            "path":         it.get("path"),
+            "text_preview": it.get("text_preview", ""),
+            "chunk_idx":    it.get("chunk_idx"),
+            "score":        float(s),
+        })
+    return out
+
+def hybrid_search(query: str, top_k: int = 8,
+                  alpha: float = 0.6, kinds: list[str] | None = None) -> list[dict]:
+    """Hybrid keyword (TF-IDF) + semantic search.
+
+    final_score = alpha * semantic_cosine + (1 - alpha) * tfidf_norm
+    Defaults to 0.6 semantic + 0.4 keyword.
+    Falls back to keyword-only if embeddings unavailable.
+    """
+    sem_hits = semantic_search(query, top_k=top_k * 3, kinds=kinds)
+    kw_hits = corpus_search(query, top_k=top_k * 3)
+    if not sem_hits:
+        return [{"doc_id": h["doc_id"], "score": h["score"], "kind": "corpus_whole",
+                 "title": h["manifest"].get("title"), "path": h["manifest"].get("path"),
+                 "type": h["manifest"].get("type"), "text_preview": "",
+                 "country": h["manifest"].get("country"), "cop": h["manifest"].get("cop"),
+                 "method": "keyword"} for h in kw_hits[:top_k]]
+    # Normalise scores to [0, 1]
+    max_sem = max((h["score"] for h in sem_hits), default=1.0) or 1.0
+    max_kw  = max((h["score"] for h in kw_hits), default=1.0) or 1.0
+    by_doc = {}
+    for h in sem_hits:
+        d = h["doc_id"]
+        s = h["score"] / max_sem
+        by_doc[d] = {"semantic": s, "keyword": 0, "hit": h}
+    for h in kw_hits:
+        d = h["doc_id"]
+        s = h["score"] / max_kw
+        if d in by_doc:
+            by_doc[d]["keyword"] = s
+        else:
+            by_doc[d] = {"semantic": 0, "keyword": s,
+                         "hit": {"doc_id": d, "title": h["manifest"].get("title"),
+                                 "path": h["manifest"].get("path"),
+                                 "type": h["manifest"].get("type"),
+                                 "country": h["manifest"].get("country"),
+                                 "cop": h["manifest"].get("cop"),
+                                 "kind": "corpus_whole",
+                                 "text_preview": "",
+                                 "chunk_idx": None,
+                                }}
+    ranked = sorted(by_doc.items(),
+                    key=lambda x: -(alpha * x[1]["semantic"] + (1 - alpha) * x[1]["keyword"]))[:top_k]
+    out = []
+    for d, info in ranked:
+        h = info["hit"]
+        out.append({**h,
+                    "score": round(alpha * info["semantic"] + (1 - alpha) * info["keyword"], 4),
+                    "score_semantic": round(info["semantic"], 4),
+                    "score_keyword":  round(info["keyword"], 4),
+                    "method": "hybrid"})
+    return out
+
 
 def corpus_filter_by_context(intent) -> list[dict]:
     """Return manifest records whose country/issue/COP overlap with intent."""
@@ -780,32 +910,42 @@ def _build_factoid(intent: QueryIntent, records: list[dict]) -> Response:
 
 
 def _build_search(intent: QueryIntent, records: list[dict]) -> Response:
-    """Pure corpus-document search intent."""
-    hits = corpus_search(intent.raw_question, top_k=8)
-    if not hits:
+    """Corpus-document search intent — hybrid (semantic + keyword) by default."""
+    # Try hybrid; falls back to keyword if embeddings unavailable
+    hybrid_hits = hybrid_search(intent.raw_question, top_k=8)
+    method = hybrid_hits[0].get("method", "keyword") if hybrid_hits else "keyword"
+    if not hybrid_hits:
         return Response(
-            text="corpus에서 관련 문서를 찾지 못했습니다. (corpus index 미생성?)",
+            text="corpus에서 관련 문서를 찾지 못했습니다.",
             citations=[], viz_payload={"type":"empty"}, intent=intent,
             matched_records=0, confidence=0.0,
         )
-    lines = [f"**'{intent.raw_question}' 관련 corpus 문서 top-{len(hits)}**\n"]
-    for i, h in enumerate(hits, 1):
-        m = h["manifest"]
-        lines.append(f"{i}. **{m.get('short_title', m.get('title','?'))}** (score={h['score']:.2f})")
-        lines.append(f"   - type: {m.get('type','?')}{'  cop:' + m.get('cop') if m.get('cop') else ''}{'  country:' + m.get('country') if m.get('country') else ''}")
-        if m.get("official_url"):
-            lines.append(f"   - source: {m['official_url']}")
-        lines.append(f"   - path: `{m.get('path','?')}`")
-        if m.get("issues_addressed"):
-            lines.append(f"   - issues: {', '.join(m['issues_addressed'])}")
-    payload = {"type": "search_results", "items": [
-        {"title": h["manifest"].get("short_title"), "score": h["score"],
-         "path": h["manifest"].get("path"), "type": h["manifest"].get("type")}
-        for h in hits
-    ]}
+    method_label = "semantic+keyword 하이브리드" if method == "hybrid" else "keyword (TF-IDF)"
+    lines = [f"**'{intent.raw_question}' — corpus 문서 top-{len(hybrid_hits)} ({method_label})**\n"]
+    for i, h in enumerate(hybrid_hits, 1):
+        lines.append(f"{i}. **{h.get('title','?')}**  (score={h['score']:.3f})")
+        meta_parts = []
+        if h.get("type"): meta_parts.append(f"type: {h['type']}")
+        if h.get("cop"): meta_parts.append(f"cop: {h['cop']}")
+        if h.get("country"): meta_parts.append(f"country: {h['country']}")
+        if h.get("chunk_idx") is not None: meta_parts.append(f"chunk #{h['chunk_idx']}")
+        if method == "hybrid":
+            meta_parts.append(f"semantic={h.get('score_semantic', 0):.2f}")
+            meta_parts.append(f"keyword={h.get('score_keyword', 0):.2f}")
+        if meta_parts: lines.append(f"   - {' · '.join(meta_parts)}")
+        lines.append(f"   - path: `{h.get('path', '?')}`")
+        if h.get("text_preview"):
+            preview = h["text_preview"][:200].replace("\n", " ")
+            lines.append(f'   - preview: "{preview}..."')
+    payload = {"type": "search_results", "method": method,
+               "items": [{"title": h.get("title"), "score": h["score"],
+                          "path": h.get("path"), "type": h.get("type"),
+                          "score_semantic": h.get("score_semantic"),
+                          "score_keyword": h.get("score_keyword")}
+                         for h in hybrid_hits]}
     return Response(
         text="\n".join(lines), citations=[], viz_payload=payload,
-        intent=intent, matched_records=len(hits), confidence=0.80,
+        intent=intent, matched_records=len(hybrid_hits), confidence=0.85,
     )
 
 
@@ -871,33 +1011,35 @@ def answer_question(question: str, k: int = 24, seed: int = 42) -> Response:
     builder = _INTENT_DISPATCH.get(intent.type, _build_lookup)
     response = builder(intent, records)
 
-    # v2.1: auto-attach corpus references to ALL response types except 'search'
-    # (which already shows corpus). Attach top-3 corpus docs by combined
-    # (TF-IDF score) + (context overlap) ranking.
+    # v2.2: auto-attach corpus references using hybrid search (semantic + keyword).
     if intent.type != "search":
-        corpus_hits = corpus_search(question, top_k=10)
+        hyb_hits = hybrid_search(question, top_k=5)
         context_hits = corpus_filter_by_context(intent)
-        # Merge with simple union, preserving search score order
+        # Build doc_id-keyed merged list, preserving hybrid order
         seen = set()
         merged = []
-        for h in corpus_hits:
-            if h["doc_id"] not in seen:
-                seen.add(h["doc_id"]); merged.append(h["manifest"])
+        for h in hyb_hits:
+            if h.get("doc_id") and h["doc_id"] not in seen:
+                seen.add(h["doc_id"])
+                merged.append({"doc_id": h["doc_id"], "title": h.get("title"),
+                               "short_title": h.get("title"), "path": h.get("path"),
+                               "type": h.get("type"), "official_url": None,
+                               "score": h.get("score"), "method": h.get("method")})
         for r in context_hits:
             if r["doc_id"] not in seen:
                 seen.add(r["doc_id"]); merged.append(r)
-        # Attach max 3 corpus references to viz_payload (UI uses this)
         if merged:
             response.viz_payload["corpus_references"] = [
                 {"doc_id": r["doc_id"], "title": r.get("short_title", r.get("title", "?")),
                  "path": r.get("path"), "type": r.get("type"),
-                 "official_url": r.get("official_url")}
+                 "official_url": r.get("official_url"),
+                 "score": r.get("score"), "method": r.get("method")}
                 for r in merged[:3]
             ]
-            # Append summary line to text
-            response.text += "\n\n📚 **관련 corpus 문서**:\n"
+            response.text += "\n\n📚 **관련 corpus 문서** (hybrid 검색):\n"
             for r in merged[:3]:
-                response.text += f"  - {r.get('short_title', r.get('title','?'))}  (`{r.get('path','?')}`)\n"
+                method_tag = f" [{r.get('method','keyword')}]" if r.get("method") else ""
+                response.text += f"  - {r.get('short_title', r.get('title','?'))}{method_tag}  (`{r.get('path','?')}`)\n"
 
     response.methodology = _make_methodology(intent, n_retrieved=len(records), seed=seed)
     return response

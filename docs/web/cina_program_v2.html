@@ -98,6 +98,8 @@
                        font-size: 10px; margin-left: 4px; }
     .cina-corpus-link a { color: #0369a1; text-decoration: none; font-weight: 500; }
     .cina-corpus-link a:hover { text-decoration: underline; }
+    .cina-corpus-method { background: #ddd6fe; color: #5b21b6; padding: 1px 6px; border-radius: 4px;
+                          font-size: 10px; margin-left: 4px; font-weight: 600; cursor: help; }
 
     .loading { color: var(--muted); font-style: italic; font-size: 13px; padding: 8px; }
 
@@ -127,11 +129,13 @@
 
 <header>
   <div class="container">
-    <h1>🌍 Ask CINA <span style="opacity:0.75;font-size:0.7em">v2</span></h1>
-    <div class="tagline">학술 등급 기후 협상 Q&amp;A · 2,400 record · 50국 · 8이슈 · 6 COP (COP25-COP30) · 7 intents</div>
+    <h1>🌍 Ask CINA <span style="opacity:0.75;font-size:0.7em">v2.2</span></h1>
+    <div class="tagline">학술 등급 기후 협상 Q&amp;A · 2,400 records · 50국 · 8 이슈 · 6 COP · 8 intents · 215 embeddings (semantic + keyword)</div>
     <div class="badges">
-      <span class="badge">engine v2.0.0</span>
-      <span class="badge">dataset v5.0.0</span>
+      <span class="badge">engine v2.2.0</span>
+      <span class="badge">dataset v5.1.0 (125 verified)</span>
+      <span class="badge">corpus v6 · 21 docs</span>
+      <span class="badge">embeddings v7 · 384-dim</span>
       <span class="badge">BYO LLM (Gemini · Anthropic · Groq)</span>
       <span class="badge">CC BY 4.0 / MIT</span>
     </div>
@@ -248,16 +252,18 @@
     refreshStatus();
   }
   function refreshStatus() {
+    const hasGemini = !!window.CINA_v2.getKey("gemini");
+    const semanticTag = hasGemini ? " · 🧠 semantic ON" : " · 🔤 keyword-only";
     if (currentMode === "rule") {
-      statusPill.textContent = "🧮 Rule-based (즉시, 무료)";
+      statusPill.textContent = "🧮 Rule-based (즉시, 무료)" + semanticTag;
       statusPill.className = "status-pill ok";
     } else {
       const prov = window.CINA_v2.pickFirstAvailableProvider();
       if (prov) {
-        statusPill.textContent = `🤖 LLM 사용 가능: ${prov}`;
+        statusPill.textContent = `🤖 LLM: ${prov}` + semanticTag;
         statusPill.className = "status-pill ok";
       } else {
-        statusPill.textContent = "🟡 LLM 모드 - API Key 미설정";
+        statusPill.textContent = "🟡 LLM 모드 - API Key 미설정" + semanticTag;
         statusPill.className = "status-pill warn";
       }
     }
