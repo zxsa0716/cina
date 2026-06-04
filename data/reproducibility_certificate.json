@@ -1,8 +1,8 @@
 {
   "version": "v9.6.0",
-  "generated_at": "2026-06-04T03:10:16.004152+00:00",
-  "n_entries": 58,
-  "chain_hash": "b869015d5f88625263796daf21db3d486f0eae5468fb0a1a6be22e8d8a199a4d",
+  "generated_at": "2026-06-04T08:37:31.725707+00:00",
+  "n_entries": 60,
+  "chain_hash": "d20d35e873d86e326484e83bc33504534c91e6f6cc7e5d0525810d5bd9077384",
   "per_category": {
     "v5_dataset": {
       "requested": 2,
@@ -49,8 +49,8 @@
       "present": 5
     },
     "changelogs": {
-      "requested": 4,
-      "present": 4
+      "requested": 6,
+      "present": 6
     },
     "documentation": {
       "requested": 4,
@@ -313,8 +313,8 @@
     {
       "category": "engine_scripts",
       "path": "src/program/query_engine_v2.py",
-      "sha256": "6428345dfc9d7030334e519679c5f4df0400a55b2fa605b765ffdfb4057a52c8",
-      "size_bytes": 47595
+      "sha256": "3d623bb05696383afc201a7bdec705c0e9de2e5677878406457a4b9b8528873b",
+      "size_bytes": 47872
     },
     {
       "category": "eval_scripts",
@@ -360,6 +360,12 @@
     },
     {
       "category": "changelogs",
+      "path": "CHANGELOG_v10.md",
+      "sha256": "7dfe325e02685ae9f866c2719831a4d0c745754be7119c0c71e084d7c12c781a",
+      "size_bytes": 9927
+    },
+    {
+      "category": "changelogs",
       "path": "CHANGELOG_v5.md",
       "sha256": "68887ffd6aad88c3f0d96a9a3f460e002259a9b93243d21e6b82570c04fa74e6",
       "size_bytes": 9524
@@ -383,6 +389,12 @@
       "size_bytes": 10494
     },
     {
+      "category": "changelogs",
+      "path": "CHANGELOG_v9.md",
+      "sha256": "041c220ec2dcc66968bf9b65227d753b64760542ede4ba5011d4acc0addbd8f0",
+      "size_bytes": 9808
+    },
+    {
       "category": "documentation",
       "path": "CLAUDE.md",
       "sha256": "1d280d53b908f9fa557857dc8b438e3b032f991d4d4bb957ea166a740a4d3f5c",
@@ -403,8 +415,8 @@
     {
       "category": "documentation",
       "path": "README.md",
-      "sha256": "6051bce3ffc0cc8af941b3fab03e9c0cccc39a07a2a2903e0003c2f24455a606",
-      "size_bytes": 19841
+      "sha256": "be147c1f925d9292df78fd98c4922975898067d5cc570125208f567df1460502",
+      "size_bytes": 20548
     }
   ]
 }

@@ -1,0 +1,13 @@
+{
+  "generated_at": "2026-06-04T03:00:01.899448+00:00",
+  "n_total": 2400,
+  "n_from_heuristic": 2400,
+  "n_from_llm": 0,
+  "kept_counts": {
+    "kept_heuristic_extension": 2275,
+    "kept_verified_canonical": 125
+  },
+  "verified_ratio": 0.052083333333333336,
+  "n_overlay_events": 0,
+  "first_20_events": []
+}

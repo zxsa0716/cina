@@ -20,6 +20,17 @@
   <img alt="Cross-LLM" src="https://img.shields.io/badge/Cross--LLM%20%CE%B1-0.93-success">
   <img alt="R-GAT chair" src="https://img.shields.io/badge/R--GAT%20chair%20attention-1.00-f59e0b">
   <img alt="Manifest" src="https://img.shields.io/badge/Manifest-225%20docs-blue">
+  <br>
+  <img alt="Engine" src="https://img.shields.io/badge/engine-v2.4.0-2a5298">
+  <img alt="Dataset" src="https://img.shields.io/badge/dataset-v5.2--merged-success">
+  <img alt="Tests" src="https://img.shields.io/badge/tests-40%20pass-success">
+  <img alt="i18n" src="https://img.shields.io/badge/i18n-%F0%9F%87%B0%F0%9F%87%B7%20%E2%86%94%20%F0%9F%87%AC%F0%9F%87%A7-blueviolet">
+  <img alt="Cache" src="https://img.shields.io/badge/LLM%20cache-SQLite%20%2B%20IndexedDB-orange">
+  <img alt="Status" src="https://img.shields.io/badge/status-PRODUCTION--COMPLETE-brightgreen">
+</p>
+
+<p align="center">
+  <strong>📋 <a href="FINAL_STATUS.md">FINAL SYSTEM STATUS</a> — 시스템 완성 sign-off</strong>
 </p>
 
 <p align="center">

@@ -33,8 +33,12 @@ from pathlib import Path
 from typing import Optional
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-DATA  = ROOT / "data" / "processed" / "stances_v5.jsonl"
-META  = ROOT / "data" / "processed" / "stances_v5_meta.json"
+# v10.4: prefer v5.2-merged (LLM overlay applied) if present
+_MERGED  = ROOT / "data" / "processed" / "stances_v5_merged.jsonl"
+_BASE    = ROOT / "data" / "processed" / "stances_v5.jsonl"
+DATA  = _MERGED if _MERGED.exists() else _BASE
+META  = (ROOT / "data" / "processed" / "stances_v5_merged_meta.json") if _MERGED.exists() else \
+        (ROOT / "data" / "processed" / "stances_v5_meta.json")
 CORPUS_MANIFEST = ROOT / "data" / "corpus" / "manifest.jsonl"
 CORPUS_INDEX    = ROOT / "data" / "corpus" / "search_index.json"
 EMBED_NPZ       = ROOT / "data" / "corpus" / "embeddings.npz"

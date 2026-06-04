@@ -118,7 +118,7 @@
       matching_records: "개 매칭 record",
       issue: "이슈", cop_col: "COP", score: "점수", ci: "95% CI",
       vs_comparison: "입장 비교", max_gap: "최대 격차",
-      timeseries: "시계열 추이", remaining: "전체",
+      timeseries: "시계열 추이 (COP25-COP30)", remaining: "전체",
       similar_countries: "와 가장 유사한 국가", official_coalition: "의 공식 coalition",
       gap_analysis: "국내↔국제 translation gap Δ",
       gap_caveat: "Δ > 0: 국내 의지 강한데 국제에서 약화 (Brazil paradox 패턴). Δ < 0: 국제에서 더 적극적.",
@@ -141,6 +141,45 @@
       llm_call_failed: "LLM 호출 실패",
       llm_fallback: "rule-based 결과로 대체합니다.",
       methodology: "methodology",
+      // v10.2 — Page-level HTML strings
+      app_subtitle: "학술 등급 기후 협상 Q&A · 2,400 records · 50국 · 8 이슈 · 6 COP · 8 intents · 215 embeddings · LLM cache · i18n",
+      mode_label: "모드", lang_label_ko: "🇰🇷 한국어", lang_label_en: "🇬🇧 EN",
+      btn_keys: "🔑 API Key 관리", btn_md: "📄 .md", btn_json: "📦 .json", btn_bib: "📚 .bib",
+      btn_cache: "💾 Cache", btn_clear: "🗑️ 대화",
+      ask_btn: "질문", ask_placeholder: "예: 브라질이 COP30에서 GGA 지표를 어떻게 통제했는가?\n한국과 비슷한 국가는?\nAOSIS GGA-IND 시계열 추이?\n브라질의 translation gap 분석",
+      corpus_browser_btn: "📚 Corpus Browser — 21개 문서 탐색",
+      footer_main: "🌐 CINA 메인", footer_github: "📦 GitHub",
+      footer_strategy: "📄 논문 전략", footer_setup: "🛠 BYO LLM 설정",
+      modal_title: "🔑 BYO LLM API Key",
+      modal_subtitle: "키는 본인 브라우저 localStorage에만 저장됩니다. CINA 서버로 전송되지 않습니다.",
+      save: "저장", remove: "제거", close: "닫기",
+      status_loading: "📡 데이터 로드 중...",
+      status_rule_mode: "🧮 Rule-based (즉시, 무료)",
+      status_llm_no_key: "🟡 LLM 모드 - API Key 미설정",
+      status_data_loaded: "📊 records 로드 완료",
+      status_data_failed: "⚠️ 데이터 로드 실패 (fallback)",
+      semantic_on: " · 🧠 semantic ON",
+      semantic_off: " · 🔤 keyword-only",
+      alpha_tip: "hybrid 검색에서 semantic 비율 (0=keyword only, 1=semantic only)",
+      generating: "⏳ 답변 생성 중...",
+      Q_marker: "Q",
+      // v10.3 — Build-function strings
+      issue_label: "이슈", cop_label: "COP", score_label: "점수",
+      best_pair_for: "최적 권한", chair_role: "의장 역할",
+      strong_strength: "강한 강점", penholder_potential: "pen-holder 잠재력",
+      domestic_proxy: "국내 추정", intl_score: "국제",
+      stable: "안정", needs_attention: "주의",
+      total_series: "전체 series 중", showing_only: "개만 표시",
+      no_corpus_match: "corpus 검색 결과 없음",
+      corpus_index_missing: "corpus index가 로드되지 않았거나 매칭되는 문서가 없습니다.",
+      corpus_search_results_for: "corpus 문서",
+      cache_modal_title: "📦 Browser LLM Cache (IndexedDB)",
+      cache_n_total: "총 캐시 항목", cache_session_hits: "세션 hits",
+      cache_session_misses: "세션 misses", cache_session_hit_rate: "세션 hit rate",
+      cache_writes: "쓰기", cache_errors: "오류",
+      cache_keep_msg: "확인 = 캐시 유지, 취소 = 캐시 전체 삭제",
+      cache_cleared: "✅ 캐시 삭제됨",
+      confirm_clear_history: "대화 기록을 모두 삭제하시겠습니까?",
     },
     en: {
       strong_support: "strong support", support: "support", neutral: "neutral",
@@ -151,7 +190,7 @@
       matching_records: "matching records",
       issue: "Issue", cop_col: "COP", score: "Score", ci: "95% CI",
       vs_comparison: "stance comparison", max_gap: "Largest gap",
-      timeseries: "Time-series trajectory", remaining: "total",
+      timeseries: "Time-series trajectory (COP25-COP30)", remaining: "total",
       similar_countries: " — most similar countries", official_coalition: "'s official coalitions",
       gap_analysis: "Domestic↔International translation gap Δ",
       gap_caveat: "Δ > 0: strong domestic but weak international (Brazil paradox). Δ < 0: more proactive internationally.",
@@ -174,6 +213,45 @@
       llm_call_failed: "LLM call failed",
       llm_fallback: "Falling back to rule-based result.",
       methodology: "methodology",
+      // v10.2 — Page-level HTML strings
+      app_subtitle: "Academic-grade climate negotiation Q&A · 2,400 records · 50 countries · 8 issues · 6 COPs · 8 intents · 215 embeddings · LLM cache · i18n",
+      mode_label: "Mode", lang_label_ko: "🇰🇷 한국어", lang_label_en: "🇬🇧 EN",
+      btn_keys: "🔑 API Keys", btn_md: "📄 .md", btn_json: "📦 .json", btn_bib: "📚 .bib",
+      btn_cache: "💾 Cache", btn_clear: "🗑️ Clear",
+      ask_btn: "Ask", ask_placeholder: "e.g.: How did Brazil control GGA indicators at COP30?\nWhich countries are similar to Korea?\nAOSIS GGA-IND trajectory?\nBrazil translation gap analysis",
+      corpus_browser_btn: "📚 Corpus Browser — explore 21 documents",
+      footer_main: "🌐 CINA home", footer_github: "📦 GitHub",
+      footer_strategy: "📄 Publication strategy", footer_setup: "🛠 BYO LLM setup",
+      modal_title: "🔑 BYO LLM API Key",
+      modal_subtitle: "Keys are stored only in your browser localStorage. They are never sent to a CINA server.",
+      save: "Save", remove: "Remove", close: "Close",
+      status_loading: "📡 Loading data...",
+      status_rule_mode: "🧮 Rule-based (instant, free)",
+      status_llm_no_key: "🟡 LLM mode — API Key not set",
+      status_data_loaded: "📊 records loaded",
+      status_data_failed: "⚠️ Data load failed (fallback)",
+      semantic_on: " · 🧠 semantic ON",
+      semantic_off: " · 🔤 keyword-only",
+      alpha_tip: "Semantic ratio in hybrid search (0=keyword only, 1=semantic only)",
+      generating: "⏳ Generating answer...",
+      Q_marker: "Q",
+      // v10.3
+      issue_label: "Issue", cop_label: "COP", score_label: "Score",
+      best_pair_for: "Best authority", chair_role: "chair role",
+      strong_strength: "strong strength", penholder_potential: "pen-holder potential",
+      domestic_proxy: "domestic", intl_score: "international",
+      stable: "stable", needs_attention: "attention",
+      total_series: "of total series", showing_only: "shown",
+      no_corpus_match: "No corpus matches",
+      corpus_index_missing: "Corpus index not loaded or no matching documents.",
+      corpus_search_results_for: "corpus documents",
+      cache_modal_title: "📦 Browser LLM Cache (IndexedDB)",
+      cache_n_total: "Total cached", cache_session_hits: "Session hits",
+      cache_session_misses: "Session misses", cache_session_hit_rate: "Session hit rate",
+      cache_writes: "Writes", cache_errors: "Errors",
+      cache_keep_msg: "OK = keep cache, Cancel = clear all",
+      cache_cleared: "✅ Cache cleared",
+      confirm_clear_history: "Delete all conversation history?",
     },
   };
   function t(key, replacements) {
@@ -216,13 +294,18 @@
 
   async function loadData() {
     if (DATA_CACHE) return DATA_CACHE;
+    // v10.4: prefer v5.2-merged (LLM overlay applied) if present
     const candidates = [
-      "data/stances_v5.jsonl",                    // GH Pages: /web/data/stances_v5.jsonl
+      "data/stances_v5_merged.jsonl",
+      "./data/stances_v5_merged.jsonl",
+      "../../data/processed/stances_v5_merged.jsonl",
+      "data/stances_v5.jsonl",
       "./data/stances_v5.jsonl",
-      "../../data/processed/stances_v5.jsonl",    // local dev
+      "../../data/processed/stances_v5.jsonl",
       "data/processed/stances_v5.jsonl",
+      "/cina/web/data/stances_v5_merged.jsonl",
       "/cina/web/data/stances_v5.jsonl",
-      "../../data/processed/stances_v4.jsonl",    // fallback to v4
+      "../../data/processed/stances_v4.jsonl",
     ];
     for (const url of candidates) {
       try {
@@ -392,14 +475,28 @@
   async function embedQuery(query) {
     if (EMBED_QUERY_CACHE[query]) return EMBED_QUERY_CACHE[query];
     const geminiKey = getKey("gemini");
-    if (geminiKey) {
-      try {
-        const v = await geminiEmbed(query, geminiKey);
-        EMBED_QUERY_CACHE[query] = v;
-        return v;
-      } catch (e) {
-        console.warn("[CINA v2.2] gemini embed failed; semantic disabled:", e.message);
+    if (!geminiKey) return null;
+    // v10.1: persist embedding via IndexedDB cache (json-encoded vector)
+    const embedFn = async (prompt, key) => {
+      const vec = await geminiEmbed(prompt, key);
+      return JSON.stringify(Array.from(vec));
+    };
+    try {
+      let cached = null;
+      if (window.CINA_LLMCache && window.CINA_LLMCache.cachedCall) {
+        cached = await window.CINA_LLMCache.cachedCall(
+          "gemini-embed", "text-embedding-004", query, geminiKey, embedFn,
+          { temperature: 0.0, ttlDays: 60 }
+        );
+      } else {
+        cached = await embedFn(query, geminiKey);
       }
+      const arr = JSON.parse(cached);
+      const v = new Float32Array(arr);
+      EMBED_QUERY_CACHE[query] = v;
+      return v;
+    } catch (e) {
+      console.warn("[CINA v2.4] gemini embed failed; semantic disabled:", e.message);
     }
     return null;
   }
@@ -680,26 +777,26 @@
       const r = records[0];
       const m = r._meta;
       html += `<div class="cina-card"><div class="cina-card-h">${m.country} – ${m.issue} (${m.cop})</div>`;
-      html += `<div class="cina-row"><span class="cina-k">입장 점수</span><span class="cina-v"><b>${fmt(r.stance_score)}</b> (${stanceLabel(r.stance_score)})</span></div>`;
-      html += `<div class="cina-row"><span class="cina-k">95% CI</span><span class="cina-v">${svgCIBar(r.stance_score, r.ci_lower_95 || r.stance_score, r.ci_upper_95 || r.stance_score)}</span></div>`;
-      html += `<div class="cina-row"><span class="cina-k">우세 frame</span><span class="cina-v">${r.frame_type || "-"}</span></div>`;
+      html += `<div class="cina-row"><span class="cina-k">${t("stance_score")}</span><span class="cina-v"><b>${fmt(r.stance_score)}</b> (${stanceLabel(r.stance_score)})</span></div>`;
+      html += `<div class="cina-row"><span class="cina-k">${t("ci")}</span><span class="cina-v">${svgCIBar(r.stance_score, r.ci_lower_95 || r.stance_score, r.ci_upper_95 || r.stance_score)}</span></div>`;
+      html += `<div class="cina-row"><span class="cina-k">${t("dominant_frame")}</span><span class="cina-v">${r.frame_type || "-"}</span></div>`;
       if (r.nato_4axis) {
-        html += `<div class="cina-row"><span class="cina-k">NATO 4축</span><span class="cina-v">${svgNatoBar(r.nato_4axis)}</span></div>`;
+        html += `<div class="cina-row"><span class="cina-k">${t("nato_4axis")}</span><span class="cina-v">${svgNatoBar(r.nato_4axis)}</span></div>`;
       }
       const proc = r.procedural_signals || {};
       if (proc.is_chair_role || proc.is_pen_holder) {
-        const tags = [proc.is_chair_role && "의장", proc.is_pen_holder && "펜홀더"].filter(Boolean).join(", ");
-        html += `<div class="cina-row"><span class="cina-k">절차권한</span><span class="cina-v">${tags} (composite=${(r.procedural_composite||0).toFixed(2)})</span></div>`;
+        const tags = [proc.is_chair_role && t("chair"), proc.is_pen_holder && t("penholder")].filter(Boolean).join(", ");
+        html += `<div class="cina-row"><span class="cina-k">${t("procedural_authority")}</span><span class="cina-v">${tags} (composite=${(r.procedural_composite||0).toFixed(2)})</span></div>`;
       }
       if (r.translation_gap_delta != null && Math.abs(r.translation_gap_delta) > 0.15) {
-        html += `<div class="cina-row"><span class="cina-k">국내↔국제 Δ</span><span class="cina-v">${fmt(r.translation_gap_delta)}</span></div>`;
+        html += `<div class="cina-row"><span class="cina-k">${t("translation_gap")}</span><span class="cina-v">${fmt(r.translation_gap_delta)}</span></div>`;
       }
       html += `</div>`;
       citations.push(recordToCitation(r));
     } else {
       const target = intent.countries[0] || records[0]._meta.country;
-      html += `<div class="cina-card"><div class="cina-card-h">${target} – ${records.length}개 매칭 record</div>`;
-      html += `<table class="cina-table"><thead><tr><th>이슈</th><th>COP</th><th>점수</th><th>95% CI</th></tr></thead><tbody>`;
+      html += `<div class="cina-card"><div class="cina-card-h">${target} – ${records.length} ${t("matching_records")}</div>`;
+      html += `<table class="cina-table"><thead><tr><th>${t("issue_label")}</th><th>${t("cop_label")}</th><th>${t("score_label")}</th><th>${t("ci")}</th></tr></thead><tbody>`;
       records.slice(0, 12).forEach(r => {
         const m = r._meta;
         html += `<tr><td>${m.issue}</td><td>${m.cop}</td><td><b>${fmt(r.stance_score)}</b></td><td>[${fmt(r.ci_lower_95||0)}, ${fmt(r.ci_upper_95||0)}]</td></tr>`;
@@ -722,7 +819,7 @@
       grouped[m.country] = grouped[m.country] || {};
       grouped[m.country][m.issue] = r;
     });
-    let html = `<div class="cina-card"><div class="cina-card-h">${intent.countries.join(" vs ")} 입장 비교 (${cop})</div>`;
+    let html = `<div class="cina-card"><div class="cina-card-h">${intent.countries.join(" vs ")} ${t("vs_comparison")} (${cop})</div>`;
     html += `<table class="cina-table"><thead><tr><th>이슈</th>${intent.countries.map(c => `<th>${c}</th>`).join("")}</tr></thead><tbody>`;
     const citations = [];
     issues.forEach(iss => {
@@ -751,7 +848,7 @@
         }
       });
       if (largest) {
-        html += `<div class="cina-callout">📊 <b>최대 격차</b>: ${largest.iss} (Δ = ${fmt(largest.g)})</div>`;
+        html += `<div class="cina-callout">📊 <b>${t("max_gap")}</b>: ${largest.iss} (Δ = ${fmt(largest.g)})</div>`;
       }
     }
     html += `</div>`;
@@ -767,7 +864,7 @@
       const m = r._meta; const k = `${m.country}|${m.issue}`;
       grouped[k] = grouped[k] || {}; grouped[k][m.cop] = r;
     });
-    let html = `<div class="cina-card"><div class="cina-card-h">시계열 추이 (${cops[0]}-${cops[cops.length-1]})</div>`;
+    let html = `<div class="cina-card"><div class="cina-card-h">${t("timeseries")}</div>`;
     const citations = [];
     const seriesKeys = Object.keys(grouped).slice(0, 8);
     seriesKeys.forEach(k => {
@@ -783,7 +880,7 @@
         if (grouped[k][cops[i]] && citations.length < 8) { citations.push(recordToCitation(grouped[k][cops[i]])); break; }
       }
     });
-    if (Object.keys(grouped).length > 8) html += `<div class="cina-callout">전체 ${Object.keys(grouped).length}개 series 중 8개만 표시</div>`;
+    if (Object.keys(grouped).length > 8) html += `<div class="cina-callout">${Object.keys(grouped).length} ${t("total_series")}, 8 ${t("showing_only")}</div>`;
     html += `</div>`;
     return { html, citations, confidence: 0.82, n: records.length };
   }
@@ -817,12 +914,12 @@
     sims.sort((a, b) => b.r - a.r);
     const top = sims.slice(0, 10);
 
-    let html = `<div class="cina-card"><div class="cina-card-h">${target}와 가장 유사한 국가 (${cop}, Pearson r)</div>`;
+    let html = `<div class="cina-card"><div class="cina-card-h">${target}${t("similar_countries")} (${cop}, Pearson r)</div>`;
     html += svgHBars(top.map(s => s.c), top.map(s => s.r));
     // primary coalition info
     const sample = records.find(r => r._meta.country === target);
     if (sample && sample.coalition_membership) {
-      html += `<div class="cina-callout">📍 <b>${target}의 공식 coalition</b>: primary = ${sample.coalition_membership.primary}, all = ${(sample.coalition_membership.all||[]).join(", ")}</div>`;
+      html += `<div class="cina-callout">📍 <b>${target}${t("official_coalition")}</b>: primary = ${sample.coalition_membership.primary}, all = ${(sample.coalition_membership.all||[]).join(", ")}</div>`;
     }
     html += `</div>`;
     const citations = top.slice(0, 6).map(s => {
@@ -840,7 +937,7 @@
       const byIssue = {};
       targetR.forEach(r => { byIssue[r._meta.issue] = byIssue[r._meta.issue] || []; byIssue[r._meta.issue].push(r); });
       const labels = [], values = []; const citations = [];
-      let html = `<div class="cina-card"><div class="cina-card-h">${target} – 국내↔국제 translation gap Δ</div>`;
+      let html = `<div class="cina-card"><div class="cina-card-h">${target} – ${t("gap_analysis")}</div>`;
       Object.entries(byIssue).forEach(([iss, rs]) => {
         rs.sort((a,b) => a._meta.cop.localeCompare(b._meta.cop));
         const r = rs[rs.length-1];
@@ -849,7 +946,7 @@
         if (citations.length < 8) citations.push(recordToCitation(r));
       });
       html += svgHBars(labels, values);
-      html += `<div class="cina-callout">Δ &gt; 0: 국내 의지 강한데 국제에서 약화 (Brazil paradox 패턴). Δ &lt; 0: 국제에서 더 적극적.</div>`;
+      html += `<div class="cina-callout">${t("gap_caveat")}</div>`;
       html += `</div>`;
       return { html, citations, confidence: 0.78, n: records.length };
     } else {
@@ -863,7 +960,7 @@
         byCountry[c].push(Math.abs(r.translation_gap_delta || 0));
       });
       const ranking = Object.entries(byCountry).map(([c, vs]) => [c, mean(vs)]).sort((a,b) => b[1] - a[1]).slice(0, 10);
-      let html = `<div class="cina-card"><div class="cina-card-h">${cop} – 국가별 평균 |Δ| 상위 10</div>`;
+      let html = `<div class="cina-card"><div class="cina-card-h">${cop} – ${t("gap_ranking_header")}</div>`;
       html += svgHBars(ranking.map(x => x[0]), ranking.map(x => x[1]));
       html += `</div>`;
       return { html, citations: [], confidence: 0.75, n: records.length };
@@ -877,29 +974,28 @@
     if (!sub.length) return buildEmpty(intent);
     sub.sort((a,b) => a.stance_score - b.stance_score);
     const weak = sub.slice(0, 3), strong = sub.slice(-3).reverse();
-    let html = `<div class="cina-card"><div class="cina-card-h">${target} 전략 권고 (${cop})</div>`;
+    let html = `<div class="cina-card"><div class="cina-card-h">${target} ${t("recommendation")} (${cop})</div>`;
     const citations = [];
-    html += `<div style="background:#fef2f2;padding:8px;border-radius:6px;margin-bottom:8px"><b>📉 약점 이슈 (보강 필요)</b></div><table class="cina-table"><tbody>`;
+    html += `<div style="background:#fef2f2;padding:8px;border-radius:6px;margin-bottom:8px"><b>${t("weak_issues")}</b></div><table class="cina-table"><tbody>`;
     weak.forEach(r => {
       const topAxis = r.nato_4axis ? Object.entries(r.nato_4axis).sort((a,b) => b[1]-a[1])[0][0] : "-";
-      html += `<tr><td>${r._meta.issue}</td><td><b>${fmt(r.stance_score)}</b></td><td><small>NATO <b>${topAxis}</b> 축 강화 권장</small></td></tr>`;
+      html += `<tr><td>${r._meta.issue}</td><td><b>${fmt(r.stance_score)}</b></td><td><small>${t("strengthen", {axis: topAxis})}</small></td></tr>`;
       if (citations.length < 8) citations.push(recordToCitation(r));
     });
     html += `</tbody></table>`;
-    html += `<div style="background:#f0fdf4;padding:8px;border-radius:6px;margin:8px 0"><b>📈 강점 이슈 (pen-holder 활용)</b></div><table class="cina-table"><tbody>`;
+    html += `<div style="background:#f0fdf4;padding:8px;border-radius:6px;margin:8px 0"><b>${t("strong_issues")}</b></div><table class="cina-table"><tbody>`;
     strong.forEach(r => {
-      const pen = r.procedural_signals && r.procedural_signals.is_pen_holder ? " 👑펜홀더" : "";
+      const pen = r.procedural_signals && r.procedural_signals.is_pen_holder ? ` 👑${t("penholder")}` : "";
       html += `<tr><td>${r._meta.issue}${pen}</td><td><b>${fmt(r.stance_score)}</b></td><td><small>${stanceLabel(r.stance_score)}</small></td></tr>`;
       if (citations.length < 8) citations.push(recordToCitation(r));
     });
     html += `</tbody></table>`;
-    // coalition + gap
     const sample = sub[0];
     if (sample.coalition_membership && sample.coalition_membership.all) {
-      html += `<div class="cina-callout">🤝 활용 coalition: ${sample.coalition_membership.all.join(", ")}</div>`;
+      html += `<div class="cina-callout">${t("coalition_label")}: ${sample.coalition_membership.all.join(", ")}</div>`;
     }
     const meanD = mean(sub.map(r => Math.abs(r.translation_gap_delta || 0)));
-    html += `<div class="cina-callout">📐 평균 |Δ| = ${meanD.toFixed(3)} (${meanD > 0.25 ? "주의" : "안정"})</div>`;
+    html += `<div class="cina-callout">${t("mean_delta")} = ${meanD.toFixed(3)} (${meanD > 0.25 ? t("needs_attention") : t("stable")})</div>`;
     html += `</div>`;
     return { html, citations, confidence: 0.82, n: records.length };
   }
@@ -916,14 +1012,14 @@
   async function buildSearch(intent, records) {
     const hits = await hybridSearch(intent.raw, 8);   // uses HYBRID_ALPHA
     if (!hits.length) {
-      return { html: `<div class="cina-card"><div class="cina-card-h">corpus 검색 결과 없음</div>
-        <div>corpus index가 로드되지 않았거나 매칭되는 문서가 없습니다.</div></div>`,
+      return { html: `<div class="cina-card"><div class="cina-card-h">${t("no_corpus_match")}</div>
+        <div>${t("corpus_index_missing")}</div></div>`,
         citations: [], confidence: 0, n: 0 };
     }
     const method = hits[0].method || "keyword";
-    const methodLabel = method === "hybrid" ? "semantic+keyword 하이브리드" : "keyword (TF-IDF)";
-    let html = `<div class="cina-card"><div class="cina-card-h">'${escapeHtml(intent.raw)}' — corpus 문서 top-${hits.length}<span style="font-size:11px;color:#64748b;margin-left:8px">${methodLabel}</span></div>
-      <table class="cina-table"><thead><tr><th>#</th><th>제목</th><th>type</th><th>score</th><th>source</th></tr></thead><tbody>`;
+    const methodLabel = method === "hybrid" ? t("method_label_hybrid") : t("method_label_keyword");
+    let html = `<div class="cina-card"><div class="cina-card-h">'${escapeHtml(intent.raw)}' — ${t("corpus_search_results_for")} top-${hits.length}<span style="font-size:11px;color:#64748b;margin-left:8px">${methodLabel}</span></div>
+      <table class="cina-table"><thead><tr><th>#</th><th>title</th><th>type</th><th>score</th><th>source</th></tr></thead><tbody>`;
     hits.forEach((h, i) => {
       const m = h.manifest || {};
       const link = m.official_url ? `<a href="${escapeHtml(m.official_url)}" target="_blank">원문 ↗</a>`
@@ -943,9 +1039,8 @@
 
   function buildEmpty(intent) {
     return {
-      html: `<div class="cina-card"><div class="cina-card-h">매칭 record 없음</div>
-        <div>지원: 50국 × 8이슈 (GGA-IND/MOI, NAPs, JT-ADAPT, L&amp;D-OP, FINANCE-ADAPT, TRANS-FIN, TECH-TRANS) × 6 COP (COP25-30)<br>
-        국가+이슈를 명시하면 정확도가 올라갑니다.</div></div>`,
+      html: `<div class="cina-card"><div class="cina-card-h">${t("empty_no_match")}</div>
+        <div>${t("empty_hint")}</div></div>`,
       citations: [], confidence: 0, n: 0,
     };
   }
@@ -1058,10 +1153,20 @@ ${histStr}
   async function callLLM(provider, prompt) {
     const key = getKey(provider);
     if (!key) throw new Error(`API key not set for ${provider}`);
-    if (provider === "gemini") return await callGemini(prompt, key);
-    if (provider === "anthropic") return await callAnthropic(prompt, key);
-    if (provider === "groq") return await callGroq(prompt, key);
-    throw new Error(`Unknown provider: ${provider}`);
+    const callMap = {
+      "gemini":    { fn: callGemini,    model: "gemini-2.5-flash-lite" },
+      "anthropic": { fn: callAnthropic, model: "claude-sonnet-4-5" },
+      "groq":      { fn: callGroq,      model: "llama-3.3-70b-versatile" },
+    };
+    if (!callMap[provider]) throw new Error(`Unknown provider: ${provider}`);
+    // v10.1: route through IndexedDB cache if available
+    if (window.CINA_LLMCache && window.CINA_LLMCache.cachedCall) {
+      return await window.CINA_LLMCache.cachedCall(
+        provider, callMap[provider].model, prompt, key, callMap[provider].fn,
+        { temperature: 0.3, ttlDays: 30 }
+      );
+    }
+    return await callMap[provider].fn(prompt, key);
   }
 
   // ================================================================
@@ -1102,7 +1207,7 @@ ${histStr}
         answerHTML = `<div class="cina-llm-answer">${escapeHtml(llmText).replace(/\n/g, "<br>")}</div>` + answerHTML;
       } catch (e) {
         console.error("[CINA v2] LLM call failed:", e);
-        answerHTML = `<div class="cina-callout" style="background:#fef2f2;color:#991b1b">⚠️ LLM 호출 실패: ${escapeHtml(e.message)}<br>rule-based 결과로 대체합니다.</div>` + answerHTML;
+        answerHTML = `<div class="cina-callout" style="background:#fef2f2;color:#991b1b">⚠️ ${t("llm_call_failed")}: ${escapeHtml(e.message)}<br>${t("llm_fallback")}</div>` + answerHTML;
       }
     }
 
@@ -1146,8 +1251,8 @@ ${histStr}
   function renderCorpusRefs(refs) {
     if (!refs || !refs.length) return "";
     const anyHybrid = refs.some(r => r.method === "hybrid");
-    const headLabel = anyHybrid ? "📚 관련 corpus 문서 (hybrid 검색)" : "📚 관련 corpus 문서";
-    let html = `<div class="cina-corpus-refs"><div class="cina-corpus-h">${headLabel} ${refs.length}건</div>`;
+    const headLabel = anyHybrid ? t("corpus_refs_hybrid") : t("corpus_refs");
+    let html = `<div class="cina-corpus-refs"><div class="cina-corpus-h">${headLabel} (${refs.length})</div>`;
     refs.forEach(r => {
       const link = r.official_url
         ? `<a href="${escapeHtml(r.official_url)}" target="_blank">원문 ↗</a>`
@@ -1170,14 +1275,14 @@ ${histStr}
 
   function renderCitations(citations) {
     if (!citations.length) return "";
-    let html = `<details class="cina-cite-panel"><summary>📎 근거 ${citations.length}건 (펼치기)</summary><div>`;
+    let html = `<details class="cina-cite-panel"><summary>${t("cite_panel")} ${citations.length} ${t("cite_panel_expand")}</summary><div>`;
     citations.forEach((c, i) => {
       html += `<div class="cina-cite-item">
         <b>[${i+1}] ${c.country} / ${c.issue} @ ${c.cop}</b> — stance ${fmt(c.score)}
         ${c.ci_lower != null ? `[${fmt(c.ci_lower)}, ${fmt(c.ci_upper)}]` : ""}
         ${c.frame ? `· frame=${c.frame}` : ""}
-        ${c.source_type === "verified_canonical" ? "✅" : ""}
-        <div class="cina-cite-quote">"${escapeHtml(c.quote || "(no quote)")}"</div>
+        ${c.source_type === "verified_canonical" || c.source_type === "verified_llm" ? "✅" : ""}
+        <div class="cina-cite-quote">"${escapeHtml(c.quote || t("cite_no_quote"))}"</div>
       </div>`;
     });
     html += `</div></details>`;

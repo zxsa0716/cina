@@ -136,7 +136,7 @@
 <header>
   <div class="container">
     <h1>🌍 Ask CINA <span style="opacity:0.75;font-size:0.7em">v2.4</span></h1>
-    <div class="tagline">Academic-grade climate negotiation Q&amp;A · 2,400 records · 50 countries · 8 issues · 6 COPs · 8 intents · 215 embeddings · LLM cache · i18n</div>
+    <div class="tagline" data-i18n="app_subtitle">학술 등급 기후 협상 Q&amp;A · 2,400 records · 50국 · 8 이슈 · 6 COP · 8 intents · 215 embeddings · LLM cache · i18n</div>
     <div class="badges">
       <span class="badge">engine v2.4.0</span>
       <span class="badge">dataset v5.2-merged</span>
@@ -153,35 +153,36 @@
 <div class="container">
 
   <div class="controls">
-    <span class="status-pill" id="status-pill">📡 데이터 로드 중...</span>
-    <label>모드</label>
+    <span class="status-pill" id="status-pill" data-i18n="status_loading">📡 데이터 로드 중...</span>
+    <label data-i18n="mode_label">모드</label>
     <div class="mode-toggle" id="mode-toggle">
       <button data-mode="rule" class="active">🧮 Rule</button>
       <button data-mode="llm">🤖 LLM</button>
     </div>
-    <span class="alpha-slider-wrap" title="hybrid 검색에서 semantic 비율 (0=keyword only, 1=semantic only)">
+    <span class="alpha-slider-wrap" data-i18n-title="alpha_tip" title="hybrid 검색에서 semantic 비율 (0=keyword only, 1=semantic only)">
       <label>🔤 kw</label>
       <input type="range" id="alpha-slider" min="0" max="100" value="60">
       <label>🧠 sem</label>
       <span class="alpha-val" id="alpha-val">0.60</span>
     </span>
     <span class="mode-toggle" id="lang-toggle" style="margin-left:4px" title="UI language">
-      <button data-lang="ko" class="active">🇰🇷 한국어</button>
-      <button data-lang="en">🇬🇧 EN</button>
+      <button data-lang="ko" class="active" data-i18n="lang_label_ko">🇰🇷 한국어</button>
+      <button data-lang="en" data-i18n="lang_label_en">🇬🇧 EN</button>
     </span>
-    <button class="btn secondary" id="btn-keys">🔑 API Key 관리</button>
-    <button class="btn secondary" id="btn-export-md">📄 .md</button>
-    <button class="btn secondary" id="btn-export-json">📦 .json</button>
-    <button class="btn secondary" id="btn-export-bib">📚 .bib</button>
-    <button class="btn danger" id="btn-clear" style="margin-left:auto">🗑️ 대화 초기화</button>
+    <button class="btn secondary" id="btn-keys" data-i18n="btn_keys">🔑 API Key 관리</button>
+    <button class="btn secondary" id="btn-export-md" data-i18n="btn_md">📄 .md</button>
+    <button class="btn secondary" id="btn-export-json" data-i18n="btn_json">📦 .json</button>
+    <button class="btn secondary" id="btn-export-bib" data-i18n="btn_bib">📚 .bib</button>
+    <button class="btn secondary" id="btn-cache" title="브라우저 LLM 캐시 (IndexedDB)" data-i18n="btn_cache" style="margin-left:auto">💾 Cache</button>
+    <button class="btn danger" id="btn-clear" title="대화 기록 초기화" data-i18n="btn_clear">🗑️ 대화</button>
   </div>
 
   <div class="input-area">
-    <textarea id="q-input" placeholder="예: 브라질이 COP30에서 GGA 지표를 어떻게 통제했는가?
-    한국과 비슷한 국가는?
-    AOSIS GGA-IND 시계열 추이?
-    브라질의 translation gap 분석"></textarea>
-    <button class="btn" id="btn-ask" style="align-self:flex-end">질문</button>
+    <textarea id="q-input" data-i18n-placeholder="ask_placeholder" placeholder="예: 브라질이 COP30에서 GGA 지표를 어떻게 통제했는가?
+한국과 비슷한 국가는?
+AOSIS GGA-IND 시계열 추이?
+브라질의 translation gap 분석"></textarea>
+    <button class="btn" id="btn-ask" data-i18n="ask_btn" style="align-self:flex-end">질문</button>
   </div>
 
   <div class="suggestions" id="suggestions">
@@ -202,7 +203,7 @@
   </div>
 
   <div style="margin-bottom: 12px; text-align: center;">
-    <a href="corpus_browser.html" class="btn secondary">📚 Corpus Browser — 21개 문서 탐색</a>
+    <a href="corpus_browser.html" class="btn secondary" data-i18n="corpus_browser_btn">📚 Corpus Browser — 21개 문서 탐색</a>
   </div>
 
   <div class="conversation" id="conversation"></div>
@@ -212,46 +213,47 @@
 <!-- API Key Modal -->
 <div class="modal" id="key-modal">
   <div class="modal-content">
-    <h2>🔑 BYO LLM API Key</h2>
-    <p style="font-size:13px;color:var(--muted)">키는 본인 브라우저 localStorage에만 저장됩니다. CINA 서버로 전송되지 않습니다.</p>
+    <h2 data-i18n="modal_title">🔑 BYO LLM API Key</h2>
+    <p style="font-size:13px;color:var(--muted)" data-i18n="modal_subtitle">키는 본인 브라우저 localStorage에만 저장됩니다. CINA 서버로 전송되지 않습니다.</p>
     <div class="provider-row">
       <b>Gemini</b>
       <input type="password" id="key-gemini" placeholder="AIzaSy...">
-      <button class="btn secondary" data-action="save" data-provider="gemini">저장</button>
-      <button class="btn danger" data-action="clear" data-provider="gemini">제거</button>
+      <button class="btn secondary" data-action="save" data-provider="gemini" data-i18n="save">저장</button>
+      <button class="btn danger" data-action="clear" data-provider="gemini" data-i18n="remove">제거</button>
     </div>
     <div class="provider-row">
       <b>Anthropic</b>
       <input type="password" id="key-anthropic" placeholder="sk-ant-...">
-      <button class="btn secondary" data-action="save" data-provider="anthropic">저장</button>
-      <button class="btn danger" data-action="clear" data-provider="anthropic">제거</button>
+      <button class="btn secondary" data-action="save" data-provider="anthropic" data-i18n="save">저장</button>
+      <button class="btn danger" data-action="clear" data-provider="anthropic" data-i18n="remove">제거</button>
     </div>
     <div class="provider-row">
       <b>Groq</b>
       <input type="password" id="key-groq" placeholder="gsk_...">
-      <button class="btn secondary" data-action="save" data-provider="groq">저장</button>
-      <button class="btn danger" data-action="clear" data-provider="groq">제거</button>
+      <button class="btn secondary" data-action="save" data-provider="groq" data-i18n="save">저장</button>
+      <button class="btn danger" data-action="clear" data-provider="groq" data-i18n="remove">제거</button>
     </div>
     <p style="font-size:12px;color:var(--muted);margin-top:12px">
       Gemini 무료 발급: <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a><br>
       자세한 가이드: <a href="../setup/BYO_LLM_SETUP.md" target="_blank">BYO_LLM_SETUP.md</a>
     </p>
     <div style="text-align:right;margin-top:14px">
-      <button class="btn" id="modal-close">닫기</button>
+      <button class="btn" id="modal-close" data-i18n="close">닫기</button>
     </div>
   </div>
 </div>
 
 <footer>
   <p>
-    🌐 <a href="../../">CINA 메인</a> ·
-    📦 <a href="https://github.com/zxsa0716/cina">GitHub</a> ·
-    📄 <a href="../research/PUBLICATION_STRATEGY.md">논문 전략</a> ·
-    🛠 <a href="../setup/BYO_LLM_SETUP.md">BYO LLM 설정</a>
+    <a href="../../" data-i18n="footer_main">🌐 CINA 메인</a> ·
+    <a href="https://github.com/zxsa0716/cina" data-i18n="footer_github">📦 GitHub</a> ·
+    <a href="../research/PUBLICATION_STRATEGY.md" data-i18n="footer_strategy">📄 논문 전략</a> ·
+    <a href="../setup/BYO_LLM_SETUP.md" data-i18n="footer_setup">🛠 BYO LLM 설정</a>
   </p>
   <p>© 2026 Heedo Choi · Kookmin University Department of Climate Technology Convergence · zxsa0716@kookmin.ac.kr</p>
 </footer>
 
+<script src="assets/llm_cache_browser.js"></script>
 <script src="assets/cina_program_v2.js"></script>
 <script>
 (function() {
@@ -271,10 +273,11 @@
     refreshStatus();
   }
   function refreshStatus() {
+    const tt = (window.CINA_v2 && window.CINA_v2.translate) || (k => k);
     const hasGemini = !!window.CINA_v2.getKey("gemini");
-    const semanticTag = hasGemini ? " · 🧠 semantic ON" : " · 🔤 keyword-only";
+    const semanticTag = hasGemini ? tt("semantic_on") : tt("semantic_off");
     if (currentMode === "rule") {
-      statusPill.textContent = "🧮 Rule-based (즉시, 무료)" + semanticTag;
+      statusPill.textContent = tt("status_rule_mode") + semanticTag;
       statusPill.className = "status-pill ok";
     } else {
       const prov = window.CINA_v2.pickFirstAvailableProvider();
@@ -282,7 +285,7 @@
         statusPill.textContent = `🤖 LLM: ${prov}` + semanticTag;
         statusPill.className = "status-pill ok";
       } else {
-        statusPill.textContent = "🟡 LLM 모드 - API Key 미설정" + semanticTag;
+        statusPill.textContent = tt("status_llm_no_key") + semanticTag;
         statusPill.className = "status-pill warn";
       }
     }
@@ -292,7 +295,8 @@
     const q = input.value.trim(); if (!q) return;
     const turn = document.createElement("div"); turn.className = "turn";
     const ts = new Date().toLocaleTimeString();
-    turn.innerHTML = `<div class="q"><b>Q (${ts}):</b> ${q}</div><div class="a"><div class="loading">⏳ 답변 생성 중...</div></div>`;
+    const tt = (window.CINA_v2 && window.CINA_v2.translate) || (k => k);
+    turn.innerHTML = `<div class="q"><b>${tt("Q_marker")} (${ts}):</b> ${q}</div><div class="a"><div class="loading">${tt("generating")}</div></div>`;
     conv.prepend(turn);
     input.value = "";
 
@@ -310,9 +314,27 @@
 
   // Language toggle
   const langButtons = document.querySelectorAll("#lang-toggle button");
+  function applyI18nDOM() {
+    if (!window.CINA_v2 || !window.CINA_v2.translate) return;
+    const tt = window.CINA_v2.translate;
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const k = el.getAttribute("data-i18n"); if (!k) return;
+      const v = tt(k); if (v && v !== k) el.textContent = v;
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+      const k = el.getAttribute("data-i18n-placeholder"); const v = tt(k);
+      if (v && v !== k) el.placeholder = v;
+    });
+    document.querySelectorAll("[data-i18n-title]").forEach(el => {
+      const k = el.getAttribute("data-i18n-title"); const v = tt(k);
+      if (v && v !== k) el.title = v;
+    });
+  }
   function updateLang(l) {
     if (window.CINA_v2.setLang) window.CINA_v2.setLang(l);
     langButtons.forEach(b => b.classList.toggle("active", b.dataset.lang === l));
+    applyI18nDOM();
+    refreshStatus();   // status pill uses translation
   }
   const initLang = (window.CINA_v2.getLang && window.CINA_v2.getLang()) || "ko";
   updateLang(initLang);
@@ -356,17 +378,40 @@
   $("#btn-export-json").addEventListener("click", () => window.CINA_v2.exportJSON());
   $("#btn-export-bib").addEventListener("click", () => window.CINA_v2.exportBibTeX());
   $("#btn-clear").addEventListener("click", () => {
-    if (confirm("대화 기록을 모두 삭제하시겠습니까?")) { window.CINA_v2.clearHistory(); conv.innerHTML = ""; }
+    const tt = (window.CINA_v2 && window.CINA_v2.translate) || (k => k);
+    if (confirm(tt("confirm_clear_history"))) { window.CINA_v2.clearHistory(); conv.innerHTML = ""; }
+  });
+
+  // v10.1 — LLM cache management
+  $("#btn-cache").addEventListener("click", async () => {
+    const tt = (window.CINA_v2 && window.CINA_v2.translate) || (k => k);
+    if (!window.CINA_LLMCache) { alert("LLM cache module not loaded"); return; }
+    const s = await window.CINA_LLMCache.stats();
+    const msg = `${tt("cache_modal_title")}\n\n` +
+                `${tt("cache_n_total")}:  ${s.n_cached}\n` +
+                `${tt("cache_session_hits")}:    ${s.hits}\n` +
+                `${tt("cache_session_misses")}:  ${s.misses}\n` +
+                `${tt("cache_session_hit_rate")}: ${(s.hit_rate*100).toFixed(1)}%\n` +
+                `${tt("cache_writes")}:         ${s.writes}\n` +
+                `${tt("cache_errors")}:         ${s.errors}\n\n` +
+                tt("cache_keep_msg");
+    if (!confirm(msg)) {
+      await window.CINA_LLMCache.clear();
+      alert(tt("cache_cleared"));
+    }
   });
 
   // init
   updateMode(currentMode);
+  applyI18nDOM();   // initial pass
   window.CINA_v2.loadData().then(d => {
-    statusPill.textContent = `📊 ${d.length} records 로드 완료`;
+    const tt = window.CINA_v2.translate || (k => k);
+    statusPill.textContent = `📊 ${d.length} ${tt("status_data_loaded")}`;
     statusPill.className = "status-pill ok";
     setTimeout(refreshStatus, 1200);
   }).catch(() => {
-    statusPill.textContent = "⚠️ 데이터 로드 실패 (fallback)";
+    const tt = window.CINA_v2.translate || (k => k);
+    statusPill.textContent = tt("status_data_failed");
     statusPill.className = "status-pill warn";
   });
 })();
