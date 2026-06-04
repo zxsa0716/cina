@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CINA External Coder Tool v9 — Real-coder Krippendorff α 입력</title>
+  <style>
+    :root {
+      --bg:#f8fafc; --fg:#0f172a; --muted:#64748b; --primary:#0ea5e9;
+      --accent:#8b5cf6; --border:#e2e8f0; --card:#fff; --ok:#10b981; --warn:#f59e0b;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Noto Sans KR", sans-serif;
+           background:var(--bg); color:var(--fg); line-height:1.5; }
+    .container { max-width:1100px; margin:0 auto; padding:16px; }
+    header { background:linear-gradient(135deg, var(--accent), var(--primary)); color:#fff;
+             padding:24px 16px; border-radius:0 0 24px 24px; }
+    header h1 { margin:0; font-size:26px; }
+    header .tagline { font-size:14px; opacity:0.95; margin-top:4px; }
+    .panel { background:var(--card); border-radius:12px; padding:16px; margin:12px 0;
+             box-shadow:0 1px 3px rgba(0,0,0,0.05); }
+    .panel h2 { margin:0 0 10px 0; font-size:16px; color:var(--accent); }
+    .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:6px 0; }
+    .row label { font-size:13px; color:var(--muted); min-width:90px; }
+    .row input, .row select, .row textarea {
+      flex:1; padding:8px 10px; border:1px solid var(--border); border-radius:8px;
+      font-size:13px; font-family:inherit; min-width:120px;
+    }
+    .row textarea { min-height:60px; resize:vertical; }
+    .btn { background:var(--primary); color:#fff; border:0; border-radius:8px;
+           padding:8px 14px; font-size:13px; cursor:pointer; }
+    .btn:hover { background:#0369a1; }
+    .btn.secondary { background:#fff; color:#0369a1; border:1px solid var(--primary); }
+    .btn.danger { background:#ef4444; }
+    .stance-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
+    .stance-grid button {
+      padding:8px 4px; border:1px solid var(--border); background:#fff; border-radius:6px;
+      cursor:pointer; font-size:12px; transition: all 0.15s;
+    }
+    .stance-grid button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .stance-grid button:hover { border-color:var(--accent); }
+    .nato-bar { display:flex; gap:4px; align-items:center; margin:4px 0; }
+    .nato-bar input[type=range] { flex:1; accent-color:var(--accent); }
+    .nato-bar .label { min-width:80px; font-size:12px; }
+    .nato-bar .val { min-width:36px; font-family:monospace; font-size:12px; color:var(--accent); }
+    .frame-pills { display:flex; gap:4px; flex-wrap:wrap; margin:4px 0; }
+    .frame-pills button {
+      padding:4px 10px; border:1px solid var(--border); background:#fff; border-radius:14px;
+      cursor:pointer; font-size:11px;
+    }
+    .frame-pills button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .table { width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; }
+    .table th { background:#f1f5f9; padding:6px; text-align:left; }
+    .table td { padding:6px; border-top:1px solid var(--border); }
+    .progress { font-size:13px; color:var(--muted); }
+    .progress b { color:var(--accent); }
+    .alert { padding:8px 12px; border-radius:6px; font-size:12px; margin:6px 0; }
+    .alert.ok { background:#d1fae5; color:#065f46; }
+    .alert.warn { background:#fef3c7; color:#92400e; }
+    nav.top a { color:#fff; margin-right:12px; text-decoration:none; font-size:13px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <nav class="top" style="padding:0 16px 8px 16px;background:rgba(255,255,255,0.18)">
+    <a href="index.html">← 메인</a>
+    <a href="cina_program_v2.html">⚡ Program v2</a>
+    <a href="corpus_browser.html">📚 Corpus</a>
+  </nav>
+  <div class="container">
+    <h1>📝 CINA External Coder Tool <span style="opacity:0.75;font-size:0.7em">v9</span></h1>
+    <div class="tagline">외부 전문가용 stance 입력 폼 · LLM 결과 검증용 Krippendorff α 측정 · CSV export</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="panel">
+    <h2>1️⃣ Coder 등록</h2>
+    <div class="row">
+      <label>코더 ID</label>
+      <input type="text" id="coder-id" placeholder="예: KEI-J.Park, KAIST-S.Lee, MOFA-H.Kim">
+      <button class="btn" id="save-coder">저장</button>
+    </div>
+    <div class="row">
+      <label>소속</label>
+      <input type="text" id="coder-aff" placeholder="예: Korea Environment Institute">
+    </div>
+    <div class="row">
+      <label>전문 분야</label>
+      <select id="coder-domain">
+        <option value="climate_policy">기후정책 (Climate Policy)</option>
+        <option value="ir">국제관계 (IR)</option>
+        <option value="diplomacy">외교실무 (Diplomacy)</option>
+        <option value="energy_economics">에너지경제</option>
+        <option value="other">기타</option>
+      </select>
+    </div>
+    <div id="coder-status" class="alert warn">⚠️ 코더 ID 미설정</div>
+  </div>
+
+  <div class="panel">
+    <h2>2️⃣ 코딩 대상 (sample 로드)</h2>
+    <div class="row">
+      <label>샘플 크기</label>
+      <input type="number" id="sample-n" value="20" min="5" max="78">
+      <label>시드 (재현)</label>
+      <input type="number" id="sample-seed" value="42">
+      <button class="btn" id="load-sample">샘플 로드</button>
+      <button class="btn secondary" id="copy-sample-csv">📋 CSV로 복사</button>
+    </div>
+    <div class="progress" id="sample-progress">샘플 미생성</div>
+  </div>
+
+  <div class="panel" id="current-target" style="display:none">
+    <h2>3️⃣ 현재 코딩 대상 <span id="target-idx" style="font-size:12px;color:var(--muted)"></span></h2>
+    <div id="target-info"></div>
+
+    <div style="margin-top:14px">
+      <label style="font-size:13px;font-weight:600">📊 Stance score (−1 ~ +1)</label>
+      <div class="stance-grid" id="stance-buttons">
+        <button data-val="-1.0">−1.0 강한 반대</button>
+        <button data-val="-0.7">−0.7 반대</button>
+        <button data-val="-0.3">−0.3 약한 반대</button>
+        <button data-val="0">0 중립</button>
+        <button data-val="0.3">+0.3 약한 지지</button>
+        <button data-val="0.7">+0.7 지지</button>
+        <button data-val="1.0">+1.0 강한 지지</button>
+        <button data-val="" id="custom-btn">기타 (직접)</button>
+        <input type="number" id="stance-custom" step="0.05" min="-1" max="1" placeholder="-1.00 ~ +1.00" style="grid-column:span 3;display:none">
+      </div>
+    </div>
+
+    <div style="margin-top:14px">
+      <label style="font-size:13px;font-weight:600">🎯 Frame typology (단일 선택)</label>
+      <div class="frame-pills" id="frame-pills">
+        <button data-frame="scientific">scientific (과학)</button>
+        <button data-frame="justice">justice (정의)</button>
+        <button data-frame="sovereignty">sovereignty (주권)</button>
+        <button data-frame="security">security (안보)</button>
+        <button data-frame="development">development (개발)</button>
+        <button data-frame="mixed">mixed (혼합)</button>
+      </div>
+    </div>
+
+    <div style="margin-top:14px">
+      <label style="font-size:13px;font-weight:600">🛠 NATO 4-axis (Hood 1983)</label>
+      <div class="nato-bar"><span class="label">Nodality (정보)</span><input type="range" id="nato-n" min="0" max="100" value="50"><span class="val" id="nato-n-val">0.50</span></div>
+      <div class="nato-bar"><span class="label">Authority (법규)</span><input type="range" id="nato-a" min="0" max="100" value="50"><span class="val" id="nato-a-val">0.50</span></div>
+      <div class="nato-bar"><span class="label">Treasure (재정)</span><input type="range" id="nato-t" min="0" max="100" value="50"><span class="val" id="nato-t-val">0.50</span></div>
+      <div class="nato-bar"><span class="label">Organization</span><input type="range" id="nato-o" min="0" max="100" value="50"><span class="val" id="nato-o-val">0.50</span></div>
+    </div>
+
+    <div class="row" style="margin-top:14px">
+      <label>Confidence</label>
+      <input type="range" id="confidence" min="0" max="100" value="80"><span id="conf-val" style="font-family:monospace;color:var(--accent)">0.80</span>
+    </div>
+    <div class="row">
+      <label>Evidence quote</label>
+      <textarea id="evidence" placeholder="실 텍스트 원문 인용 (선택)"></textarea>
+    </div>
+    <div class="row">
+      <button class="btn" id="save-next">저장 + 다음 →</button>
+      <button class="btn secondary" id="prev-target">← 이전</button>
+      <button class="btn secondary" id="skip-target">건너뜀</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>4️⃣ 진행 + CSV export</h2>
+    <div class="progress" id="totals">코딩 완료: 0 / 20 (0%)</div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" id="export-csv">📄 CSV 다운로드</button>
+      <button class="btn secondary" id="export-json">📦 JSON</button>
+      <button class="btn danger" id="reset">🗑 모두 초기화</button>
+    </div>
+    <table class="table" id="results-table"><thead><tr><th>#</th><th>Country</th><th>Issue</th><th>COP</th><th>Stance</th><th>Frame</th><th>NATO</th><th>Conf</th></tr></thead><tbody></tbody></table>
+  </div>
+
+  <div class="panel">
+    <h2>📈 Cross-coder Krippendorff α</h2>
+    <p style="font-size:13px;color:var(--muted)">N명의 코더가 같은 sample을 코딩한 후, 각 코더가 export한 CSV를 <code>src/eval/external_coder_alpha.py</code>에 입력하면 Krippendorff α 측정 가능. paper claim <b>α=0.876 raw / 0.933 bias-corrected</b>의 외부 검증 도구.</p>
+    <pre style="background:#f1f5f9;padding:8px;border-radius:6px;font-size:11px;overflow:auto">
+# 3명의 코더 CSV 받은 후
+python -m src.eval.external_coder_alpha \
+    --csvs coder_park.csv,coder_lee.csv,coder_kim.csv
+# → α + per-coder means + 보고서</pre>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const COUNTRIES = ["Brazil","EU","USA","China","India","AOSIS","Korea","Saudi","Japan","AILAC","AGN","LMDC","Multi","Canada","Australia","Norway","UK","Germany","France","Mexico","Indonesia","South Africa","Egypt","Türkiye","Maldives","Marshall Is","Tuvalu","Bangladesh","Ethiopia","Nepal","Switzerland","Spain","Italy","New Zealand","Argentina","Colombia","Chile","Peru","Costa Rica","Vietnam","Thailand","Philippines","Pakistan","Iran","UAE","Qatar","Kenya","Ghana","Senegal","Morocco"];
+  const ISSUES = ["GGA-IND","GGA-MOI","NAPs","JT-ADAPT","L&D-OP","FINANCE-ADAPT","TRANS-FIN","TECH-TRANS"];
+  const COPS = ["COP25","COP26","COP27","COP28","COP29","COP30"];
+
+  // Deterministic sample (matches Python sample_targets)
+  function lcg(seed) { let s = seed; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; }
+  function sampleTargets(n, seed, focusCop) {
+    const rng = lcg(seed);
+    const cands = [];
+    for (const c of COUNTRIES) for (const i of ISSUES) cands.push([c, i, focusCop]);
+    // Fisher-Yates
+    for (let i = cands.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1)); [cands[i], cands[j]] = [cands[j], cands[i]];
+    }
+    return cands.slice(0, n);
+  }
+
+  // State
+  let coder = JSON.parse(localStorage.getItem("cina_coder_meta") || "{}");
+  let sample = JSON.parse(localStorage.getItem("cina_coder_sample") || "[]");
+  let results = JSON.parse(localStorage.getItem("cina_coder_results") || "{}");
+  let curIdx = 0;
+
+  function save() {
+    localStorage.setItem("cina_coder_meta", JSON.stringify(coder));
+    localStorage.setItem("cina_coder_sample", JSON.stringify(sample));
+    localStorage.setItem("cina_coder_results", JSON.stringify(results));
+  }
+  function renderCoderStatus() {
+    const s = $("#coder-status");
+    if (coder.id && coder.affiliation && coder.domain) {
+      s.className = "alert ok";
+      s.textContent = `✅ ${coder.id} (${coder.affiliation}, ${coder.domain})`;
+    } else {
+      s.className = "alert warn";
+      s.textContent = "⚠️ 코더 정보 미입력 — Coder ID + 소속 입력 후 저장";
+    }
+  }
+  function renderSampleProgress() {
+    if (sample.length === 0) { $("#sample-progress").textContent = "샘플 미생성"; return; }
+    $("#sample-progress").textContent = `샘플 ${sample.length}건 로드됨 (시드 ${$("#sample-seed").value})`;
+  }
+  function targetKey(t) { return t.join("|"); }
+  function loadCurrent() {
+    if (sample.length === 0) { $("#current-target").style.display = "none"; return; }
+    $("#current-target").style.display = "block";
+    curIdx = Math.max(0, Math.min(curIdx, sample.length - 1));
+    const t = sample[curIdx];
+    $("#target-idx").textContent = `(${curIdx + 1} / ${sample.length})`;
+    $("#target-info").innerHTML = `<div style="background:#fefce8;padding:10px;border-radius:6px;font-size:14px"><b>${t[0]}</b> 의 <b>${t[1]}</b> 입장 (<b>${t[2]}</b>) 을 평가해주세요.</div>`;
+    // Preload existing result
+    const r = results[targetKey(t)] || {};
+    // stance
+    document.querySelectorAll("#stance-buttons button").forEach(b => b.classList.remove("active"));
+    if (r.stance != null) {
+      const exact = document.querySelector(`#stance-buttons button[data-val="${r.stance}"]`);
+      if (exact) exact.classList.add("active");
+      else { $("#custom-btn").classList.add("active"); $("#stance-custom").style.display = "block"; $("#stance-custom").value = r.stance; }
+    } else { $("#stance-custom").style.display = "none"; }
+    // frame
+    document.querySelectorAll("#frame-pills button").forEach(b => b.classList.toggle("active", b.dataset.frame === r.frame));
+    // NATO
+    ["n","a","t","o"].forEach(ax => {
+      const v = (r.nato && r.nato[ax] != null) ? r.nato[ax] : 0.5;
+      $(`#nato-${ax}`).value = Math.round(v * 100); $(`#nato-${ax}-val`).textContent = v.toFixed(2);
+    });
+    $("#confidence").value = Math.round((r.confidence != null ? r.confidence : 0.8) * 100);
+    $("#conf-val").textContent = (r.confidence != null ? r.confidence : 0.8).toFixed(2);
+    $("#evidence").value = r.evidence || "";
+  }
+  function readCurrentForm() {
+    const t = sample[curIdx];
+    const stanceBtn = document.querySelector("#stance-buttons button.active");
+    let stance = stanceBtn ? parseFloat(stanceBtn.dataset.val || "0") : null;
+    if (stanceBtn && stanceBtn.id === "custom-btn") stance = parseFloat($("#stance-custom").value || "0");
+    const frameBtn = document.querySelector("#frame-pills button.active");
+    return {
+      country: t[0], issue: t[1], cop: t[2],
+      stance, frame: frameBtn ? frameBtn.dataset.frame : null,
+      nato: {
+        n: parseInt($("#nato-n").value)/100, a: parseInt($("#nato-a").value)/100,
+        t: parseInt($("#nato-t").value)/100, o: parseInt($("#nato-o").value)/100,
+      },
+      confidence: parseInt($("#confidence").value) / 100,
+      evidence: $("#evidence").value,
+      coder_id: coder.id, coder_affiliation: coder.affiliation, coder_domain: coder.domain,
+      timestamp: new Date().toISOString(),
+    };
+  }
+  function renderTotals() {
+    const done = Object.keys(results).length;
+    const tot = sample.length;
+    const pct = tot ? Math.round(done / tot * 100) : 0;
+    $("#totals").innerHTML = `코딩 완료: <b>${done}</b> / ${tot} (${pct}%)`;
+    // table
+    const tb = $("#results-table tbody"); tb.innerHTML = "";
+    Object.values(results).forEach((r, i) => {
+      const nato = r.nato ? `N=${r.nato.n.toFixed(1)} A=${r.nato.a.toFixed(1)} T=${r.nato.t.toFixed(1)} O=${r.nato.o.toFixed(1)}` : "-";
+      tb.insertAdjacentHTML("beforeend", `<tr><td>${i+1}</td><td>${r.country}</td><td>${r.issue}</td><td>${r.cop}</td><td>${r.stance!=null?r.stance.toFixed(2):"-"}</td><td>${r.frame||"-"}</td><td>${nato}</td><td>${r.confidence!=null?r.confidence.toFixed(2):"-"}</td></tr>`);
+    });
+  }
+
+  // ---------- Event handlers ----------
+  $("#save-coder").addEventListener("click", () => {
+    coder = {
+      id: $("#coder-id").value.trim(), affiliation: $("#coder-aff").value.trim(),
+      domain: $("#coder-domain").value, registered_at: new Date().toISOString(),
+    };
+    save(); renderCoderStatus();
+  });
+
+  $("#load-sample").addEventListener("click", () => {
+    const n = parseInt($("#sample-n").value);
+    const seed = parseInt($("#sample-seed").value);
+    sample = sampleTargets(n, seed, "COP30");
+    results = {}; curIdx = 0; save();
+    renderSampleProgress(); loadCurrent(); renderTotals();
+  });
+  $("#copy-sample-csv").addEventListener("click", () => {
+    const csv = ["country,issue,cop"].concat(sample.map(t => t.join(","))).join("\n");
+    navigator.clipboard.writeText(csv).then(() => alert("CSV 클립보드 복사됨")).catch(() => alert("복사 실패"));
+  });
+
+  document.querySelectorAll("#stance-buttons button").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll("#stance-buttons button").forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    $("#stance-custom").style.display = b.id === "custom-btn" ? "block" : "none";
+  }));
+  document.querySelectorAll("#frame-pills button").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll("#frame-pills button").forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+  }));
+  ["n","a","t","o"].forEach(ax => $(`#nato-${ax}`).addEventListener("input", () => {
+    $(`#nato-${ax}-val`).textContent = (parseInt($(`#nato-${ax}`).value)/100).toFixed(2);
+  }));
+  $("#confidence").addEventListener("input", () => {
+    $("#conf-val").textContent = (parseInt($("#confidence").value)/100).toFixed(2);
+  });
+
+  $("#save-next").addEventListener("click", () => {
+    if (!coder.id) { alert("Coder ID 먼저 저장하세요"); return; }
+    const r = readCurrentForm();
+    if (r.stance == null) { alert("Stance 선택하세요"); return; }
+    results[targetKey(sample[curIdx])] = r;
+    save(); renderTotals();
+    if (curIdx < sample.length - 1) { curIdx++; loadCurrent(); }
+    else { alert("모든 sample 완료!"); }
+  });
+  $("#prev-target").addEventListener("click", () => { if (curIdx > 0) { curIdx--; loadCurrent(); } });
+  $("#skip-target").addEventListener("click", () => { if (curIdx < sample.length - 1) { curIdx++; loadCurrent(); } });
+
+  $("#export-csv").addEventListener("click", () => {
+    if (!coder.id) { alert("Coder ID 먼저 저장하세요"); return; }
+    const hdr = ["coder_id","coder_affiliation","coder_domain","country","issue","cop","stance","frame","nato_n","nato_a","nato_t","nato_o","confidence","evidence","timestamp"];
+    const rows = sample.map(t => results[targetKey(t)]).filter(Boolean);
+    const lines = [hdr.join(",")].concat(rows.map(r => [
+      coder.id, coder.affiliation, coder.domain, r.country, r.issue, r.cop,
+      r.stance, r.frame || "", r.nato.n, r.nato.a, r.nato.t, r.nato.o, r.confidence,
+      '"' + (r.evidence||"").replace(/"/g, '""') + '"', r.timestamp,
+    ].join(",")));
+    const blob = new Blob([lines.join("\n")], {type:"text/csv"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `coder_${coder.id.replace(/\W+/g,"_")}.csv`; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  });
+  $("#export-json").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify({coder, sample, results}, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `coder_${(coder.id||'anon').replace(/\W+/g,"_")}.json`; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  });
+  $("#reset").addEventListener("click", () => {
+    if (!confirm("모든 코딩 데이터를 삭제합니다.")) return;
+    localStorage.removeItem("cina_coder_sample"); localStorage.removeItem("cina_coder_results");
+    sample = []; results = {}; curIdx = 0;
+    renderSampleProgress(); loadCurrent(); renderTotals();
+  });
+
+  // Init
+  if (coder.id) {
+    $("#coder-id").value = coder.id;
+    $("#coder-aff").value = coder.affiliation || "";
+    if (coder.domain) $("#coder-domain").value = coder.domain;
+  }
+  renderCoderStatus(); renderSampleProgress(); loadCurrent(); renderTotals();
+})();
+</script>
+
+</body>
+</html>

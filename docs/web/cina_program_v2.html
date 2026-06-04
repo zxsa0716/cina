@@ -135,15 +135,16 @@
 
 <header>
   <div class="container">
-    <h1>🌍 Ask CINA <span style="opacity:0.75;font-size:0.7em">v2.3</span></h1>
-    <div class="tagline">학술 등급 기후 협상 Q&amp;A · 2,400 records · 50국 · 8 이슈 · 6 COP · 8 intents · 215 embeddings · α slider · cache-aware build</div>
+    <h1>🌍 Ask CINA <span style="opacity:0.75;font-size:0.7em">v2.4</span></h1>
+    <div class="tagline">Academic-grade climate negotiation Q&amp;A · 2,400 records · 50 countries · 8 issues · 6 COPs · 8 intents · 215 embeddings · LLM cache · i18n</div>
     <div class="badges">
-      <span class="badge">engine v2.3.0</span>
-      <span class="badge">dataset v5.1.0 (125 verified)</span>
+      <span class="badge">engine v2.4.0</span>
+      <span class="badge">dataset v5.2-merged</span>
       <span class="badge">corpus v6 · 21 docs</span>
       <span class="badge">embeddings v7/v8.3 · 384-dim</span>
-      <span class="badge">BYO LLM (Gemini · Anthropic · Groq)</span>
-      <span class="badge">5-provider α framework</span>
+      <span class="badge">persistent LLM cache</span>
+      <span class="badge">40 pytest pass</span>
+      <span class="badge">reproducibility cert</span>
       <span class="badge">CC BY 4.0 / MIT</span>
     </div>
   </div>
@@ -163,6 +164,10 @@
       <input type="range" id="alpha-slider" min="0" max="100" value="60">
       <label>🧠 sem</label>
       <span class="alpha-val" id="alpha-val">0.60</span>
+    </span>
+    <span class="mode-toggle" id="lang-toggle" style="margin-left:4px" title="UI language">
+      <button data-lang="ko" class="active">🇰🇷 한국어</button>
+      <button data-lang="en">🇬🇧 EN</button>
     </span>
     <button class="btn secondary" id="btn-keys">🔑 API Key 관리</button>
     <button class="btn secondary" id="btn-export-md">📄 .md</button>
@@ -302,6 +307,16 @@
 
   $("#btn-ask").addEventListener("click", ask);
   input.addEventListener("keydown", (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") ask(); });
+
+  // Language toggle
+  const langButtons = document.querySelectorAll("#lang-toggle button");
+  function updateLang(l) {
+    if (window.CINA_v2.setLang) window.CINA_v2.setLang(l);
+    langButtons.forEach(b => b.classList.toggle("active", b.dataset.lang === l));
+  }
+  const initLang = (window.CINA_v2.getLang && window.CINA_v2.getLang()) || "ko";
+  updateLang(initLang);
+  langButtons.forEach(b => b.addEventListener("click", () => updateLang(b.dataset.lang)));
 
   // Hybrid alpha slider
   const slider = $("#alpha-slider"); const alphaVal = $("#alpha-val");

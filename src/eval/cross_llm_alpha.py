@@ -135,7 +135,11 @@ def extract_one(country, issue, cop, provider, api_key) -> float | None:
     prompt = build_prompt(country, issue, cop, corpus)
     fn, _ = PROVIDERS[provider]
     try:
-        raw = fn(prompt, api_key)
+        from src.program.llm_cache import cached_call
+        model_name = {"gemini": "gemini-2.5-flash-lite",
+                      "anthropic": "claude-sonnet-4-5", "groq": "llama-3.3-70b-versatile"}[provider]
+        raw = cached_call(provider=provider, model=model_name, prompt=prompt,
+                          api_key=api_key, call_fn=fn, temperature=0.2)
     except Exception as e:
         print(f"  [{provider}] error: {e}")
         return None

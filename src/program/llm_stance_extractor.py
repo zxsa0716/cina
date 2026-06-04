@@ -247,8 +247,13 @@ def extract_one(country, issue, cop, provider, api_key) -> dict | None:
         return None
     prompt = build_prompt(country, issue, cop, corpus)
     fn, _ = PROVIDERS[provider]
+    # v9.2: route through persistent LLM cache
     try:
-        raw = fn(prompt, api_key)
+        from src.program.llm_cache import cached_call
+        model_name = {"gemini": "gemini-2.5-flash-lite",
+                      "anthropic": "claude-sonnet-4-5", "groq": "llama-3.3-70b-versatile"}[provider]
+        raw = cached_call(provider=provider, model=model_name, prompt=prompt,
+                          api_key=api_key, call_fn=fn, temperature=0.2)
     except Exception as e:
         return {"_error": str(e), "country": country, "issue": issue, "cop": cop}
     parsed = parse_llm_json(raw)
@@ -362,6 +367,13 @@ def main():
     print(f"\n[v8.1 extract] DONE. ok={n_ok}  err={n_err}")
     print(f"[v8.1 extract] output: {STANCES_LLM_OUT}")
     print(f"[v8.1 extract] checkpoint: {CHECKPOINT}")
+    # v9.2: cache stats
+    try:
+        from src.program.llm_cache import CacheStats
+        s = CacheStats.snapshot()
+        print(f"[v8.1 extract] llm cache: {s['hits']} hits / {s['total']} calls ({s['hit_rate']*100:.1f}% hit rate)")
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":

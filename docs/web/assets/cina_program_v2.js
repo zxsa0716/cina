@@ -94,10 +94,95 @@
     "COP30": "COP30", "cop30": "COP30", "벨렘": "COP30", "belem": "COP30",
   };
 
-  const ENGINE_VERSION = "v2.3.0";
-  const DATASET_VERSION_TARGET = "5.1.0";
+  const ENGINE_VERSION = "v2.4.0";
+  const DATASET_VERSION_TARGET = "5.2.0-merged";
   const CORPUS_VERSION_TARGET = "6.0.0";
   const EMBED_VERSION_TARGET   = "7.0.0";   // or gemini variant v8.3 if present
+
+  // ================================================================
+  // i18n (Korean / English UI toggle)
+  // ================================================================
+  let UI_LANG = localStorage.getItem("cina_v2_lang") || "ko";
+  function setLang(l) {
+    UI_LANG = (l === "en") ? "en" : "ko";
+    localStorage.setItem("cina_v2_lang", UI_LANG);
+  }
+  function getLang() { return UI_LANG; }
+
+  const I18N = {
+    ko: {
+      strong_support: "강한 지지", support: "지지", neutral: "중립", oppose: "반대", strong_oppose: "강한 반대",
+      stance_score: "입장 점수", dominant_frame: "우세 frame", nato_4axis: "NATO 4축",
+      procedural_authority: "절차권한", chair: "의장", penholder: "펜홀더",
+      translation_gap: "국내↔국제 Δ",
+      matching_records: "개 매칭 record",
+      issue: "이슈", cop_col: "COP", score: "점수", ci: "95% CI",
+      vs_comparison: "입장 비교", max_gap: "최대 격차",
+      timeseries: "시계열 추이", remaining: "전체",
+      similar_countries: "와 가장 유사한 국가", official_coalition: "의 공식 coalition",
+      gap_analysis: "국내↔국제 translation gap Δ",
+      gap_caveat: "Δ > 0: 국내 의지 강한데 국제에서 약화 (Brazil paradox 패턴). Δ < 0: 국제에서 더 적극적.",
+      gap_ranking_header: "국가별 평균 |Δ| 상위 10",
+      recommendation: "전략 권고",
+      weak_issues: "📉 약점 이슈 (보강 필요)",
+      strong_issues: "📈 강점 이슈 (pen-holder 활용)",
+      strengthen: "NATO {axis} 축 강화 권장",
+      coalition_label: "🤝 활용 coalition",
+      mean_delta: "📐 평균 |Δ|",
+      empty_no_match: "매칭 record 없음",
+      empty_hint: "지원: 50국 × 8이슈 × 6 COP (COP25-30). 국가+이슈를 명시하면 정확도가 올라갑니다.",
+      corpus_refs: "📚 관련 corpus 문서",
+      corpus_refs_hybrid: "📚 관련 corpus 문서 (hybrid 검색)",
+      cite_panel: "📎 근거",
+      cite_panel_expand: "건 (펼치기)",
+      cite_no_quote: "(no quote)",
+      method_label_hybrid: "semantic+keyword 하이브리드",
+      method_label_keyword: "keyword (TF-IDF)",
+      llm_call_failed: "LLM 호출 실패",
+      llm_fallback: "rule-based 결과로 대체합니다.",
+      methodology: "methodology",
+    },
+    en: {
+      strong_support: "strong support", support: "support", neutral: "neutral",
+      oppose: "oppose", strong_oppose: "strong oppose",
+      stance_score: "Stance score", dominant_frame: "Dominant frame", nato_4axis: "NATO 4-axis",
+      procedural_authority: "Procedural authority", chair: "chair", penholder: "pen-holder",
+      translation_gap: "Domestic↔International Δ",
+      matching_records: "matching records",
+      issue: "Issue", cop_col: "COP", score: "Score", ci: "95% CI",
+      vs_comparison: "stance comparison", max_gap: "Largest gap",
+      timeseries: "Time-series trajectory", remaining: "total",
+      similar_countries: " — most similar countries", official_coalition: "'s official coalitions",
+      gap_analysis: "Domestic↔International translation gap Δ",
+      gap_caveat: "Δ > 0: strong domestic but weak international (Brazil paradox). Δ < 0: more proactive internationally.",
+      gap_ranking_header: "Top-10 countries by mean |Δ|",
+      recommendation: "strategy recommendation",
+      weak_issues: "📉 Weak issues (need strengthening)",
+      strong_issues: "📈 Strong issues (pen-holder potential)",
+      strengthen: "strengthen NATO {axis} axis",
+      coalition_label: "🤝 Active coalitions",
+      mean_delta: "📐 Mean |Δ|",
+      empty_no_match: "No matching record",
+      empty_hint: "Supports: 50 countries × 8 issues × 6 COPs (COP25-30). Specify country + issue for higher accuracy.",
+      corpus_refs: "📚 Related corpus documents",
+      corpus_refs_hybrid: "📚 Related corpus documents (hybrid search)",
+      cite_panel: "📎 Citations",
+      cite_panel_expand: "items (expand)",
+      cite_no_quote: "(no quote)",
+      method_label_hybrid: "semantic+keyword hybrid",
+      method_label_keyword: "keyword (TF-IDF)",
+      llm_call_failed: "LLM call failed",
+      llm_fallback: "Falling back to rule-based result.",
+      methodology: "methodology",
+    },
+  };
+  function t(key, replacements) {
+    let s = (I18N[UI_LANG] || I18N.ko)[key] || (I18N.ko[key] || key);
+    if (replacements) {
+      for (const k in replacements) s = s.replace("{" + k + "}", replacements[k]);
+    }
+    return s;
+  }
 
   // ================================================================
   // localStorage keys (BYO LLM)
@@ -469,11 +554,11 @@
 
   function fmt(s) { return (s >= 0 ? "+" : "") + s.toFixed(2); }
   function stanceLabel(s) {
-    if (s >= 0.7) return "강한 지지";
-    if (s >= 0.3) return "지지";
-    if (s >= -0.3) return "중립";
-    if (s >= -0.7) return "반대";
-    return "강한 반대";
+    if (s >= 0.7) return t("strong_support");
+    if (s >= 0.3) return t("support");
+    if (s >= -0.3) return t("neutral");
+    if (s >= -0.7) return t("oppose");
+    return t("strong_oppose");
   }
   function ciStr(r) {
     if (r.ci_lower_95 == null || r.ci_upper_95 == null) return "";
@@ -1168,6 +1253,7 @@ ${histStr}
     loadData, loadEmbeddings, loadCorpus,
     semanticSearch, hybridSearch, corpusSearch,
     setAlpha, getAlpha: () => HYBRID_ALPHA,
+    setLang, getLang, translate: t,
     ENGINE_VERSION,
   };
 

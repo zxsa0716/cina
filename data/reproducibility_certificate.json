@@ -1,0 +1,410 @@
+{
+  "version": "v9.6.0",
+  "generated_at": "2026-06-04T03:10:16.004152+00:00",
+  "n_entries": 58,
+  "chain_hash": "b869015d5f88625263796daf21db3d486f0eae5468fb0a1a6be22e8d8a199a4d",
+  "per_category": {
+    "v5_dataset": {
+      "requested": 2,
+      "present": 2
+    },
+    "v5_merged": {
+      "requested": 3,
+      "present": 3
+    },
+    "v6_corpus_index": {
+      "requested": 3,
+      "present": 3
+    },
+    "v6_corpus_documents": {
+      "requested": 16,
+      "present": 16
+    },
+    "v6_corpus_csvs": {
+      "requested": 5,
+      "present": 5
+    },
+    "v6_corpus_bib": {
+      "requested": 1,
+      "present": 1
+    },
+    "v7_embeddings": {
+      "requested": 4,
+      "present": 2
+    },
+    "build_scripts": {
+      "requested": 8,
+      "present": 8
+    },
+    "engine_scripts": {
+      "requested": 3,
+      "present": 3
+    },
+    "eval_scripts": {
+      "requested": 2,
+      "present": 2
+    },
+    "test_suite": {
+      "requested": 5,
+      "present": 5
+    },
+    "changelogs": {
+      "requested": 4,
+      "present": 4
+    },
+    "documentation": {
+      "requested": 4,
+      "present": 4
+    }
+  },
+  "entries": [
+    {
+      "category": "v5_dataset",
+      "path": "data/processed/stances_v5.jsonl",
+      "sha256": "68f79253b01597916331f7532bab601f86f8269142de2fbdc07cd18336ba2494",
+      "size_bytes": 3440039
+    },
+    {
+      "category": "v5_dataset",
+      "path": "data/processed/stances_v5_meta.json",
+      "sha256": "3a40a30ab4294367f5fbb511917616e3356af2c7e4db162b3f608190e7d15d6c",
+      "size_bytes": 1959
+    },
+    {
+      "category": "v5_merged",
+      "path": "data/processed/stances_v5_merged.jsonl",
+      "sha256": "e3e84be9c34ccfb5b4c5d921f032d5b08682edd04112eb365b5b0ebb4d0e6e7e",
+      "size_bytes": 3715914
+    },
+    {
+      "category": "v5_merged",
+      "path": "data/processed/stances_v5_merged_audit.json",
+      "sha256": "922146ee157c3255b83ba4d1774ecbad6f3a060cdfc16ab04c08ba1acd815d79",
+      "size_bytes": 323
+    },
+    {
+      "category": "v5_merged",
+      "path": "data/processed/stances_v5_merged_meta.json",
+      "sha256": "6e15e49831efc036c184857f5b98ce62759fd8ebdf495b0b5f57db07cadba2b2",
+      "size_bytes": 1520
+    },
+    {
+      "category": "v6_corpus_index",
+      "path": "data/corpus/manifest.jsonl",
+      "sha256": "acffed3000b7d2163e4cc0c058d48b683bdf1d547a7b89bc5b6add9442b3f3ab",
+      "size_bytes": 13399
+    },
+    {
+      "category": "v6_corpus_index",
+      "path": "data/corpus/README.md",
+      "sha256": "2bbec67ea827150f8e393ab88cbcc5c9de1e37747b213cbae7d1c66bc03e7a26",
+      "size_bytes": 5433
+    },
+    {
+      "category": "v6_corpus_index",
+      "path": "data/corpus/search_index.json",
+      "sha256": "f3beeed9d81f2c911e03c5cf4f26ef4ebf1bdfc9820d34e988eb78c334f85adc",
+      "size_bytes": 302401
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/coalition_statements/COP30_8_groups_statements.md",
+      "sha256": "77c7acda9ff3f0549f75a9b38a624d12efa3c9a007a9f993b7b90bfe69ee0af5",
+      "size_bytes": 6848
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/national_policies/BRA_plano_clima_2024.md",
+      "sha256": "07466e8253eb3c31eabbaf46ccb009fa125fe44a7859271605b3159aa4b12d40",
+      "size_bytes": 3472
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/national_policies/EU_green_deal_fit55.md",
+      "sha256": "64bbe1f0132efaf1b59c1aa47cc3cf8d1187b0bdfcd903bcab60a6edcafa1396",
+      "size_bytes": 2127
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/national_policies/KOR_NAP2_carbon_neutrality_act.md",
+      "sha256": "d71162a36711ea8f590b3b9dc6184e9437d17e0055c44f81dd6f4f0e32ea659b",
+      "size_bytes": 4049
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/national_policies/OTHER_COUNTRIES_brief.md",
+      "sha256": "1ebbf0077ac471da764577beca8c39a4814fbf03d6050ca2b4948b254a775cea",
+      "size_bytes": 5087
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/national_policies/USA_climate_policy_2025.md",
+      "sha256": "6d0ad62bab9bcd1238206f338745703106f01c2e4eb88785dd3118cf7c617bc1",
+      "size_bytes": 2217
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/README.md",
+      "sha256": "2bbec67ea827150f8e393ab88cbcc5c9de1e37747b213cbae7d1c66bc03e7a26",
+      "size_bytes": 5433
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/unfccc_decisions/COP25_madrid_chile_presidency.md",
+      "sha256": "3d4b4942abc2a1531ae914ea6312d68ebb6ab46e59257656775be63229cccb4c",
+      "size_bytes": 2709
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/unfccc_decisions/COP26_glasgow_pact.md",
+      "sha256": "019d95fcb1d1cf8e1ac5f6afebf44804e015d8fe0cb90c212d0cd95bbd41a0b7",
+      "size_bytes": 2446
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/unfccc_decisions/COP27_sharm_LD_fund.md",
+      "sha256": "d22f8a2bbcacd97b91520a332511b3cb4f76f2f4a1dfc3cdcbb8a7b25be8cfaf",
+      "size_bytes": 3443
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/unfccc_decisions/COP28_UAE_consensus.md",
+      "sha256": "fbc0c0e5b4cccf7139b8ccefb06d871753aebe2a80e4f825fb02e31d631a1ff7",
+      "size_bytes": 3158
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/unfccc_decisions/COP29_baku_NCQG.md",
+      "sha256": "436ef5d886c5f00af933936245ccabbb1ea9daa62855d5f3218b6b28ae283ace",
+      "size_bytes": 3285
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/unfccc_decisions/COP30_L24_finance_triple.md",
+      "sha256": "cc18f398aaefe6a82824b15fe05d1efc318435a68ec41a0f7d9f14f8cdd72b83",
+      "size_bytes": 3404
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/unfccc_decisions/COP30_L25E_GGA_indicators.md",
+      "sha256": "a59a8f6c1b2c9915e08caa49eac871471f2eea63e02ac51caa2854e3f028468a",
+      "size_bytes": 4285
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/unfccc_decisions/FRLD_decision_1_CP28.md",
+      "sha256": "7d913cf05883c55d89b53d4a2479ddb310e2c8fe6d98b5f72ba5d59a7c6feb61",
+      "size_bytes": 2622
+    },
+    {
+      "category": "v6_corpus_documents",
+      "path": "data/corpus/unfccc_decisions/paris_agreement_article_7.md",
+      "sha256": "a6cce99c6a239339f774cdc69012d41a8160d67bb2b7bbc3e5bbe1856d0ec499",
+      "size_bytes": 3660
+    },
+    {
+      "category": "v6_corpus_csvs",
+      "path": "data/corpus/quantitative/cop_delegation_size.csv",
+      "sha256": "c8ecc51bfe32d1a504906daa67d1297460822c1bd9945ffca0b4f328e3600c32",
+      "size_bytes": 5554
+    },
+    {
+      "category": "v6_corpus_csvs",
+      "path": "data/corpus/quantitative/cvf_membership.csv",
+      "sha256": "a49b5feeeef65dd5cf760f5a8187de34cc5c742f646462e8c154001d6c189bd8",
+      "size_bytes": 1336
+    },
+    {
+      "category": "v6_corpus_csvs",
+      "path": "data/corpus/quantitative/ndgain_2024.csv",
+      "sha256": "6d28d54fb9f76365727dc7275b05e7e2dd2d5584259f8b64290fbb866f13db02",
+      "size_bytes": 1262
+    },
+    {
+      "category": "v6_corpus_csvs",
+      "path": "data/corpus/quantitative/oecd_adaptation_finance_2022.csv",
+      "sha256": "3916c34bcbac55222938b421474b41beee815356dfbfffa5736d9a1cceee9aa0",
+      "size_bytes": 5326
+    },
+    {
+      "category": "v6_corpus_csvs",
+      "path": "data/corpus/quantitative/primap_co2_1990_2023.csv",
+      "sha256": "e0df2798ceeecb8ffed6d5552cf5a6a0227e624f040df3bf663122d9fe629e44",
+      "size_bytes": 42868
+    },
+    {
+      "category": "v6_corpus_bib",
+      "path": "data/corpus/academic_references/bibliography.bib",
+      "sha256": "fa107b04559763a4495f47bd7d94d54d5e7e0ce4b1ed730f7f1b3dcc091a618b",
+      "size_bytes": 12904
+    },
+    {
+      "category": "v7_embeddings",
+      "path": "data/corpus/embeddings.npz",
+      "sha256": "6d66ee48d54ecd774d866b348b333df83d9adb1fc70a4cf8f3e8fdf801c9166f",
+      "size_bytes": 152348
+    },
+    {
+      "category": "v7_embeddings",
+      "path": "data/corpus/embeddings_index.json",
+      "sha256": "7b1a315e9bd6c6fb58a74ee2f970dfead563d2a755ecfb4a4349a892900de886",
+      "size_bytes": 118939
+    },
+    {
+      "category": "build_scripts",
+      "path": "src/data/build_v5_dataset.py",
+      "sha256": "9525b514cb9ed98a12bd0d8d0160fac32aa6c695584f3dcf73b40b796576e7ee",
+      "size_bytes": 30095
+    },
+    {
+      "category": "build_scripts",
+      "path": "src/data/build_v6_corpus_index.py",
+      "sha256": "64158978d86b3501c30cfff523ddc273485bfd5ec45dca998926408be9e47279",
+      "size_bytes": 8364
+    },
+    {
+      "category": "build_scripts",
+      "path": "src/data/build_v6_quantitative.py",
+      "sha256": "0e7b402f348ec00c0e868af5000ad1555a81e8a7dca5b65df01284bf1415dba7",
+      "size_bytes": 13778
+    },
+    {
+      "category": "build_scripts",
+      "path": "src/data/build_v7_embeddings.py",
+      "sha256": "85ece248e975596f87fa3b2998ed839e184d9706fd964440d9c40f5f3d2e2392",
+      "size_bytes": 13783
+    },
+    {
+      "category": "build_scripts",
+      "path": "src/data/build_v7_embeddings_gemini.py",
+      "sha256": "493de530774fe02f704cc19fc43dfe5d0aae07170456badc2e1b582577dc24ae",
+      "size_bytes": 8441
+    },
+    {
+      "category": "build_scripts",
+      "path": "src/data/merge_v5_llm.py",
+      "sha256": "9c8e0543ec148bf28d9c43af4aec6ad27f089aaa431db6d666e5e52debf1c54d",
+      "size_bytes": 7005
+    },
+    {
+      "category": "build_scripts",
+      "path": "src/data/rebuild_if_stale.py",
+      "sha256": "5a542c32d6cd0a88be19a0f631fb2821410377013cb8c8d2e1f9bb0ca03c73cd",
+      "size_bytes": 4367
+    },
+    {
+      "category": "build_scripts",
+      "path": "src/data/v5_evidence_quotes_expanded.py",
+      "sha256": "2df10d06973da9aea07d6bb7d3bf8aa1dfd1c5b5e5f824e99f9c56bb14b71ba4",
+      "size_bytes": 34157
+    },
+    {
+      "category": "engine_scripts",
+      "path": "src/program/llm_cache.py",
+      "sha256": "e71c7568eadc683bbd2bb05d9246e081eb4a3a007b85d2d7b4e354bf618b9628",
+      "size_bytes": 7012
+    },
+    {
+      "category": "engine_scripts",
+      "path": "src/program/llm_stance_extractor.py",
+      "sha256": "54c7ee9408786336e1dda1f7fa09d5e3a2b3414ff51bbf7343d326e9a2bee747",
+      "size_bytes": 16890
+    },
+    {
+      "category": "engine_scripts",
+      "path": "src/program/query_engine_v2.py",
+      "sha256": "6428345dfc9d7030334e519679c5f4df0400a55b2fa605b765ffdfb4057a52c8",
+      "size_bytes": 47595
+    },
+    {
+      "category": "eval_scripts",
+      "path": "src/eval/cross_llm_alpha.py",
+      "sha256": "178e45c9d29f89b2f072d79c138172c43cc38c94db61d73f39083819b9842dd6",
+      "size_bytes": 11199
+    },
+    {
+      "category": "eval_scripts",
+      "path": "src/eval/external_coder_alpha.py",
+      "sha256": "b909a47f640f184c6189b6db38a68607645bcd2ca65c7e418a9c7959d7450e1d",
+      "size_bytes": 4987
+    },
+    {
+      "category": "test_suite",
+      "path": "tests/test_alpha.py",
+      "sha256": "24907d8bc0b0b5a61797105cc19c2b59ddefeb367d40f6c7c93f3d7f4c774c89",
+      "size_bytes": 1813
+    },
+    {
+      "category": "test_suite",
+      "path": "tests/test_corpus_search.py",
+      "sha256": "6b726921a3b4e81ea3c264f812c6a216dd7425098c6d4878b024a30e9f735988",
+      "size_bytes": 2003
+    },
+    {
+      "category": "test_suite",
+      "path": "tests/test_llm_cache.py",
+      "sha256": "e17a2fa5394ac84ec37250e013e2c944d05027806f984269e7851af5b950497c",
+      "size_bytes": 2390
+    },
+    {
+      "category": "test_suite",
+      "path": "tests/test_merge.py",
+      "sha256": "53104b048d041bd0bd4794d9fa217aaa1bd1092c1ed1f30adad632873a53b0b3",
+      "size_bytes": 2559
+    },
+    {
+      "category": "test_suite",
+      "path": "tests/test_query_engine.py",
+      "sha256": "de278bfda5896271b5f2d98f520341bf77db8afc7a494b6f97e2c7da0551716d",
+      "size_bytes": 3491
+    },
+    {
+      "category": "changelogs",
+      "path": "CHANGELOG_v5.md",
+      "sha256": "68887ffd6aad88c3f0d96a9a3f460e002259a9b93243d21e6b82570c04fa74e6",
+      "size_bytes": 9524
+    },
+    {
+      "category": "changelogs",
+      "path": "CHANGELOG_v6.md",
+      "sha256": "60974daa06c59102a648229f601f0fa49c6e88f0e2d3ed7e3907ba51a0013f55",
+      "size_bytes": 8961
+    },
+    {
+      "category": "changelogs",
+      "path": "CHANGELOG_v7.md",
+      "sha256": "f0d6cae7d25fa91b6735f9a6eb3cdf0229193e05ed9f28d107a2e04c4d6c26db",
+      "size_bytes": 9761
+    },
+    {
+      "category": "changelogs",
+      "path": "CHANGELOG_v8.md",
+      "sha256": "e770dbb1306f4190f453b3c3376a223482169b457ede6a1d26d679af1931a6f2",
+      "size_bytes": 10494
+    },
+    {
+      "category": "documentation",
+      "path": "CLAUDE.md",
+      "sha256": "1d280d53b908f9fa557857dc8b438e3b032f991d4d4bb957ea166a740a4d3f5c",
+      "size_bytes": 4466
+    },
+    {
+      "category": "documentation",
+      "path": "data/corpus/README.md",
+      "sha256": "2bbec67ea827150f8e393ab88cbcc5c9de1e37747b213cbae7d1c66bc03e7a26",
+      "size_bytes": 5433
+    },
+    {
+      "category": "documentation",
+      "path": "docs/research/PUBLICATION_STRATEGY.md",
+      "sha256": "d109647cdced23f990bd629547825ccbb6295ca5c7b46442d03df6efe35a9e46",
+      "size_bytes": 13377
+    },
+    {
+      "category": "documentation",
+      "path": "README.md",
+      "sha256": "6051bce3ffc0cc8af941b3fab03e9c0cccc39a07a2a2903e0003c2f24455a606",
+      "size_bytes": 19841
+    }
+  ]
+}
