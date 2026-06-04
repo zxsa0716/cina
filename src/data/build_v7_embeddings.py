@@ -123,6 +123,52 @@ def load_stance_evidence(limit: int | None = None) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# Source-content hash for cache invalidation
+# ---------------------------------------------------------------------------
+
+def compute_source_hash() -> str:
+    """SHA-256 over (corpus file contents + manifest + stance dataset + build params).
+
+    Used to skip rebuild if no source changes. Hash inputs:
+      - All corpus markdown files (sha256 from manifest)
+      - manifest.jsonl byte content
+      - stances_v5.jsonl byte content (for stance evidence)
+      - MODEL_NAME, CHUNK_MAX_CHARS, CHUNK_OVERLAP
+    """
+    h = hashlib.sha256()
+    h.update(MODEL_NAME.encode())
+    h.update(str(CHUNK_MAX_CHARS).encode())
+    h.update(str(CHUNK_OVERLAP).encode())
+    if MANIFEST.exists():
+        h.update(MANIFEST.read_bytes())
+    if STANCES_JSONL.exists():
+        h.update(STANCES_JSONL.read_bytes())
+    # Also walk corpus markdown for additional change detection
+    for p in sorted(CORPUS_DIR.rglob("*.md")):
+        try: h.update(p.read_bytes())
+        except: pass
+    return h.hexdigest()
+
+
+def stored_source_hash() -> str | None:
+    if not EMBED_INDEX.exists(): return None
+    try:
+        return json.loads(EMBED_INDEX.read_text(encoding="utf-8")).get("source_hash")
+    except: return None
+
+
+def is_stale(force: bool = False) -> tuple[bool, str, str | None]:
+    """Returns (needs_rebuild, current_hash, stored_hash)."""
+    cur = compute_source_hash()
+    stored = stored_source_hash()
+    if force:
+        return True, cur, stored
+    if stored is None:
+        return True, cur, None
+    return cur != stored, cur, stored
+
+
+# ---------------------------------------------------------------------------
 # Build embeddings
 # ---------------------------------------------------------------------------
 
@@ -234,8 +280,10 @@ def save(embeddings: np.ndarray, items: list[dict]):
     # Stable hash for cache invalidation
     h = hashlib.sha256(json.dumps(meta, sort_keys=True, default=str).encode()).hexdigest()[:16]
     meta["index_hash"] = h
+    meta["source_hash"] = compute_source_hash()   # v8.5: cache invalidation key
     EMBED_INDEX.write_text(json.dumps(meta, ensure_ascii=False), encoding="utf-8")
     print(f"[v7] {EMBED_INDEX}: {EMBED_INDEX.stat().st_size//1024} KB")
+    print(f"[v7] source_hash: {meta['source_hash'][:16]}...")
 
     # ----- Web-deployable copies -----
     WEB_EMBED_NPZ.parent.mkdir(parents=True, exist_ok=True)
@@ -268,7 +316,26 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--quick", action="store_true",
                     help="Only encode 200 stance evidence (debugging)")
+    ap.add_argument("--force", action="store_true",
+                    help="Force rebuild even if source hash unchanged")
+    ap.add_argument("--check-stale", action="store_true",
+                    help="Only print stale/fresh status and exit (no build)")
     args = ap.parse_args()
+
+    stale, cur_h, stored_h = is_stale(force=args.force)
+    print(f"[v7] current source hash: {cur_h[:16]}...")
+    print(f"[v7] stored source hash : {(stored_h or '(none)')[:16]}...")
+    print(f"[v7] status: {'STALE (rebuild needed)' if stale else 'FRESH (no rebuild)'}")
+
+    if args.check_stale:
+        sys_exit_code = 0 if not stale else 1
+        import sys; sys.exit(sys_exit_code)
+
+    if not stale and not args.force:
+        print(f"[v7] Skipping rebuild (use --force to override).")
+        sys_exit_code = 0
+        import sys; sys.exit(sys_exit_code)
+
     emb, items = build_embeddings(quick=args.quick)
     save(emb, items)
     print(f"\n[v7] Done. {emb.shape[0]} embeddings × {emb.shape[1]} dims.")

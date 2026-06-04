@@ -45,6 +45,12 @@
     .status-pill.ok { background: #d1fae5; color: #065f46; }
     .status-pill.warn { background: #fef3c7; color: #92400e; }
 
+    .alpha-slider-wrap { display: inline-flex; align-items: center; gap: 6px;
+                         background: #f1f5f9; padding: 4px 10px; border-radius: 12px; font-size: 12px; }
+    .alpha-slider-wrap label { color: var(--muted); }
+    .alpha-slider-wrap input[type="range"] { width: 100px; accent-color: var(--accent); }
+    .alpha-slider-wrap .alpha-val { font-family: monospace; color: var(--accent); font-weight: 700; min-width: 28px; }
+
     .input-area { display: flex; gap: 6px; background: var(--card); padding: 10px; border-radius: 12px;
                   margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .input-area textarea {
@@ -129,14 +135,15 @@
 
 <header>
   <div class="container">
-    <h1>🌍 Ask CINA <span style="opacity:0.75;font-size:0.7em">v2.2</span></h1>
-    <div class="tagline">학술 등급 기후 협상 Q&amp;A · 2,400 records · 50국 · 8 이슈 · 6 COP · 8 intents · 215 embeddings (semantic + keyword)</div>
+    <h1>🌍 Ask CINA <span style="opacity:0.75;font-size:0.7em">v2.3</span></h1>
+    <div class="tagline">학술 등급 기후 협상 Q&amp;A · 2,400 records · 50국 · 8 이슈 · 6 COP · 8 intents · 215 embeddings · α slider · cache-aware build</div>
     <div class="badges">
-      <span class="badge">engine v2.2.0</span>
+      <span class="badge">engine v2.3.0</span>
       <span class="badge">dataset v5.1.0 (125 verified)</span>
       <span class="badge">corpus v6 · 21 docs</span>
-      <span class="badge">embeddings v7 · 384-dim</span>
+      <span class="badge">embeddings v7/v8.3 · 384-dim</span>
       <span class="badge">BYO LLM (Gemini · Anthropic · Groq)</span>
+      <span class="badge">5-provider α framework</span>
       <span class="badge">CC BY 4.0 / MIT</span>
     </div>
   </div>
@@ -151,6 +158,12 @@
       <button data-mode="rule" class="active">🧮 Rule</button>
       <button data-mode="llm">🤖 LLM</button>
     </div>
+    <span class="alpha-slider-wrap" title="hybrid 검색에서 semantic 비율 (0=keyword only, 1=semantic only)">
+      <label>🔤 kw</label>
+      <input type="range" id="alpha-slider" min="0" max="100" value="60">
+      <label>🧠 sem</label>
+      <span class="alpha-val" id="alpha-val">0.60</span>
+    </span>
     <button class="btn secondary" id="btn-keys">🔑 API Key 관리</button>
     <button class="btn secondary" id="btn-export-md">📄 .md</button>
     <button class="btn secondary" id="btn-export-json">📦 .json</button>
@@ -243,6 +256,7 @@
   const input = $("#q-input");
   const statusPill = $("#status-pill");
   let currentMode = localStorage.getItem("cina_v2_mode") || "rule";
+  let currentAlpha = parseFloat(localStorage.getItem("cina_v2_alpha") || "0.60");
 
   function updateMode(m) {
     currentMode = m;
@@ -288,6 +302,18 @@
 
   $("#btn-ask").addEventListener("click", ask);
   input.addEventListener("keydown", (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") ask(); });
+
+  // Hybrid alpha slider
+  const slider = $("#alpha-slider"); const alphaVal = $("#alpha-val");
+  slider.value = Math.round(currentAlpha * 100);
+  alphaVal.textContent = currentAlpha.toFixed(2);
+  window.CINA_v2.setAlpha && window.CINA_v2.setAlpha(currentAlpha);
+  slider.addEventListener("input", () => {
+    currentAlpha = parseInt(slider.value) / 100;
+    alphaVal.textContent = currentAlpha.toFixed(2);
+    localStorage.setItem("cina_v2_alpha", String(currentAlpha));
+    if (window.CINA_v2.setAlpha) window.CINA_v2.setAlpha(currentAlpha);
+  });
 
   document.querySelectorAll("#mode-toggle button").forEach(b =>
     b.addEventListener("click", () => updateMode(b.dataset.mode)));

@@ -39,8 +39,10 @@ CORPUS_MANIFEST = ROOT / "data" / "corpus" / "manifest.jsonl"
 CORPUS_INDEX    = ROOT / "data" / "corpus" / "search_index.json"
 EMBED_NPZ       = ROOT / "data" / "corpus" / "embeddings.npz"
 EMBED_INDEX     = ROOT / "data" / "corpus" / "embeddings_index.json"
+EMBED_GEMINI_NPZ   = ROOT / "data" / "corpus" / "embeddings_gemini.npz"
+EMBED_GEMINI_INDEX = ROOT / "data" / "corpus" / "embeddings_gemini_index.json"
 
-ENGINE_VERSION = "2.2.0"   # 2.2 = semantic embedding + hybrid retrieval
+ENGINE_VERSION = "2.3.0"   # 2.3 = Gemini-aligned embedding + alpha-tunable hybrid
 DEFAULT_COP = "COP30"
 
 # ===========================================================================
@@ -281,9 +283,24 @@ _EMBED_INDEX_META = None   # dict with items list
 _EMBED_MODEL = None        # SentenceTransformer (lazy)
 
 def _load_embeddings():
-    """Lazy load NPZ + index. Returns (matrix, index_meta) or (None, None)."""
+    """Lazy load NPZ + index. Returns (matrix, index_meta) or (None, None).
+
+    v2.3: Prefer Gemini-aligned embeddings if present; fall back to sentence-transformers.
+    """
     global _EMBED_MATRIX, _EMBED_INDEX_META
     if _EMBED_MATRIX is not None: return _EMBED_MATRIX, _EMBED_INDEX_META
+    # Prefer Gemini if present
+    if EMBED_GEMINI_NPZ.exists() and EMBED_GEMINI_INDEX.exists():
+        try:
+            import numpy as np
+            arr = np.load(EMBED_GEMINI_NPZ)
+            _EMBED_MATRIX = arr["embeddings"].astype(np.float32)
+            _EMBED_INDEX_META = json.loads(EMBED_GEMINI_INDEX.read_text(encoding="utf-8"))
+            _EMBED_INDEX_META["_loaded_from"] = "gemini"
+            return _EMBED_MATRIX, _EMBED_INDEX_META
+        except Exception as e:
+            print(f"[v2.3] gemini embedding load failed: {e}")
+    # Fall back to sentence-transformers
     if not EMBED_NPZ.exists() or not EMBED_INDEX.exists():
         return None, None
     try:
@@ -291,9 +308,10 @@ def _load_embeddings():
         arr = np.load(EMBED_NPZ)
         _EMBED_MATRIX = arr["embeddings"].astype(np.float32)
         _EMBED_INDEX_META = json.loads(EMBED_INDEX.read_text(encoding="utf-8"))
+        _EMBED_INDEX_META["_loaded_from"] = "sentence_transformers"
         return _EMBED_MATRIX, _EMBED_INDEX_META
     except Exception as e:
-        print(f"[v2.2] embedding load failed: {e}")
+        print(f"[v2.3] embedding load failed: {e}")
         return None, None
 
 def _get_embed_model():

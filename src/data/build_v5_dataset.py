@@ -568,6 +568,14 @@ def build_dataset(seed: int = 42, output_path: Path = OUT) -> tuple[int, str]:
     h = hashlib.sha256(json.dumps(schema_keys, sort_keys=True).encode()).hexdigest()[:16]
     meta["schema_hash"] = h
 
+    # v8.5: builder_hash for cache invalidation (matches rebuild_if_stale check)
+    builder_h = hashlib.sha256()
+    here = Path(__file__).resolve()
+    expanded = here.parent / "v5_evidence_quotes_expanded.py"
+    builder_h.update(here.read_bytes())
+    if expanded.exists(): builder_h.update(expanded.read_bytes())
+    meta["builder_hash"] = builder_h.hexdigest()
+
     META_OUT.parent.mkdir(parents=True, exist_ok=True)
     META_OUT.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
 

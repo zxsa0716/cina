@@ -119,6 +119,11 @@
       <option value="COP29">COP29</option>
       <option value="COP30">COP30</option>
     </select>
+    <span style="display:inline-flex;align-items:center;gap:6px;background:#f1f5f9;padding:4px 10px;border-radius:8px;font-size:12px"
+          title="0=keyword only, 1=semantic only (Gemini key 필요)">
+      🔤 <input type="range" id="alpha-slider" min="0" max="100" value="60" style="width:100px;accent-color:#8b5cf6"> 🧠
+      <span id="alpha-val" style="font-family:monospace;color:#8b5cf6;font-weight:700;min-width:28px">0.60</span>
+    </span>
     <button class="btn" id="clear">🗑 Clear</button>
   </div>
 

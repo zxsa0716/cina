@@ -94,10 +94,10 @@
     "COP30": "COP30", "cop30": "COP30", "벨렘": "COP30", "belem": "COP30",
   };
 
-  const ENGINE_VERSION = "v2.2.0";
+  const ENGINE_VERSION = "v2.3.0";
   const DATASET_VERSION_TARGET = "5.1.0";
   const CORPUS_VERSION_TARGET = "6.0.0";
-  const EMBED_VERSION_TARGET   = "7.0.0";
+  const EMBED_VERSION_TARGET   = "7.0.0";   // or gemini variant v8.3 if present
 
   // ================================================================
   // localStorage keys (BYO LLM)
@@ -244,11 +244,20 @@
   let EMBED_DATA = null;     // { ids, embeddings (Int16Array nested), n, dim }
   let EMBED_QUERY_CACHE = {};   // query string -> Float32Array
   let EMBED_DOC_F32 = null;     // dequantized Float32 matrix [n, dim]
+  let HYBRID_ALPHA = 0.6;       // user-tunable; 0=keyword only, 1=semantic only
+
+  function setAlpha(a) {
+    a = Math.max(0, Math.min(1, +a || 0));
+    HYBRID_ALPHA = a;
+  }
 
   async function loadEmbeddings() {
     if (EMBED_DATA) return EMBED_DATA;
+    // v2.3: prefer Gemini-aligned embeddings if present (model consistency)
     const candidates = [
+      "data/corpus/embeddings_gemini.json", "./data/corpus/embeddings_gemini.json",
       "data/corpus/embeddings.json", "./data/corpus/embeddings.json",
+      "../../docs/web/data/corpus/embeddings_gemini.json",
       "../../docs/web/data/corpus/embeddings.json",
     ];
     for (const url of candidates) {
@@ -334,7 +343,7 @@
     }));
   }
 
-  async function hybridSearch(query, topK = 8, alpha = 0.6) {
+  async function hybridSearch(query, topK = 8, alpha = HYBRID_ALPHA) {
     // alpha = semantic weight; (1-alpha) = keyword weight
     const semHits = await semanticSearch(query, topK * 3);
     const kwHits = corpusSearch(query, topK * 3);
@@ -820,7 +829,7 @@
   }
 
   async function buildSearch(intent, records) {
-    const hits = await hybridSearch(intent.raw, 8, 0.6);
+    const hits = await hybridSearch(intent.raw, 8);   // uses HYBRID_ALPHA
     if (!hits.length) {
       return { html: `<div class="cina-card"><div class="cina-card-h">corpus 검색 결과 없음</div>
         <div>corpus index가 로드되지 않았거나 매칭되는 문서가 없습니다.</div></div>`,
@@ -865,7 +874,8 @@
     const h = hashIntent(intent, 42);
     const src = source === "rule" ? "rule-based v2"
               : `LLM (${providerName || "?"})`;
-    return `<div class="cina-meta">📐 methodology · engine ${ENGINE_VERSION} · dataset v${dsv} · intent <b>${intent.type}</b> · retrieved n=${n_retrieved} · source ${src} · hash <code>${h}</code></div>`;
+    const aTag = `· α=${HYBRID_ALPHA.toFixed(2)}`;
+    return `<div class="cina-meta">📐 methodology · engine ${ENGINE_VERSION} · dataset v${dsv} · intent <b>${intent.type}</b> · retrieved n=${n_retrieved} · source ${src} ${aTag} · hash <code>${h}</code></div>`;
   }
 
   // ================================================================
@@ -1015,7 +1025,7 @@ ${histStr}
 
     // v2.2: Auto-attach corpus refs using hybrid search (semantic + keyword)
     if (intent.type !== "search") {
-      const hybHits = await hybridSearch(question, 5, 0.6);
+      const hybHits = await hybridSearch(question, 5);   // uses HYBRID_ALPHA
       const ctxHits = corpusFilterByContext(intent);
       const seen = new Set(), merged = [];
       hybHits.forEach(h => {
@@ -1155,7 +1165,9 @@ ${histStr}
     answerQuestion, parseIntent, getKey, setKey, clearKey, hasAnyKey,
     pickFirstAvailableProvider, getHistory, clearHistory,
     exportMarkdown, exportJSON, exportBibTeX,
-    loadData,
+    loadData, loadEmbeddings, loadCorpus,
+    semanticSearch, hybridSearch, corpusSearch,
+    setAlpha, getAlpha: () => HYBRID_ALPHA,
     ENGINE_VERSION,
   };
 
