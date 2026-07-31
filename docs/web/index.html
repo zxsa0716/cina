@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,6 +12,12 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://zxsa0716.github.io/cina/web/">
 <link rel="stylesheet" href="assets/style.css">
+<style>
+  .lang-toggle{display:inline-flex;gap:2px;margin-left:12px;border:1px solid rgba(255,255,255,.25);border-radius:999px;overflow:hidden;vertical-align:middle}
+  .lang-btn{background:transparent;color:inherit;font:inherit;font-size:.8rem;font-weight:700;padding:4px 10px;border:0;cursor:pointer;opacity:.6;line-height:1}
+  .lang-btn.active{background:var(--c-warm,#f59e0b);color:#0b1220;opacity:1}
+  .lang-btn:not(.active):hover{opacity:.9}
+</style>
 </head>
 <body>
 
@@ -23,19 +29,23 @@
       <span class="logo-tag">Climate Issue-Network Analysis</span>
     </a>
     <nav class="nav-main">
-      <a href="#overview">개요</a>
-      <a href="#methodology">방법론</a>
-      <a href="#case-korea">한국 사례</a>
-      <a href="#case-brazil">브라질 사례</a>
-      <a href="#findings">학술 발견</a>
-      <a href="#data">데이터</a>
+      <a href="#overview" data-en="Overview">개요</a>
+      <a href="#methodology" data-en="Methodology">방법론</a>
+      <a href="#case-korea" data-en="Korea Case">한국 사례</a>
+      <a href="#case-brazil" data-en="Brazil Case">브라질 사례</a>
+      <a href="#findings" data-en="Findings">학술 발견</a>
+      <a href="#data" data-en="Data">데이터</a>
       <a href="methodology.html">Methodology ↗</a>
       <a href="visualizations.html">Visualizations ↗</a>
-      <a href="outputs.html">결과물 ↗</a>
+      <a href="outputs.html" data-en="Outputs ↗">결과물 ↗</a>
       <a href="cina_program_v2.html" style="color: var(--c-warm); font-weight: 700;">⚡ Program v2</a>
       <a href="corpus_browser.html">📚 Corpus</a>
       <a href="sitemap.html">🧭 Sitemap</a>
       <a href="https://github.com/zxsa0716/cina" target="_blank" rel="noopener" class="nav-github">GitHub →</a>
+      <span class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" class="lang-btn" data-lang="en" onclick="__cinaSetLang('en')">EN</button>
+        <button type="button" class="lang-btn" data-lang="ko" onclick="__cinaSetLang('ko')">한국어</button>
+      </span>
     </nav>
   </div>
 </header>
@@ -43,20 +53,20 @@
 <!-- Hero -->
 <section class="hero">
   <div class="container">
-    <div class="hero-meta">국민대학교 대학원 글로벌기후리더십 · 2026 · v3.0</div>
-    <h1 class="hero-title">기후 협상 의사결정을<br>AI가 정량화한다</h1>
-    <p class="hero-sub">
+    <div class="hero-meta" data-en="Kookmin University Graduate School · Global Climate Leadership · 2026 · v3.0">국민대학교 대학원 글로벌기후리더십 · 2026 · v3.0</div>
+    <h1 class="hero-title" data-en="AI quantifies<br>climate-negotiation decisions">기후 협상 의사결정을<br>AI가 정량화한다</h1>
+    <p class="hero-sub" data-en="<strong>CINA</strong> is a pipeline that automatically converts UNFCCC decision text into ministerial-level negotiation briefings —<br><strong>multi-axis LLM extraction + Heterogeneous R-GAT + graph-grounded generation</strong>. Retrospectively validated on the COP30 Belém Adaptation Indicators (FCCC/PA/CMA/2025/L.25E).">
       <strong>CINA</strong> 는 UNFCCC 결정문 텍스트를 외교부 장관급 협상 브리핑으로 자동 변환하는<br>
       <strong>다축 LLM 추출 + Heterogeneous R-GAT + graph-grounded 생성</strong> 파이프라인입니다.
       COP30 Belém Adaptation Indicators (FCCC/PA/CMA/2025/L.25E) 사례에 회고적으로 검증.
     </p>
     <div class="hero-cta">
-      <a href="#case-korea" class="btn btn-primary">한국 적응정책 분석 보기 →</a>
-      <a href="#methodology" class="btn btn-ghost">방법론 살펴보기</a>
+      <a href="#case-korea" class="btn btn-primary" data-en="See the Korea adaptation analysis →">한국 적응정책 분석 보기 →</a>
+      <a href="#methodology" class="btn btn-ghost" data-en="Explore the methodology">방법론 살펴보기</a>
     </div>
     <div class="hero-stats">
       <div class="stat"><div class="stat-num" id="stat-rubric">0.658</div><div class="stat-label">Task A Spearman ρ</div><div class="stat-sub">vs expert reference</div></div>
-      <div class="stat"><div class="stat-num" id="stat-gates">1.00</div><div class="stat-label">Task C P@3 = R@3</div><div class="stat-sub">3 / 3 contested 정확 (N=3)</div></div>
+      <div class="stat"><div class="stat-num" id="stat-gates">1.00</div><div class="stat-label">Task C P@3 = R@3</div><div class="stat-sub" data-en="3 / 3 contested correct (N=3)">3 / 3 contested 정확 (N=3)</div></div>
       <div class="stat"><div class="stat-num" id="stat-stances">0.93</div><div class="stat-label">Cross-LLM α</div><div class="stat-sub">5 providers, bias-corrected</div></div>
       <div class="stat"><div class="stat-num" id="stat-findings">1.00</div><div class="stat-label">R-GAT chair attention</div><div class="stat-sub">supervision-free emergent</div></div>
     </div>
@@ -68,13 +78,13 @@
   <div class="container">
     <div class="section-head">
       <span class="kicker">§ Pipeline Visualization</span>
-      <h2>전체 연구 흐름 — 3단계 LLM-GNN-LLM 파이프라인</h2>
-      <p class="lede">UNFCCC 결정문에서 외교부 장관급 브리핑까지, 데이터가 어떻게 흘러가는지 한눈에.</p>
+      <h2 data-en="Full research flow — the 3-stage LLM-GNN-LLM pipeline">전체 연구 흐름 — 3단계 LLM-GNN-LLM 파이프라인</h2>
+      <p class="lede" data-en="From UNFCCC decisions to ministerial briefings — see how the data flows, at a glance.">UNFCCC 결정문에서 외교부 장관급 브리핑까지, 데이터가 어떻게 흘러가는지 한눈에.</p>
     </div>
 
     <!-- Animated SVG Pipeline -->
     <div class="svg-pipeline-wrap">
-      <svg viewBox="0 0 1200 480" xmlns="http://www.w3.org/2000/svg" class="svg-pipeline" preserveAspectRatio="xMidYMid meet" role="img" aria-label="CINA 파이프라인 단계별 흐름도">
+      <svg viewBox="0 0 1200 480" xmlns="http://www.w3.org/2000/svg" class="svg-pipeline" preserveAspectRatio="xMidYMid meet" role="img" aria-label="CINA pipeline stage flow">
         <defs>
           <linearGradient id="g0" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stop-color="#1e3a5f"/><stop offset="100%" stop-color="#2563eb"/>
@@ -131,7 +141,7 @@
           <text x="820" y="115" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">Stage 3 · LLM</text>
           <text x="820" y="138" text-anchor="middle" fill="#fff" font-size="12.5">Briefing Generation</text>
           <text x="820" y="162" text-anchor="middle" fill="#d1fae5" font-size="11">Graph-Grounded Gen</text>
-          <text x="820" y="178" text-anchor="middle" fill="#d1fae5" font-size="11">인용 + 구조 강제</text>
+          <text x="820" y="178" text-anchor="middle" fill="#d1fae5" font-size="11">Citation + structure enforced</text>
           <text x="820" y="194" text-anchor="middle" fill="#d1fae5" font-size="11">7-rule verification</text>
           <text x="820" y="212" text-anchor="middle" fill="#d1fae5" font-size="10.5" font-style="italic">→ KO + EN 9 sections</text>
         </g>
@@ -170,8 +180,8 @@
         <!-- Theory grounding -->
         <g class="theory-band">
           <rect x="20" y="320" width="1140" height="120" rx="10" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
-          <text x="40" y="345" fill="#e2e8f0" font-weight="600" font-size="13">📚 Theoretical grounding (이론적 근거)</text>
-          <text x="40" y="370" fill="#94a3b8" font-size="11.5">• <tspan fill="#cbd5e1" font-weight="600">Regime Complex</tspan> (Keohane &amp; Victor 2011) — horizontal cleavage 정량 검증</text>
+          <text x="40" y="345" fill="#e2e8f0" font-weight="600" font-size="13">📚 Theoretical grounding</text>
+          <text x="40" y="370" fill="#94a3b8" font-size="11.5">• <tspan fill="#cbd5e1" font-weight="600">Regime Complex</tspan> (Keohane &amp; Victor 2011) — horizontal cleavage quantified</text>
           <text x="40" y="390" fill="#94a3b8" font-size="11.5">• <tspan fill="#cbd5e1" font-weight="600">Two-Level Games</tspan> (Putnam 1988) × <tspan fill="#cbd5e1" font-weight="600">Policy Instruments</tspan> (Howlett 2019) — Brazil Translation Gap Δ=0.304</text>
           <text x="40" y="410" fill="#94a3b8" font-size="11.5">• <tspan fill="#cbd5e1" font-weight="600">Procedural Authority</tspan> (Tallberg 2010) + <tspan fill="#cbd5e1" font-weight="600">Norm Entrepreneur</tspan> (Finnemore-Sikkink 1998) — AILAC NES = 0.86</text>
           <text x="40" y="430" fill="#94a3b8" font-size="11.5">• <tspan fill="#cbd5e1" font-weight="600">Frame Theory</tspan> (Snow-Benford 1988) + <tspan fill="#cbd5e1" font-weight="600">Issue Linkage</tspan> (Tollison-Willett 1979)</text>
@@ -181,11 +191,11 @@
 
     <!-- Mermaid as backup/text view -->
     <details class="mermaid-fallback">
-      <summary>📐 텍스트 형식으로 보기 (Mermaid)</summary>
+      <summary data-en="📐 View as text (Mermaid)">📐 텍스트 형식으로 보기 (Mermaid)</summary>
       <pre class="mermaid-code">
 Stage 0  →  Stage 1  →  Stage 2  →  Stage 3  →  Phase 5
    ↓           ↓           ↓           ↓           ↓
-Collection  LLM 추출    그래프 분석  브리핑 생성   평가
+Collection  LLM extract  Graph anal.  Briefing gen  Evaluation
 225 docs   98 stances  Leiden 2C   KO+EN 9§     5/5 PASS</pre>
     </details>
   </div>
@@ -196,39 +206,39 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
   <div class="container">
     <div class="section-head">
       <span class="kicker">§1 Overview</span>
-      <h2>이 시스템은 무엇을 하는가?</h2>
-      <p class="lede">CINA는 협상 문서를 입력으로 받아, <strong>국가 × 이슈 스탠스 매트릭스</strong>, <strong>연합 지형 그래프</strong>, <strong>장관급 전략 브리핑</strong> 세 가지 산출물을 자동 생성합니다.</p>
+      <h2 data-en="What does this system do?">이 시스템은 무엇을 하는가?</h2>
+      <p class="lede" data-en="CINA takes negotiation documents as input and automatically generates three outputs: a <strong>country × issue stance matrix</strong>, a <strong>coalition-landscape graph</strong>, and a <strong>ministerial strategic briefing</strong>.">CINA는 협상 문서를 입력으로 받아, <strong>국가 × 이슈 스탠스 매트릭스</strong>, <strong>연합 지형 그래프</strong>, <strong>장관급 전략 브리핑</strong> 세 가지 산출물을 자동 생성합니다.</p>
     </div>
 
     <div class="comparison-grid">
       <div class="compare-col">
-        <h3>기존 도구의 한계</h3>
+        <h3 data-en="Limits of existing tools">기존 도구의 한계</h3>
         <div class="card limit">
           <h4>NegotiateCOP <small>(Germany 2024)</small></h4>
-          <p>문서 검색·QA에 머무름. 구조 분석 없음.</p>
+          <p data-en="Stays at document search / QA. No structural analysis.">문서 검색·QA에 머무름. 구조 분석 없음.</p>
         </div>
         <div class="card limit">
           <h4>RICE-N <small>(Salesforce 2022)</small></h4>
-          <p>이론적 시뮬레이션. 실제 문서·국가 입장 미반영.</p>
+          <p data-en="Theoretical simulation. Does not reflect real documents or country positions.">이론적 시뮬레이션. 실제 문서·국가 입장 미반영.</p>
         </div>
         <div class="card limit">
           <h4>Castro et al. <small>(2025)</small></h4>
-          <p>협력/대립 빈도 집계. 이슈별 스탠스·전략적 함의 없음.</p>
+          <p data-en="Counts cooperation/conflict frequency. No per-issue stance or strategic implications.">협력/대립 빈도 집계. 이슈별 스탠스·전략적 함의 없음.</p>
         </div>
       </div>
       <div class="compare-col">
-        <h3>CINA의 답</h3>
+        <h3 data-en="CINA's answer">CINA의 답</h3>
         <div class="card win">
-          <h4>① 구조화 스탠스 추출</h4>
-          <p>NATO 4축 (정책 수단) + 5범주 frame_type + 절차권 동시 추출.</p>
+          <h4 data-en="① Structured stance extraction">① 구조화 스탠스 추출</h4>
+          <p data-en="Simultaneously extracts NATO 4 axes (policy instruments) + 5-category frame_type + procedural authority.">NATO 4축 (정책 수단) + 5범주 frame_type + 절차권 동시 추출.</p>
         </div>
         <div class="card win">
-          <h4>② 이종 그래프 + 커뮤니티</h4>
-          <p>국가·이슈·그룹 노드 + Leiden algorithm 자동 검출.</p>
+          <h4 data-en="② Heterogeneous graph + community">② 이종 그래프 + 커뮤니티</h4>
+          <p data-en="Country / issue / group nodes + automatic Leiden-algorithm detection.">국가·이슈·그룹 노드 + Leiden algorithm 자동 검출.</p>
         </div>
         <div class="card win">
           <h4>③ Graph-Grounded Briefing</h4>
-          <p>모든 주장에 (텍스트 인용 + 구조적 근거) 강제 grounding.</p>
+          <p data-en="Every claim is forced to ground on (text citation + structural evidence).">모든 주장에 (텍스트 인용 + 구조적 근거) 강제 grounding.</p>
         </div>
       </div>
     </div>
@@ -240,8 +250,8 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
   <div class="container">
     <div class="section-head">
       <span class="kicker">§2 Methodology</span>
-      <h2>3-Stage LLM-GNN-LLM 파이프라인</h2>
-      <p class="lede">UNFCCC 문서에서 장관급 브리핑까지 — 4 단계로 자동 변환됩니다.</p>
+      <h2>3-Stage LLM-GNN-LLM Pipeline</h2>
+      <p class="lede" data-en="From UNFCCC documents to a ministerial briefing — auto-converted in four stages.">UNFCCC 문서에서 장관급 브리핑까지 — 4 단계로 자동 변환됩니다.</p>
     </div>
 
     <div class="pipeline">
@@ -250,7 +260,7 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
         <h3>Data Collection</h3>
         <div class="stage-meta">26 collectors · 225 manifest entries</div>
         <ul>
-          <li>UNFCCC 결정문 + NDC + ENB</li>
+          <li data-en="UNFCCC decisions + NDC + ENB">UNFCCC 결정문 + NDC + ENB</li>
           <li>IPCC AR6 + OWID + IMF + PRIMAP</li>
           <li>WRI Climate Watch + OECD</li>
           <li>Korea MOFA/MOE + Brazil Plano Clima</li>
@@ -264,7 +274,7 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
         <div class="stage-meta">Multi-LLM ensemble · 98 records</div>
         <ul>
           <li><b>Multi-sample k=5</b> + Bayesian credible interval</li>
-          <li><b>NATO 4축</b>: nodality, authority, treasure, organization</li>
+          <li><b>NATO 4 axes</b>: nodality, authority, treasure, organization</li>
           <li><b>5 frame types</b>: scientific / justice / sovereignty / security / development</li>
           <li><b>Procedural signals</b>: chair_role, pen_holder, drafts_text</li>
           <li><b>Evidence quotes</b> with fuzzy match ≥85% verification</li>
@@ -277,10 +287,10 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
         <h3>Graph Analysis <small>(GNN)</small></h3>
         <div class="stage-meta">Heterogeneous + Leiden + Centrality</div>
         <ul>
-          <li>Country / Issue / Group <b>3-type 노드</b></li>
-          <li><b>R-GAT 설계</b>(NetworkX advanced 대체 실행)</li>
-          <li><b>Leiden community</b> 자동 검출 (modularity 0.31)</li>
-          <li><b>Centrality 5종</b>: PageRank, betweenness, eigenvector, degree, closeness</li>
+          <li>Country / Issue / Group <b>3-type nodes</b></li>
+          <li><b>R-GAT design</b> (NetworkX-advanced fallback run)</li>
+          <li><b>Leiden community</b> auto-detection (modularity 0.31)</li>
+          <li><b>5 centralities</b>: PageRank, betweenness, eigenvector, degree, closeness</li>
           <li><b>Cross-issue hypergraph</b> (Apriori-style frame motifs)</li>
         </ul>
         <div class="stage-arrow">↓ Coalition map · bridges · hyperedges</div>
@@ -292,16 +302,16 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
         <div class="stage-meta">Graph-Grounded · evidence-traceable</div>
         <ul>
           <li><b>9 sections</b> + 4 appendices (Korean ministerial format)</li>
-          <li>모든 claim에 <b>(인용 + 구조적 근거)</b> 강제</li>
+          <li data-en="Every claim forced to carry <b>(citation + structural evidence)</b>">모든 claim에 <b>(인용 + 구조적 근거)</b> 강제</li>
           <li>Post-hoc 7-rule verification</li>
-          <li><b>한국어 + 영어</b> 양 버전 산출</li>
+          <li data-en="Produced in <b>both Korean and English</b>"><b>한국어 + 영어</b> 양 버전 산출</li>
         </ul>
-        <div class="stage-arrow">↓ 외교부 장관급 브리핑</div>
+        <div class="stage-arrow" data-en="↓ Ministerial-level briefing">↓ 외교부 장관급 브리핑</div>
       </div>
     </div>
 
     <div class="llm-providers">
-      <h3>5 무료 LLM Provider 통합</h3>
+      <h3 data-en="5 free LLM providers integrated">5 무료 LLM Provider 통합</h3>
       <div class="provider-grid">
         <div class="provider"><b>Gemini 2.5 Flash-Lite</b><span>1,000 RPD · 1M ctx · $0</span></div>
         <div class="provider"><b>Groq Llama 3.3 70B</b><span>30 RPM · 280 tok/s · $0</span></div>
@@ -318,8 +328,8 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
   <div class="container">
     <div class="section-head">
       <span class="kicker">§3 Case Study A · Track A</span>
-      <h2>🇰🇷 한국 적응정책의 GGA 정합도</h2>
-      <p class="lede">한국 제3차 국가 기후위기 적응 강화대책 × COP30 Belém Adaptation Indicators 정합도 정량 분석.</p>
+      <h2 data-en="🇰🇷 Alignment of Korea's adaptation policy with the GGA">🇰🇷 한국 적응정책의 GGA 정합도</h2>
+      <p class="lede" data-en="A quantitative analysis of the alignment between Korea's 3rd National Climate-Crisis Adaptation Plan and the COP30 Belém Adaptation Indicators.">한국 제3차 국가 기후위기 적응 강화대책 × COP30 Belém Adaptation Indicators 정합도 정량 분석.</p>
     </div>
 
     <div class="case-grid">
@@ -330,17 +340,17 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
         <div class="metric-status">Accept eligible</div>
       </div>
       <div class="case-text">
-        <p><b>IRR (Implementation Realization Rate)</b>는 한국 적응정책이 GGA 11 targets에 얼마나 정합하는지 30 cells 매트릭스로 측정한 지수입니다.</p>
-        <p>이 0.653 값은 한국 정책이 <b>Howlett (2019) NATO 4축</b> instrument calibration 관점에서 국제 GGA 프레임워크와 평균 65% 정합함을 의미합니다.</p>
+        <p data-en="<b>IRR (Implementation Realization Rate)</b> is an index that measures, via a 30-cell matrix, how well Korea's adaptation policy aligns with the 11 GGA targets."><b>IRR (Implementation Realization Rate)</b>는 한국 적응정책이 GGA 11 targets에 얼마나 정합하는지 30 cells 매트릭스로 측정한 지수입니다.</p>
+        <p data-en="The value of 0.653 means Korea's policy aligns with the international GGA framework on average 65%, from the perspective of <b>Howlett (2019) NATO 4-axis</b> instrument calibration.">이 0.653 값은 한국 정책이 <b>Howlett (2019) NATO 4축</b> instrument calibration 관점에서 국제 GGA 프레임워크와 평균 65% 정합함을 의미합니다.</p>
       </div>
     </div>
 
-    <h3 class="sub-head">5 NAP 분야 × 6 GGA 이슈 매트릭스</h3>
+    <h3 class="sub-head" data-en="5 NAP sectors × 6 GGA issues matrix">5 NAP 분야 × 6 GGA 이슈 매트릭스</h3>
     <div class="crosswalk-table">
       <table>
         <thead>
           <tr>
-            <th>한국 NAP 분야</th>
+            <th data-en="Korea NAP sector">한국 NAP 분야</th>
             <th>GGA-IND</th>
             <th>ADAPT-FIN</th>
             <th>L&D-OP</th>
@@ -350,11 +360,11 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
           </tr>
         </thead>
         <tbody>
-          <tr><td>사회·경제</td><td class="m">0.65</td><td class="m">0.55</td><td class="l">0.35</td><td class="h">0.78</td><td class="m">0.62</td><td class="h">0.72</td></tr>
-          <tr><td>기반시설</td><td class="h">0.78</td><td class="m">0.55</td><td class="m">0.50</td><td class="h">0.80</td><td class="m">0.58</td><td class="m">0.60</td></tr>
-          <tr><td>자연·환경</td><td class="h">0.70</td><td class="m">0.55</td><td class="l">0.40</td><td class="h">0.82</td><td class="m">0.62</td><td class="m">0.55</td></tr>
-          <tr><td>농림수산</td><td class="h">0.75</td><td class="m">0.60</td><td class="m">0.50</td><td class="h">0.78</td><td class="m">0.62</td><td class="m">0.58</td></tr>
-          <tr><td>건강·국민</td><td class="h">0.80</td><td class="m">0.58</td><td class="m">0.50</td><td class="h">0.80</td><td class="m">0.55</td><td class="m">0.65</td></tr>
+          <tr><td data-en="Socio-economic">사회·경제</td><td class="m">0.65</td><td class="m">0.55</td><td class="l">0.35</td><td class="h">0.78</td><td class="m">0.62</td><td class="h">0.72</td></tr>
+          <tr><td data-en="Infrastructure">기반시설</td><td class="h">0.78</td><td class="m">0.55</td><td class="m">0.50</td><td class="h">0.80</td><td class="m">0.58</td><td class="m">0.60</td></tr>
+          <tr><td data-en="Nature·Environment">자연·환경</td><td class="h">0.70</td><td class="m">0.55</td><td class="l">0.40</td><td class="h">0.82</td><td class="m">0.62</td><td class="m">0.55</td></tr>
+          <tr><td data-en="Agriculture·Forestry·Fisheries">농림수산</td><td class="h">0.75</td><td class="m">0.60</td><td class="m">0.50</td><td class="h">0.78</td><td class="m">0.62</td><td class="m">0.58</td></tr>
+          <tr><td data-en="Health·Citizens">건강·국민</td><td class="h">0.80</td><td class="m">0.58</td><td class="m">0.50</td><td class="h">0.80</td><td class="m">0.55</td><td class="m">0.65</td></tr>
         </tbody>
       </table>
       <div class="legend">
@@ -364,25 +374,25 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
       </div>
     </div>
 
-    <h3 class="sub-head">Stage 1 LLM 추출 — 한국 stance 7건</h3>
+    <h3 class="sub-head" data-en="Stage 1 LLM extraction — 7 Korea stances">Stage 1 LLM 추출 — 한국 stance 7건</h3>
     <div class="stance-cards">
       <div class="stance-card support"><div class="sc-issue">GGA-IND</div><div class="sc-score">+0.65</div><div class="sc-frame">development</div><div class="sc-note">EIG balanced</div></div>
       <div class="stance-card oppose"><div class="sc-issue">ADAPT-FIN</div><div class="sc-score">−0.20</div><div class="sc-frame">development+sov</div><div class="sc-note">defensive on contributor</div></div>
       <div class="stance-card oppose"><div class="sc-issue">L&D-OP</div><div class="sc-score">−0.30</div><div class="sc-frame">development+sov</div><div class="sc-note">EIG dual identity</div></div>
       <div class="stance-card strong"><div class="sc-issue">NAPs</div><div class="sc-score">+0.85</div><div class="sc-frame">development</div><div class="sc-note">⭐ pen_holder=True</div></div>
-      <div class="stance-card support"><div class="sc-issue">MIT-ADAPT</div><div class="sc-score">+0.55</div><div class="sc-frame">development</div><div class="sc-note">탄소중립기본법 §41</div></div>
-      <div class="stance-card support"><div class="sc-issue">JT-ADAPT</div><div class="sc-score">+0.65</div><div class="sc-frame">justice</div><div class="sc-note">탄소중립기본법 §50</div></div>
+      <div class="stance-card support"><div class="sc-issue">MIT-ADAPT</div><div class="sc-score">+0.55</div><div class="sc-frame">development</div><div class="sc-note" data-en="Carbon Neutrality Act §41">탄소중립기본법 §41</div></div>
+      <div class="stance-card support"><div class="sc-issue">JT-ADAPT</div><div class="sc-score">+0.65</div><div class="sc-frame">justice</div><div class="sc-note" data-en="Carbon Neutrality Act §50">탄소중립기본법 §50</div></div>
       <div class="stance-card support"><div class="sc-issue">GGA-IND</div><div class="sc-score">+0.65</div><div class="sc-frame">development</div><div class="sc-note">Korea AdComm 2023</div></div>
     </div>
 
     <div class="recommendation-box">
-      <h3>🎯 외교부 권고 (CINA Stage 3 자동 생성)</h3>
+      <h3 data-en="🎯 MOFA recommendations (auto-generated by CINA Stage 3)">🎯 외교부 권고 (CINA Stage 3 자동 생성)</h3>
       <ol>
-        <li><b>NAP pen_holder 활용</b>: 한국 3-tier NAP 모델을 Belém-Addis 2-year vision에 입력</li>
-        <li><b>JT 한국 모델 국제화</b>: 탄소중립기본법 §50 → COP31 plenary 발언 + Track B 논문</li>
-        <li><b>L&D-OP institutional support pledge</b>: $5-10M voluntary, FRLD 이사회 한국 진출</li>
-        <li><b>EIG dual identity 정립</b>: Switzerland + Mexico AILAC 가교 활용</li>
-        <li><b>GCF 운영 효율 의제 주도</b>: contributor expansion 회피</li>
+        <li data-en="<b>Leverage NAP pen_holder</b>: feed Korea's 3-tier NAP model into the Belém-Addis 2-year vision"><b>NAP pen_holder 활용</b>: 한국 3-tier NAP 모델을 Belém-Addis 2-year vision에 입력</li>
+        <li data-en="<b>Internationalize Korea's JT model</b>: Carbon Neutrality Act §50 → COP31 plenary statement + Track B paper"><b>JT 한국 모델 국제화</b>: 탄소중립기본법 §50 → COP31 plenary 발언 + Track B 논문</li>
+        <li><b>L&D-OP institutional support pledge</b>: $5-10M voluntary, FRLD board Korea seat</li>
+        <li data-en="<b>Establish EIG dual identity</b>: use Switzerland + Mexico AILAC bridging"><b>EIG dual identity 정립</b>: Switzerland + Mexico AILAC 가교 활용</li>
+        <li data-en="<b>Lead the GCF operational-efficiency agenda</b>: avoid contributor expansion"><b>GCF 운영 효율 의제 주도</b>: contributor expansion 회피</li>
       </ol>
     </div>
   </div>
@@ -393,33 +403,33 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
   <div class="container">
     <div class="section-head">
       <span class="kicker">§4 Case Study B · COP30 Focal</span>
-      <h2>🇧🇷 브라질 의장국의 Translation Gap</h2>
-      <p class="lede">Plano Clima 국내 정책 vs COP30 GGA 국제 합의 사이의 Δ를 정량화 — 학술 빈자리 발견.</p>
+      <h2 data-en="🇧🇷 The Brazilian presidency's Translation Gap">🇧🇷 브라질 의장국의 Translation Gap</h2>
+      <p class="lede" data-en="Quantifying the Δ between Brazil's domestic Plano Clima and the COP30 GGA international consensus — surfacing a scholarly gap.">Plano Clima 국내 정책 vs COP30 GGA 국제 합의 사이의 Δ를 정량화 — 학술 빈자리 발견.</p>
     </div>
 
     <div class="brazil-paradox">
       <div class="paradox-side">
-        <h3>국내 (Plano Clima 16 sectoral)</h3>
+        <h3 data-en="Domestic (Plano Clima, 16 sectoral)">국내 (Plano Clima 16 sectoral)</h3>
         <div class="paradox-irr"><span class="num">0.714</span><span class="lbl">domestic IRR</span></div>
         <div class="paradox-axis"><div class="bar" style="width:67%"><span>Authority+Nodality+Org 67%</span></div></div>
-        <p>16 sectoral plans, 탄소중립기본법, MMA 통합 implementation.</p>
+        <p data-en="16 sectoral plans, Carbon Neutrality Act, MMA integrated implementation.">16 sectoral plans, 탄소중립기본법, MMA 통합 implementation.</p>
       </div>
       <div class="paradox-arrow">→ Translation Gap</div>
       <div class="paradox-side">
-        <h3>국제 (COP30 GGA L.25E)</h3>
+        <h3 data-en="International (COP30 GGA L.25E)">국제 (COP30 GGA L.25E)</h3>
         <div class="paradox-irr"><span class="num">0.410</span><span class="lbl">international IRR</span></div>
         <div class="paradox-axis"><div class="bar bar-low" style="width:48%"><span>Nodality only 48%</span></div></div>
-        <p>"voluntary, non-prescriptive" 언어 + Para 9 negative Authority (shall not × 3).</p>
+        <p data-en="&quot;voluntary, non-prescriptive&quot; language + Para 9 negative Authority (shall not × 3).">"voluntary, non-prescriptive" 언어 + Para 9 negative Authority (shall not × 3).</p>
       </div>
     </div>
 
     <div class="delta-confirmed">
       <div class="delta-num">Δ = 0.304</div>
       <div class="delta-status">CONFIRMED</div>
-      <div class="delta-note">가설 임계 0.30 돌파 — Putnam (1988) Two-Level Games × Howlett (2019) instrument calibration <strong>학술 빈자리 정량화</strong></div>
+      <div class="delta-note" data-en="Crosses the 0.30 hypothesis threshold — <strong>quantifying the scholarly gap</strong> between Putnam (1988) Two-Level Games × Howlett (2019) instrument calibration.">가설 임계 0.30 돌파 — Putnam (1988) Two-Level Games × Howlett (2019) instrument calibration <strong>학술 빈자리 정량화</strong></div>
     </div>
 
-    <h3 class="sub-head">Brazil Stage 1 LLM 검증 — chair power 정량</h3>
+    <h3 class="sub-head" data-en="Brazil Stage 1 LLM validation — quantified chair power">Brazil Stage 1 LLM 검증 — chair power 정량</h3>
     <div class="chair-grid">
       <div class="chair-card highlight">
         <div class="chair-issue">GGA-IND</div>
@@ -428,7 +438,7 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
           <span class="flag chair">chair_role ✓</span>
           <span class="flag pen">pen_holder ✓</span>
         </div>
-        <p><b>frame=development</b> + Tallberg (2010) chairman power 직접 LLM 검증</p>
+        <p data-en="<b>frame=development</b> + direct LLM validation of Tallberg (2010) chairman power"><b>frame=development</b> + Tallberg (2010) chairman power 직접 LLM 검증</p>
       </div>
       <div class="chair-card highlight">
         <div class="chair-issue">NAPs</div>
@@ -442,7 +452,7 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
       <div class="chair-card">
         <div class="chair-issue">JT-ADAPT</div>
         <div class="chair-score">+0.92</div>
-        <p><b>frame=development+justice</b> Lula 정부 + indigenous protection</p>
+        <p data-en="<b>frame=development+justice</b> Lula government + indigenous protection"><b>frame=development+justice</b> Lula 정부 + indigenous protection</p>
       </div>
       <div class="chair-card">
         <div class="chair-issue">MIT-ADAPT</div>
@@ -452,19 +462,19 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
       <div class="chair-card neutral">
         <div class="chair-issue">ADAPT-FIN</div>
         <div class="chair-score">+0.45</div>
-        <p>의장국 중립 (G77 leader + chair neutrality dual)</p>
+        <p data-en="Presidency neutral (G77 leader + chair neutrality dual)">의장국 중립 (G77 leader + chair neutrality dual)</p>
       </div>
       <div class="chair-card neutral">
         <div class="chair-issue">L&D-OP</div>
         <div class="chair-score">+0.55</div>
-        <p>FRLD operationalization 지지</p>
+        <p data-en="Supports FRLD operationalization">FRLD operationalization 지지</p>
       </div>
     </div>
 
-    <h3 class="sub-head">L.25 Pre-Crystallized Formula 가설 <small>(NeurIPS CCAI signature 후보)</small></h3>
+    <h3 class="sub-head">L.25 Pre-Crystallized Formula <small data-en="(NeurIPS CCAI signature candidate)">(NeurIPS CCAI signature 후보)</small></h3>
     <div class="formula-card">
-      <p>L.25 advance ≡ L.25E final, hot spots = <b>0</b>. 결정문이 <strong>advance 배포 *이전* 비공식 협의에서 완성됨</strong>을 시사.</p>
-      <p>Tallberg (2010) chairman power 4 channels 통합:</p>
+      <p data-en="L.25 advance ≡ L.25E final, hot spots = <b>0</b>. Suggests the decision text was <strong>finalized in informal consultations *before* the advance release</strong>.">L.25 advance ≡ L.25E final, hot spots = <b>0</b>. 결정문이 <strong>advance 배포 *이전* 비공식 협의에서 완성됨</strong>을 시사.</p>
+      <p data-en="Integrates Tallberg (2010) chairman power across 4 channels:">Tallberg (2010) chairman power 4 channels 통합:</p>
       <ul>
         <li><b>Formula control</b>: Para 7 hedging density (voluntary + non-prescriptive + non-punitive + facilitative 4-burst)</li>
         <li><b>Agenda-shaping</b>: 16 sectoral Plano Clima mirroring</li>
@@ -480,36 +490,36 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
   <div class="container">
     <div class="section-head">
       <span class="kicker">§5 Stage 2 Output</span>
-      <h2>Leiden 자동 검출 — 2 Communities</h2>
-      <p class="lede"><strong>Regime Complex 'horizontal cleavage'</strong> (Keohane-Victor 2011) 정량 검증. 자동 클러스터링이 북-남 분열을 발견.</p>
+      <h2 data-en="Leiden auto-detection — 2 Communities">Leiden 자동 검출 — 2 Communities</h2>
+      <p class="lede" data-en="A quantitative test of the <strong>Regime Complex 'horizontal cleavage'</strong> (Keohane-Victor 2011). Automatic clustering discovers the North-South split."><strong>Regime Complex 'horizontal cleavage'</strong> (Keohane-Victor 2011) 정량 검증. 자동 클러스터링이 북-남 분열을 발견.</p>
     </div>
 
     <div class="coalitions">
       <div class="coalition coalition-a">
         <div class="coalition-tag">Community 0 · development frame</div>
-        <h3>Northern + Southern moderate 연합</h3>
+        <h3 data-en="Northern + Southern moderate coalition">Northern + Southern moderate 연합</h3>
         <div class="members">
           <span class="member">🇧🇷 Brazil</span>
           <span class="member">🇪🇺 EU</span>
           <span class="member">🌍 African Group</span>
           <span class="member">🌐 Multi (UAE-Belém)</span>
         </div>
-        <p class="coalition-desc">Plano Clima + EU Climate Adaptation Mission + AGN bridging — 모두 <b>development frame</b> 일관.</p>
+        <p class="coalition-desc" data-en="Plano Clima + EU Climate Adaptation Mission + AGN bridging — all consistent on the <b>development frame</b>.">Plano Clima + EU Climate Adaptation Mission + AGN bridging — 모두 <b>development frame</b> 일관.</p>
       </div>
       <div class="coalition coalition-b">
         <div class="coalition-tag">Community 1 · mixed/justice/sov</div>
-        <h3>Vulnerable + Sovereignty defender 연합</h3>
+        <h3 data-en="Vulnerable + Sovereignty-defender coalition">Vulnerable + Sovereignty defender 연합</h3>
         <div class="members">
           <span class="member">🇮🇳 India</span>
           <span class="member">🌊 AOSIS</span>
           <span class="member">🇰🇷 South Korea</span>
           <span class="member">🛡️ LMDC</span>
         </div>
-        <p class="coalition-desc">AOSIS justice + India CBDR-RC + Korea EIG dual + LMDC sovereignty — vulnerability + sovereignty defense 공통.</p>
+        <p class="coalition-desc" data-en="AOSIS justice + India CBDR-RC + Korea EIG dual + LMDC sovereignty — shared vulnerability + sovereignty defense.">AOSIS justice + India CBDR-RC + Korea EIG dual + LMDC sovereignty — vulnerability + sovereignty defense 공통.</p>
       </div>
     </div>
 
-    <h3 class="sub-head">PageRank Centrality — 협상 영향력 순위</h3>
+    <h3 class="sub-head" data-en="PageRank Centrality — negotiation-influence ranking">PageRank Centrality — 협상 영향력 순위</h3>
     <div class="pagerank-bars">
       <div class="pr-bar"><span class="pr-name">🇰🇷 South Korea</span><div class="pr-fill" style="width:100%">0.166 ⭐</div></div>
       <div class="pr-bar"><span class="pr-name">🌊 AOSIS</span><div class="pr-fill" style="width:90%">0.149</div></div>
@@ -536,39 +546,39 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
   <div class="container">
     <div class="section-head">
       <span class="kicker">§6 Findings</span>
-      <h2>8 publishable-grade 학술 발견</h2>
-      <p class="lede">5개 venue 후보 — Global Environmental Change, Climate Policy, ISQ, NeurIPS CCAI, IO.</p>
+      <h2 data-en="8 publishable-grade academic findings">8 publishable-grade 학술 발견</h2>
+      <p class="lede" data-en="5 venue candidates — Global Environmental Change, Climate Policy, ISQ, NeurIPS CCAI, IO.">5개 venue 후보 — Global Environmental Change, Climate Policy, ISQ, NeurIPS CCAI, IO.</p>
     </div>
 
     <div class="findings-grid">
       <div class="finding">
         <div class="finding-num">1</div>
         <h3>GGA-IND Authority 6.1</h3>
-        <p>6개 이슈 중 <b>최저</b>. UAE-Belém 59 indicators의 "voluntary, non-prescriptive" 언어가 binding force 부재의 구조적 evidence.</p>
+        <p data-en="The <b>lowest</b> of 6 issues. The &quot;voluntary, non-prescriptive&quot; language of the UAE-Belém 59 indicators is structural evidence of the absence of binding force.">6개 이슈 중 <b>최저</b>. UAE-Belém 59 indicators의 "voluntary, non-prescriptive" 언어가 binding force 부재의 구조적 evidence.</p>
         <div class="finding-tag">Howlett 2019</div>
       </div>
       <div class="finding star">
         <div class="finding-num">2 ⭐</div>
         <h3>IRR_Brazil Δ=0.304 CONFIRMED</h3>
-        <p>국내 0.714 vs 국제 0.410 paradox. <b>Putnam × Howlett 학술 빈자리</b> 정량화. 가설 임계 0.30 돌파.</p>
+        <p data-en="Domestic 0.714 vs international 0.410 paradox. Quantifies the <b>Putnam × Howlett scholarly gap</b>. Crosses the 0.30 hypothesis threshold.">국내 0.714 vs 국제 0.410 paradox. <b>Putnam × Howlett 학술 빈자리</b> 정량화. 가설 임계 0.30 돌파.</p>
         <div class="finding-tag">Global Environmental Politics</div>
       </div>
       <div class="finding star">
         <div class="finding-num">3 ⭐</div>
         <h3>L.25 Pre-Crystallized Formula</h3>
-        <p>advance ≡ final, hot spots=0. Tallberg + Steinberg + Goh 통합. <b>NeurIPS CCAI signature finding 후보</b>.</p>
+        <p data-en="advance ≡ final, hot spots=0. Integrates Tallberg + Steinberg + Goh. <b>NeurIPS CCAI signature finding candidate</b>.">advance ≡ final, hot spots=0. Tallberg + Steinberg + Goh 통합. <b>NeurIPS CCAI signature finding 후보</b>.</p>
         <div class="finding-tag">NeurIPS CCAI 2026</div>
       </div>
       <div class="finding">
         <div class="finding-num">4</div>
         <h3>Realist F1=0.560 (p&lt;0.0001)</h3>
-        <p>Realism 단독 부족 → CINA constructivist+frame 변수 필요성 empirical 정당화. McNemar χ²=16.1.</p>
+        <p data-en="Realism alone is insufficient → empirically justifies the need for CINA's constructivist+frame variables. McNemar χ²=16.1.">Realism 단독 부족 → CINA constructivist+frame 변수 필요성 empirical 정당화. McNemar χ²=16.1.</p>
         <div class="finding-tag">ISQ</div>
       </div>
       <div class="finding star">
         <div class="finding-num">5 ⭐</div>
         <h3>Leiden 2 Communities</h3>
-        <p>Regime Complex 'horizontal cleavage' (Keohane-Victor 2011) <b>정량 검증</b>. Modularity 0.31.</p>
+        <p data-en="<b>Quantitative test</b> of the Regime Complex 'horizontal cleavage' (Keohane-Victor 2011). Modularity 0.31.">Regime Complex 'horizontal cleavage' (Keohane-Victor 2011) <b>정량 검증</b>. Modularity 0.31.</p>
         <div class="finding-tag">International Organization</div>
       </div>
       <div class="finding">
@@ -580,14 +590,14 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
       <div class="finding star">
         <div class="finding-num">7 ⭐</div>
         <h3>Task C P@3=R@3=1.00</h3>
-        <p>COP30 contested issues (3개) <b>100% 정확 예측</b>. Stage 1 stance variance 만으로.</p>
+        <p data-en="<b>100% correct prediction</b> of COP30 contested issues (3), from Stage 1 stance variance alone.">COP30 contested issues (3개) <b>100% 정확 예측</b>. Stage 1 stance variance 만으로.</p>
         <div class="finding-tag">NeurIPS CCAI signature</div>
       </div>
       <div class="finding">
         <div class="finding-num">8</div>
         <h3>Korea IRR 0.653 + L&D-OP 0.39</h3>
-        <p>Track A 한국정책학회보 단독 논문 자격. <b>actionable</b> COP31 정책 권고 직접 도출.</p>
-        <div class="finding-tag">한국정책학회보</div>
+        <p data-en="Qualifies as a standalone Track A paper (Korean Policy Studies Review). Directly yields <b>actionable</b> COP31 policy recommendations.">Track A 한국정책학회보 단독 논문 자격. <b>actionable</b> COP31 정책 권고 직접 도출.</p>
+        <div class="finding-tag" data-en="Korean Policy Studies Review">한국정책학회보</div>
       </div>
     </div>
   </div>
@@ -609,7 +619,7 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
           <div><span>MAE</span><b>0.183</b></div>
           <div><span>n overlap</span><b>34</b></div>
         </div>
-        <div class="eval-status">✅ PASS (목표 ρ≥0.6, MAE≤0.25)</div>
+        <div class="eval-status" data-en="✅ PASS (target ρ≥0.6, MAE≤0.25)">✅ PASS (목표 ρ≥0.6, MAE≤0.25)</div>
       </div>
       <div class="eval-card pass">
         <h3>Task B · Coalition Detection</h3>
@@ -618,7 +628,7 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
           <div><span>Modularity</span><b>0.31</b></div>
           <div><span>Communities</span><b>2</b></div>
         </div>
-        <div class="eval-status">✅ PASS (목표 ARI≥0.4)</div>
+        <div class="eval-status" data-en="✅ PASS (target ARI≥0.4)">✅ PASS (목표 ARI≥0.4)</div>
       </div>
       <div class="eval-card pass star">
         <h3>Task C · Outcome Prediction ⭐</h3>
@@ -627,7 +637,7 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
           <div><span>R@3</span><b>1.00</b></div>
           <div><span>F1@3</span><b>1.00</b></div>
         </div>
-        <div class="eval-status">✅ PASS (3/3 contested 정확)</div>
+        <div class="eval-status" data-en="✅ PASS (3/3 contested correct)">✅ PASS (3/3 contested 정확)</div>
       </div>
       <div class="eval-card pass">
         <h3>Task D · Briefing Quality</h3>
@@ -636,22 +646,22 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
           <div><span>Krippendorff α</span><b>0.905</b></div>
           <div><span>Hallucination</span><b>1.5%</b></div>
         </div>
-        <div class="eval-status">✅ PASS (5-evaluator 시뮬레이션)</div>
+        <div class="eval-status" data-en="✅ PASS (5-evaluator simulation)">✅ PASS (5-evaluator 시뮬레이션)</div>
       </div>
     </div>
 
-    <h3 class="sub-head">Ablation Study A0-A5 — CINA 컴포넌트 검증</h3>
+    <h3 class="sub-head" data-en="Ablation Study A0-A5 — CINA component validation">Ablation Study A0-A5 — CINA 컴포넌트 검증</h3>
     <div class="ablation-table">
       <table>
-        <tr><th>Variant</th><th>Spearman ρ</th><th>MAE</th><th>Δ ρ</th><th>의의</th></tr>
+        <tr><th>Variant</th><th>Spearman ρ</th><th>MAE</th><th>Δ ρ</th><th data-en="Meaning">의의</th></tr>
         <tr class="ab-base"><td>A0 Full CINA</td><td><b>0.658</b></td><td><b>0.183</b></td><td>(base)</td><td>Full pipeline</td></tr>
         <tr><td>A1 No graph</td><td>0.625</td><td>0.187</td><td>−5%</td><td>Stage 2 skip</td></tr>
         <tr><td>A2 No calibration</td><td>0.592</td><td>0.201</td><td>−10%</td><td>Platt off</td></tr>
         <tr><td>A3 No multi-sample</td><td>0.605</td><td>0.198</td><td>−8%</td><td>k=1</td></tr>
-        <tr class="ab-largest"><td><b>A4 No evidence grounding</b></td><td><b>0.559</b></td><td><b>0.210</b></td><td><b>−15%</b></td><td><b>가장 큰 영향</b></td></tr>
+        <tr class="ab-largest"><td><b>A4 No evidence grounding</b></td><td><b>0.559</b></td><td><b>0.210</b></td><td><b>−15%</b></td><td data-en="<b>Largest impact</b>"><b>가장 큰 영향</b></td></tr>
         <tr><td>A5 No hypergraph</td><td>0.638</td><td>0.185</td><td>−3%</td><td>Minor</td></tr>
       </table>
-      <p class="ablation-note">→ <b>A4 (evidence grounding 제거)가 가장 큰 영향 -15%</b>. CINA 핵심 가치 = evidence-grounded extraction임을 empirical 정당화.</p>
+      <p class="ablation-note" data-en="→ <b>A4 (removing evidence grounding) has the largest impact, −15%</b>. Empirically justifies that CINA's core value is evidence-grounded extraction.">→ <b>A4 (evidence grounding 제거)가 가장 큰 영향 -15%</b>. CINA 핵심 가치 = evidence-grounded extraction임을 empirical 정당화.</p>
     </div>
   </div>
 </section>
@@ -661,8 +671,8 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
   <div class="container">
     <div class="section-head">
       <span class="kicker">§8 Visualizations</span>
-      <h2>Stage 2 Figures (5종)</h2>
-      <p class="lede">300 dpi, 논문/발표 직접 사용 가능.</p>
+      <h2 data-en="Stage 2 Figures (5)">Stage 2 Figures (5종)</h2>
+      <p class="lede" data-en="300 dpi, directly usable in papers/presentations.">300 dpi, 논문/발표 직접 사용 가능.</p>
     </div>
     <div class="figures-grid">
       <figure><img src="figures/fig1_country_issue_heatmap.png" alt="Country × Issue stance heatmap"><figcaption><b>Fig 1.</b> Country × Issue Stance Heatmap. 13 countries × 6 issues. Brazil 100% coverage.</figcaption></figure>
@@ -681,7 +691,7 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
     <div class="section-head">
       <span class="kicker">§9 Process</span>
       <h2>Council 5-Agent System — 6 Round Progression</h2>
-      <p class="lede">팀장 + 4 작업 에이전트가 라운드별 cross-critique. Combined Rubric 3.05 → 4.76.</p>
+      <p class="lede" data-en="A team lead + 4 worker agents cross-critique each round. Combined Rubric 3.05 → 4.76.">팀장 + 4 작업 에이전트가 라운드별 cross-critique. Combined Rubric 3.05 → 4.76.</p>
     </div>
 
     <div class="rounds">
@@ -694,11 +704,11 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
     </div>
 
     <div class="agents-grid">
-      <div class="agent"><b>team-lead</b> (Opus)<br><small>전체 조율 + 헌법 유지 + 5 quality gate 판정</small></div>
-      <div class="agent"><b>policy-data-collector</b> (Sonnet)<br><small>UNFCCC/NDC/ENB/IPCC raw 문서 수집</small></div>
-      <div class="agent"><b>data-refinement-analyst</b> (Sonnet)<br><small>raw → 구조화 + 토픽 태깅</small></div>
-      <div class="agent"><b>policy-science-professor</b> (Opus)<br><small>정책학 비판 (Howlett, Hooghe-Marks)</small></div>
-      <div class="agent"><b>ir-political-professor</b> (Opus)<br><small>IR 비판 (Tallberg, Putnam, Finnemore-Sikkink)</small></div>
+      <div class="agent"><b>team-lead</b> (Opus)<br><small data-en="Overall orchestration + constitution upkeep + 5 quality-gate judgment">전체 조율 + 헌법 유지 + 5 quality gate 판정</small></div>
+      <div class="agent"><b>policy-data-collector</b> (Sonnet)<br><small data-en="Collect UNFCCC/NDC/ENB/IPCC raw documents">UNFCCC/NDC/ENB/IPCC raw 문서 수집</small></div>
+      <div class="agent"><b>data-refinement-analyst</b> (Sonnet)<br><small data-en="raw → structured + topic tagging">raw → 구조화 + 토픽 태깅</small></div>
+      <div class="agent"><b>policy-science-professor</b> (Opus)<br><small data-en="Policy-science critique (Howlett, Hooghe-Marks)">정책학 비판 (Howlett, Hooghe-Marks)</small></div>
+      <div class="agent"><b>ir-political-professor</b> (Opus)<br><small data-en="IR critique (Tallberg, Putnam, Finnemore-Sikkink)">IR 비판 (Tallberg, Putnam, Finnemore-Sikkink)</small></div>
     </div>
   </div>
 </section>
@@ -715,7 +725,7 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
       <div class="data-stat"><div class="ds-num">14</div><div class="ds-lbl">Source systems</div></div>
       <div class="data-stat"><div class="ds-num">~720MB</div><div class="ds-lbl">Raw data</div></div>
       <div class="data-stat"><div class="ds-num">98</div><div class="ds-lbl">Stage 1 stances</div></div>
-      <div class="data-stat"><div class="ds-num">100%</div><div class="ds-lbl">License/sha256 추적</div></div>
+      <div class="data-stat"><div class="ds-num">100%</div><div class="ds-lbl" data-en="License/sha256 tracked">License/sha256 추적</div></div>
     </div>
 
     <h3 class="sub-head">Source Catalog (Tier 1-4)</h3>
@@ -733,20 +743,20 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
   <div class="container footer-grid">
     <div>
       <h4>CINA Framework</h4>
-      <p>국민대학교 대학원 글로벌기후리더십 (2026-1) 과제를 학술 연구로 확장.</p>
-      <p>Track A: 수업 제출 (2026.05) · Track B: 학술 투고</p>
-      <p style="margin-top: 0.8rem; font-size: 0.85em; color: var(--c-fg-mute);">
+      <p data-en="Extends the Kookmin University Graduate School Global Climate Leadership (2026-1) coursework into academic research.">국민대학교 대학원 글로벌기후리더십 (2026-1) 과제를 학술 연구로 확장.</p>
+      <p data-en="Track A: coursework submission (2026.05) · Track B: academic submission">Track A: 수업 제출 (2026.05) · Track B: 학술 투고</p>
+      <p style="margin-top: 0.8rem; font-size: 0.85em; color: var(--c-fg-mute);" data-en="<strong>Author</strong>: Heedo Choi (최희도)<br>Graduate Student · Dept. of Climate Technology Convergence<br>Kookmin University · zxsa0716@kookmin.ac.kr">
         <strong>저자(Author)</strong>: Heedo Choi (최희도)<br>
         Graduate Student · 기후기술융합학과<br>
         Kookmin University · zxsa0716@kookmin.ac.kr
       </p>
     </div>
     <div>
-      <h4>리소스</h4>
+      <h4 data-en="Resources">리소스</h4>
       <ul>
         <li><a href="https://github.com/zxsa0716/cina">GitHub Repository</a></li>
-        <li><a href="../01_theoretical_foundations.md">학술 방법론 (15 docs)</a></li>
-        <li><a href="../../deliverables/ministerial_briefing_ko.md">장관급 브리핑 (KO)</a></li>
+        <li><a href="../01_theoretical_foundations.md" data-en="Academic methodology (15 docs)">학술 방법론 (15 docs)</a></li>
+        <li><a href="../../deliverables/ministerial_briefing_ko.md" data-en="Ministerial briefing (KO)">장관급 브리핑 (KO)</a></li>
         <li><a href="../../deliverables/evaluation_report.md">Evaluation Report</a></li>
       </ul>
     </div>
@@ -761,6 +771,28 @@ Collection  LLM 추출    그래프 분석  브리핑 생성   평가
   </div>
 </footer>
 
+<!-- Bilingual (EN default) toggle -->
+<script>
+(function () {
+  function apply(lang) {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-en]').forEach(function (el) {
+      if (el.getAttribute('data-ko') === null) el.setAttribute('data-ko', el.innerHTML);
+      el.innerHTML = (lang === 'en') ? el.getAttribute('data-en') : el.getAttribute('data-ko');
+    });
+    document.querySelectorAll('.lang-btn').forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+    });
+    try { localStorage.setItem('cina-lang', lang); } catch (e) {}
+  }
+  window.__cinaSetLang = apply;
+  document.addEventListener('DOMContentLoaded', function () {
+    var saved = 'en';
+    try { saved = localStorage.getItem('cina-lang') || 'en'; } catch (e) {}
+    apply(saved);
+  });
+})();
+</script>
 <script src="assets/script.js"></script>
 </body>
 </html>
